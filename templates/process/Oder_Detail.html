@@ -1,0 +1,473 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
+<link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="col-md-14">
+
+        <div class="box box-primary">
+            <div class="mailbox-controls margin-b-10">
+                <div class="btn-group margin-l-5">
+                    <button type="button" class="btn btn-danger btn-sm" title="返回" id="btnOriReturn">
+                        <i class="fa fa-undo">返回上一級</i>
+                    </button>
+                </div>
+                <div class="btn-group pull-right">
+                </div>
+            </div>
+            <!--原始入库-->
+            <div class="box-header with-border">
+                <h3 class="box-title">原始數據</h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <form class="form-horizontal" id="oriForm" action="" method="post">
+                    {% csrf_token %}
+
+                    <input class="form-control" name="applyId" type="hidden" value="{{ apply.id }}"/>
+
+                    <div class="table-responsive mailbox-messages">
+                        <table class="table" id="ysList" style="white-space: nowrap; table-layout:fixed ">
+                            <tbody>
+                            <tr>
+                                <td class="warning"><strong> 專案 </strong></td>
+                                <td class="warning">{{ apply.fk_project }}</td>
+                                <td class="warning"><strong> 階段 </strong></td>
+                                <td class="warning">{{ apply.fk_stage }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="success"><strong> Rel編號 </strong></td>
+                                <td class="success">{{ apply.rel }}</td>
+
+                                <td class="success"><strong> SN </strong></td>
+                                <td class="success">{{ apply.sn }}</td>
+                            </tr>
+                            <tr>
+                                <!--<td class="info"><strong> 原始入庫部門 </strong></td>-->
+                                <!--<td class="info">PM-->
+                                    <!--&lt;!&ndash;{% if apply.applyTime %} {{ apply.applyTime}} {% else %} &#45;&#45; {% endif %}&ndash;&gt;-->
+                                <!--</td>-->
+
+                                <td class="info"><strong> 原始入庫者 </strong></td>
+                                <td class="info">{{ apply.recuser }}
+                                    <!--{% if apply.applyState == '1' %} 待簽核 {% elif apply.applyState == '2' %}已簽核{% else %}-->
+                                    <!--&#45;&#45; {% endif %}-->
+                                </td>
+                                <td class="info"><strong> 原始入庫日期 </strong></td>
+                                <td class="info">
+                                    {% if apply.indate %} {{ apply.indate}} {% else %} -- {% endif %}
+                                </td>
+
+                            </tr>
+                            <!--<tr>-->
+                                <!--<td class="info"><strong> 原始入庫日期 </strong></td>-->
+                                <!--<td class="info">-->
+                                    <!--{% if apply.indate %} {{ apply.indate}} {% else %} &#45;&#45; {% endif %}-->
+                                <!--</td>-->
+
+                                <!--<td class="info"><strong> 原始入庫停留時長 </strong></td>-->
+                                <!--<td class="info">-->
+                                    <!--{% if apply.applyState == '1' %} 待簽核 {% elif apply.applyState == '2' %}已簽核{% else %}-->
+                                    <!--&#45;&#45; {% endif %}-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <tr>
+                                <td class="danger"><strong> 入庫備註 </strong></td>
+                                <td class="danger">
+                                    {% if apply.remark %} {{ apply.remark}} {% else %} -- {% endif %}
+                                </td>
+                                <td class="danger"><strong></strong></td>
+                                <td class="danger"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer ">
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+
+        <div class="box box-primary">
+            <!--当前入库-->
+            <div class="box-header with-border">
+                <h3 class="box-title">當前數據</h3>
+
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <form class="form-horizontal" id="nowForm" action="" method="post">
+                    {% csrf_token %}
+
+                    <input class="form-control" name="applyId" type="hidden" value="{{ apply.id }}"/>
+
+                    <div class="table-responsive mailbox-messages">
+                        <table class="table" id="tbWorkList" style="white-space: nowrap; table-layout:fixed ">
+                            <tbody>
+                            <tr>
+                                <td class="warning"><strong> 專案 </strong></td>
+                                <td class="warning">{{ apply.fk_project }}</td>
+                                <td class="warning"><strong> 階段 </strong></td>
+                                <td class="warning">{{ apply.fk_stage }}</td>
+                            </tr>
+
+                            <tr>
+                                <td class="success"><strong> Rel編號 </strong></td>
+                                <td class="success">{{ apply.rel}}</td>
+
+                                <td class="success"><strong> SN </strong></td>
+                                <td class="success">{{ apply.sn }}</td>
+                            </tr>
+                            <tr>
+                                <td class="info"><strong> 當前所在部門 </strong></td>
+                                <td class="info">
+                                    {% if apply.fk_structure %} {{ apply.fk_structure}} {% else %} -- {% endif %}
+                                </td>
+
+                                <td class="info"><strong> 當前入庫者 </strong></td>
+                                <td class="info">{{apply.currRecUser}}
+                                    <!--{% if apply.applyState == '1' %} 待簽核 {% elif apply.applyState == '2' %}已簽核{% else %}-->
+                                    <!--&#45;&#45; {% endif %}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info"><strong> 當前入庫日期 </strong></td>
+                                <td class="info">
+                                    {% if apply.currRecDate %} {{ apply.currRecDate}} {% else %} -- {% endif %}
+                                </td>
+
+                                <td class="info"><strong> 當前入庫停留時長 </strong></td>
+                                <td class="info">
+                                    {% if apply.stayTime %} {{ apply.stayTime}} {% else %} -- {% endif %}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer ">
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--历史记录-->
+        <div class="box">
+            <div class="box-header with-border">
+                <i class="ion ion-clipboard"></i>
+                <h3 class="box-title">歷史數據</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="box-header">
+                    <div class="btn-group pull-left">
+                        <button type="button" id="btnRefresh" class="btn btn-default">
+                            <i class="glyphicon glyphicon-repeat"></i>刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <table id="dtbList" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr valign="middle">
+                            <th><input type="checkbox" id="checkAll"></th>
+                            <!--<th>id</th>-->
+                            <!--<th>專案</th>-->
+                            <!--<th>階段</th>-->
+                            <!--<th>Rel編號</th>-->
+                            <!--<th>SN</th>-->
+                            <th>申請單號</th>
+                            <th>申請人</th>
+                            <th>申請單位</th>
+                            <th>申請時間</th>
+                            <th>確認狀態</th>
+                            <th>確認人</th>
+                            <th>確認時間</th>
+                            <th>確認部門</th>
+                            <th>確認部門使用時間</th>
+                            <th>確認前機台狀態</th>
+
+
+                            <!--<th>操作</th>-->
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer clearfix no-border">
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables/dataTables.const.js' %}"></script>
+<script src="{% static 'plugins/datatables/moment.min.js' %}"></script>
+<script src="{% static 'js/plugins/layer/layer.js' %}"></script>
+<script type="text/javascript">
+
+    $(function () {
+        $('#DQE-IM').addClass('active');
+        $('#DQE-IM-INVENTORY').addClass('active');
+
+    });
+
+
+    // 返回
+    $("#btnNowReturn").on("click", function () {
+        window.location.href = "{% url 'dqe:mt-loanconfirm' %}";
+    });
+
+    // 这里开始为申请详情
+    var oDataTable = null;
+    $(function () {
+        oDataTable = initTable();
+
+        function initTable() {
+            var oTable = $('#dtbList').DataTable($.extend(true, {},
+                DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
+                {
+                    ajax: {
+                        "url": "{% url 'dqe:inventory-detail-list' %}",
+                        "data": function (d) {
+                            d.applyId = "{{ apply.id }}";
+                        }
+                    },
+                    columns: [
+                        DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
+                        // {
+                        //     data: "id",
+                        //     //width: "10%",
+                        // },
+                        // {
+                        //     //单独的fk_inventory显示
+                        //     data: "fk_inventory__fk_project__pname",
+                        // },
+                        // {
+                        //     //阶段
+                        //     data: "fk_inventory__fk_stage__sname",
+                        // },
+                        // {
+                        //     data: "fk_inventory__rel",
+                        // },
+                        // {
+                        //     data: "fk_inventory__sn",
+                        // },
+                        {
+                            //申请单号
+                            data: "fk_apply__applyNum",
+                        },
+                        {
+                            data: "fk_apply__applyUser",
+                        },
+                        {
+                            //申请单位
+                            data: "fk_apply__applyUnit",
+                        },
+                        {
+                            data: "fk_apply__applyDate",
+                            render: function (data, type, full, meta) {
+                                return moment(data).format("YYYY-MM-DD HH:mm");
+                            }
+                        },
+                        {
+                            //機台確認狀態
+                            data: "machineState",
+                            render: function (data, type, row, meta) {
+
+
+                                if (data == "1") {
+                                    return "未確認"
+                                } else if (data == "2") {
+                                    return "確認"
+                                } else if (data == "3") {
+                                    return "拒絕"
+                                } else {
+                                    alert(data);
+                                    return "未知錯誤"
+                                }
+                            }
+                        },
+                        {
+                            data: "confirmUser",
+                        },
+                        {
+                            data: "lendDate",
+                            render: function (data, type, full, meta) {
+                                return moment(data).format("YYYY-MM-DD HH:mm");
+                            }
+                        },
+                        {
+                            //借出单位 == 确认单位
+                            data: "lendUnit",
+                        },
+                        {
+                            //借出部門使用時長  这个是用于记录历史的的部门使用的时间
+                            data: "lendtime",
+                            render: function (data, type, row, meta) {
+
+                                if (data) {
+                                    return data
+                                } else {
+                                    return "--"
+                                }
+                            }
+                        },
+
+                        // {
+                        //     //机台备注
+                        //     data: "remark",
+                        //     render: function (data, type, row, meta) {
+                        //
+                        //         if (data) {
+                        //             return data
+                        //         } else {
+                        //             return "--"
+                        //         }
+                        //     }
+                        // },
+                        {
+                            //借出部門機台狀態
+                            data: "macAppState",
+                            render: function (data, type, row, meta) {
+                                //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
+                                if (data == 1) {
+                                    return "入庫"
+                                } else if (data == 2) {
+                                    return "可申請"
+                                } else if (data == 3) {
+                                    return "被申請"
+                                } else {
+                                    return "出庫"
+                                }
+                            }
+                        },
+
+                        // {
+                        //     data: "id",
+                        //     width: "4%",
+                        //     bSortable: "false",
+                        //     render: function (data, type, row, meta) {
+                        //         var ret = "<button title='增加機台備註'  class='btn btn-xs btn-primary' onclick='adRemark("
+                        //             + data + ")'><i class='glyphicon glyphicon-plus'></i></button>";
+                        //         return ret;
+                        //     }
+                        // }
+                    ],
+                }));
+            return oTable;
+        }
+
+    });
+
+    //以下针对 Apply 进行操作
+    //checkbox全选
+    $("#checkAll").on("click", function () {
+        if ($(this).prop("checked") === true) {
+            $("input[name='checkList']").prop("checked", $(this).prop("checked"));
+            $('#example tbody tr').addClass('selected');
+        } else {
+            $("input[name='checkList']").prop("checked", false);
+            $('#example tbody tr').removeClass('selected');
+        }
+    });
+
+    //申请详情刷新
+    $("#btnRefresh").click(function () {
+        oDataTable.ajax.reload();
+    });
+
+    //机台确认借出 思路：没有勾选的机台，默认就是拒绝借出。这里弹出的备注仍然是 申请单中的备注，至于机台的备注，我们就采用后面增添一个按钮的方式，对这个单下的这台机器的详情进行备注。
+    $("#btnMachLoanConfirm").click(function () {
+        if ($("input[name='checkList']:checked").length == 0) {
+            layer.msg("請勾選要借出的機台");
+            return;
+        }
+        var arrId = new Array();
+        $("input[name='checkList']:checked").each(function () {
+            arrId.push($(this).val());
+        });
+        sId = arrId.join(',');  // applydetail 的 id
+
+        //获取到 ApplyId
+        applyId = $("input[name='applyId']").val()
+        // alert(applyId);
+
+        // 这里将申请单remark的内容传递过去
+        layer.open({
+            type: 2,
+            title: '填寫確認/拒絕備註',
+            shadeClose: false,
+            maxmin: true,
+            area: ['800px', '400px'],
+            content: "{% url 'dqe:mt-loanconfirmdetail-machremark' %}?applyDetailIds=" + sId + "&applyId=" + applyId,        //'/dqe/mt/loanconfirm/aremark?applyId=2',
+            end: function () {
+                //关闭时做的事情
+                oDataTable.ajax.reload();
+            }
+        });
+
+    });
+
+
+    //详情
+    // function doDetail(id){
+    //     window.location.href="{% url 'dqe:mt-apply-detail' %}?id="+id+"&applyid="+applyid;
+    // }
+
+    //增加機台备注
+    function adRemark(id) {
+        layer.open({
+            type: 2,
+            title: '增加機台備註',
+            shadeClose: false,
+            maxmin: true,
+            area: ['800px', '400px'],
+            content: "{% url 'dqe:mt-loanconfirmdetail-addremark' %}?applyDetailId=" + id,
+            end: function () {
+                //关闭时做的事情
+                oDataTable.ajax.reload();
+            }
+        });
+    }
+
+    // 返回
+    $("#btnOriReturn").on("click", function () {
+        window.location.href = "{% url 'dqe:inventory' %}";
+    });
+
+</script>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,89 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+<div class="pad margin no-print">
+    <div class="callout callout-info" style="margin-bottom: 0!important;">
+        <h4><i class="fa  fa-info-circle"></i>系統管理：</h4>
+        系統管理模塊包含：系統許可權管理和系統設置，系統許可權管理可實現基於角色組的許可權管理，可根據角色組許可權動態生成URL導航菜單。
+    </div>
+</div>
+<!-- Main content -->
+<section class="invoice">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="page-header">
+                <i class="fa fa-github"></i> 公告信息展示
+            </h2>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+
+        <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>標題</th>
+                    <th>內容</th>
+                    <th>發佈者</th>
+                    <th>發佈時間</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+
+                {% if datas %}
+                    {% for data in datas %}
+                        <tr>
+                            <td style="color:#ed0d18;">{{data.tag}}</td>
+                            <td style="color:#ed0d18;">{{data.relContent}}</td>
+                            <td style="color:#ed0d18;">{{data.relUser}}</td>
+                            <td style="color:#ed0d18;">{{data.relDate}}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                   <tr>
+                        <td colspan="4" style="color:cornflowerblue;">今日無公告</td>
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                        <!--<td></td>-->
+                    </tr>
+
+                {% endif %}
+
+
+                </tbody>
+            </table>
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <!-- accepted payments column -->
+        <div class="col-xs-12">
+            <p class="lead">其他信息：</p>
+
+            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                <strong>庫存管理：</strong>進去可直接觀察本部門下的機台，也可查詢其他部門的機台；<br>
+                <strong>機台轉賬：</strong>機台申請可以直接在庫存中進行機台申請操作，在轉賬中查詢歷史轉賬信息；<br>
+                <strong>狀態查詢：</strong>輸入機台SN或者rel編號可直接查詢機台信息，當前存在部門以及停留時間；<br>
+                <strong>時間分析：</strong>統計該機台被哪些部門借過，以及在每個部門下的停留時間。<br>
+            </p>
+
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->
+<div class="clearfix"></div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+{% endblock %}

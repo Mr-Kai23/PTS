@@ -1,0 +1,208 @@
+{% extends 'base-layer.html' %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="box box-danger">
+        <form class="form-horizontal" id="addForm" method="post">
+            {% csrf_token %}
+
+            <!--注释：增加input标签，type属性为hidden，value值是structure.id，用来像后台POST提交数据时，传递id参数-->
+            <input type="hidden" name='id' value="{{ inventory.id }}"/>
+
+            <div class="box-body">
+                <fieldset>
+                    <legend>
+                        <h4>機台入庫</h4>
+                    </legend>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">專案名稱</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="fk_project">
+                                <option value="{{ inventory.fk_project.id }}">{{ inventory.fk_project | default:"--请选择--" }}</option>
+                                {% for project in projects %}
+                                    {% if project.id != inventory.fk_project.id %}
+                                        <option value="{{ project.id }}">{{ project.pname }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">階段名稱</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="fk_stage">
+                                <option value="{{ inventory.fk_stage.id }}">{{ inventory.fk_stage | default:"--请选择--" }}</option>
+                                {% for stage in stages %}
+                                    <option value="{{ stage.id }}">{{ stage.sname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">Rel編號</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="rel" type="text" value="{{ inventory.rel }}"/>
+                        </div>
+
+                        <label class="col-sm-2 control-label">SN</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="sn" type="text" value="{{ inventory.sn }}"/>
+                        </div>
+                    </div>
+
+                    <!--<div class="form-group has-feedback">-->
+                    <!--<label class="col-sm-2 control-label">入庫日期</label>-->
+                    <!--<div class="col-sm-3">-->
+                    <!--<input type="text" class="form-control pull-right form_datetime" name="indate" value="{{ inventory.indate }}"/>-->
+                    <!--</div>-->
+
+                    <!--<label class="col-sm-2 control-label">入庫者</label>-->
+                    <!--<div class="col-sm-3">-->
+                    <!--<input class="form-control" name="recuser" type="text" value="{{ inventory.recuser }}"/>-->
+                    <!--</div>-->
+                    <!--</div>-->
+
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">狀態</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="state">
+                                <option value="{{ inventory.state }}">{{ inventory.get_state_display | default:"--请选择--" }}</option>
+                                {% for state in state_list %}
+                                    <option value="{{ state.key }}">{{ state.value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <label class="col-sm-2 control-label">產品類別</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="fk_pt">
+                                <option value="{{ inventory.fk_pt.id }}">{{ inventory.fk_pt | default:"--请选择--" }}</option>
+                                {% for prodtype in prodtypes %}
+                                    <option value="{{ prodtype.id }}">{{ prodtype.ptname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">備註</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" name="remark" type="text" placeholder="機台入庫"
+                                   value="{{ inventory.remark }}"/>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+            </div>
+            <div class="box-footer ">
+                <div class="row span7 text-center ">
+                    <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
+                    <button type="button" id="btnSave" class="btn btn-info margin-right ">保存</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'plugins/combo-select/jquery.combo.select.js' %}"></script>
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
+
+    <script type="text/javascript">
+
+        $("#btnSave").click(function () {
+            var data = $("#addForm").serialize();
+            $.ajax({
+                type: $("#addForm").attr('method'),
+                url: "{% url 'dqe:inventory-update' %}",
+                data: data,
+                cache: false,
+                success: function (msg) {
+                    if (msg.result) {
+                        layer.alert('數據保存成功！', {icon: 1}, function (index) {
+                            parent.layer.closeAll(); //关闭所有弹窗
+                        });
+                    } else {
+                        layer.alert('數據保存失败！', {icon: 5});
+                        //$('errorMessage').html(msg.message)
+                    }
+                    return;
+                }
+            });
+        });
+
+
+        /*点取消刷新新页面*/
+        $("#btnCancel").click(function () {
+            window.location.reload();
+
+        });
+
+        /*input 时间输入选择*/
+        $(".form_datetime").datetimepicker({
+            language: 'zh',
+            minView: 'month', //选择范围知道日期，不选择时分
+            //weekStart: 1,
+            //todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            //startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            format: 'yyyy-mm-dd'
+        }).on('changeDate', function (ev) {
+            $(this).datetimepicker('hide');
+        });
+
+        // select2
+        $(function () {
+            //Initialize Select2 Elements
+            $(".select2").select2();
+        });
+
+        /*专案阶段二级联动*/
+
+        $("select[name='fk_project']").change(function () {
+
+            var fk_project_id = $("select[name='fk_project']").val();
+
+            //alert(fk_project_id);
+
+            $.ajax({
+                type: "POST",
+
+                url: "{% url 'system:basic-project-stage' %}",
+
+                data: {"fk_project_id": fk_project_id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+
+                success: function (data) {
+                    //console.log(data);
+                    //console.log(data.stages);
+                    //console.log(data.stages.length);
+
+                    var fk_st = $("select[name='fk_stage']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
+
+                    $.each(data.stages, function (i, val) {
+                        //console.log(i + "===" + val.id)  // #表示浏览器控制台下打印消息
+                        fk_st.append('<option value="' + val.id + '">' + val.sname + '</option>')
+                    })
+
+                }
+            });
+
+        });
+    </script>
+
+{% endblock %}
