@@ -77,7 +77,7 @@ class Structure2UserView(LoginRequiredMixin, View):
     def get(self, request):
         if 'id' in request.GET and request.GET['id']:
             structure = get_object_or_404(Structure, pk=int(request.GET['id']))
-            added_users = structure.userprofile_set.all()
+            added_users = structure.userinfo_set.all()
             all_users = User.objects.all()
             un_add_users = set(all_users).difference(added_users)
             ret = dict(structure=structure, added_users=added_users, un_add_users=list(un_add_users))
@@ -89,9 +89,9 @@ class Structure2UserView(LoginRequiredMixin, View):
         structure = get_object_or_404(Structure, pk=int(request.POST['id']))
         if 'to' in request.POST and request.POST.getlist('to', []):
             id_list = map(int, request.POST.getlist('to', []))
-        structure.userprofile_set.clear()
+        structure.userinfo_set.clear()
         if id_list:
             for user in User.objects.filter(id__in=id_list):
-                structure.userprofile_set.add(user)
+                structure.userinfo_set.add(user)
         res['result'] = True
         return HttpResponse(json.dumps(res), content_type='application/json')

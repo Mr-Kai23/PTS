@@ -126,7 +126,7 @@
             var data = $("#addForm").serialize();
             $.ajax({
                 type: $("#addForm").attr('method'),
-                url: "{% url 'dqe:inventory-update' %}",
+                url: "{% url 'process:inventory-update' %}",
                 data: data,
                 cache: false,
                 success: function (msg) {

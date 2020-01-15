@@ -104,7 +104,7 @@ class BuildDeleteView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 
-class ProjectAndStageLinkageView(LoginRequiredMixin, View):
+class ProjectAndBuildLinkageView(LoginRequiredMixin, View):
     """
     专案 和 阶段 联动
     """
@@ -112,8 +112,8 @@ class ProjectAndStageLinkageView(LoginRequiredMixin, View):
 
         res = dict()
 
-        if request.POST.get('fk_project_id'):
-            builds = Build.objects.filter(project=request.POST.get('fk_project_id')).values(*['id', 'build'])
+        if request.POST.get('project'):
+            builds = Build.objects.filter(project=request.POST.get('project')).values(*['id', 'build'])
             res['builds'] = list(builds)
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')

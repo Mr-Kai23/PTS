@@ -8,11 +8,10 @@ import json
 from django.shortcuts import render, HttpResponse
 from django.views.generic.base import View, TemplateView
 from django.http import HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
 from .forms import LoginForm, UserCreateForm, UserUpdateForm, PasswordChangeForm
 from .mixin import LoginRequiredMixin
@@ -21,6 +20,7 @@ from custom import BreadcrumbMixin
 from django import forms
 from django.contrib.auth import get_user_model
 from system.models import Structure, Menu
+from app_process.models import OrderInfo
 from datetime import datetime
 from django.db.models import Count, Q
 User = get_user_model()
@@ -30,7 +30,13 @@ class IndexView(LoginRequiredMixin, View):
 
     def get(self, request):
 
-        return render(request, 'index.html')
+        res = {
+            'created': OrderInfo.objects.all().count(),
+            'receive': OrderInfo.objects.filter(receive_status=0).count(),
+            'finished': OrderInfo.objects.filter(receive_status=1, status=1).count()
+        }
+
+        return render(request, 'process/order_index.html', res)
 
 
 class LoginView(View):
@@ -75,7 +81,8 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
 
 class UserListView(LoginRequiredMixin, View):
     def get(self, request):
-        fields = ['id', 'name', 'gender', 'mobile', 'email', 'department__name', 'post', 'superior__name', 'is_active','worknum', 'sendEmailFlag', 'resetFlag','username']
+        fields = ['id', 'work_num', 'name', 'mobile', 'email', 'department', 'project', 'segment', 'account_type',
+                  'is_admin', 'remark']
         filters = dict()
         if 'select' in request.GET and request.GET['select']:
             filters['is_active'] = request.GET['select']

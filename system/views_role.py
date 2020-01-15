@@ -59,7 +59,7 @@ class Role2UserView(LoginRequiredMixin, View):
     def get(self, request):
         if 'id' in request.GET and request.GET['id']:
             role = get_object_or_404(Role, pk=int(request.GET.get('id')))
-            added_users = role.userprofile_set.all()
+            added_users = role.userinfo_set.all()
             all_users = User.objects.all()
             un_add_users = set(all_users).difference(added_users)
             ret = dict(role=role, added_users=added_users, un_add_users=list(un_add_users))
@@ -71,10 +71,10 @@ class Role2UserView(LoginRequiredMixin, View):
         role = get_object_or_404(Role, pk=int(request.POST.get('id')))
         if 'to' in request.POST and request.POST['to']:
             id_list = map(int, request.POST.getlist('to', []))
-        role.userprofile_set.clear()
+        role.userinfo_set.clear()
         if id_list:
             for user in User.objects.filter(id__in=id_list):
-                role.userprofile_set.add(user)
+                role.userinfo_set.add(user)
         res['result'] = True
         return HttpResponse(json.dumps(res), content_type='application/json')
 

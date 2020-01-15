@@ -41,7 +41,7 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'department', 'project', 'phone', 'email',
+            'name', 'work_num', 'department', 'project', 'mobile', 'email',
             'segment', 'account_type', 'is_admin', 'roles', 'password',
             'remark'
         ]
@@ -50,7 +50,7 @@ class UserCreateForm(forms.ModelForm):
             "name": {"required": "姓名不能为空"},
             "username": {"required": "用户名不能为空"},
             "email": {"required": "邮箱不能为空"},
-            "phone": {
+            "mobile": {
                 "required": "手机号码不能为空",
                 "max_length": "输入有效的手机号码",
                 "min_length": "输入有效的手机号码"
@@ -60,7 +60,7 @@ class UserCreateForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super(UserCreateForm, self).clean()
         username = cleaned_data.get("username")
-        phone = cleaned_data.get("phone", "")
+        mobile = cleaned_data.get("mobile", "")
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
@@ -71,11 +71,11 @@ class UserCreateForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("两次密码输入不一致")
 
-        if User.objects.filter(phone=phone).count():
-            raise forms.ValidationError('手机号码：{}已存在'.format(phone))
+        if User.objects.filter(mobile=mobile).count():
+            raise forms.ValidationError('手机号码：{}已存在'.format(mobile))
 
         REGEX_MOBILE = "^1[3578]\d{9}$|^147\d{8}$|^176\d{8}$"
-        if not re.match(REGEX_MOBILE, phone):
+        if not re.match(REGEX_MOBILE, mobile):
             raise forms.ValidationError("手机号码非法")
 
         if User.objects.filter(email=email).count():
@@ -86,7 +86,7 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'department', 'project', 'phone', 'email',
+            'name', 'work_num', 'department', 'project', 'mobile', 'email',
             'segment', 'account_type', 'is_admin', 'roles', 'password',
             'remark'
         ]

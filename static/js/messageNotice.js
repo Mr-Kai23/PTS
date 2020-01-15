@@ -6,7 +6,7 @@ $(function () {
     function checkTodo() {
         $.ajax({
             type: 'GET',
-            url: "/dqe/mt/loanconfirm/message", //"{% url 'dqe:mt-loanconfirm-message' %}",
+            url: "",
             //data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (data) {
                 //console.log(data);

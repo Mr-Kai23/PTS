@@ -243,7 +243,7 @@
                     {
 
                         ajax: {
-                            "url": "{% url 'dqe:inventory-list' %}",
+                            "url": "{% url 'process:inventory-list' %}",
                             "data": function (d) {
 
                                 d.fk_project_id = $("#fk_project_id").val();
@@ -424,7 +424,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['800px', '400px'],
-                content: "{% url 'dqe:inventory-update' %}",
+                content: "{% url 'process:inventory-update' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -457,7 +457,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'dqe:inventory-delete' %}",
+                        url: "{% url 'process:inventory-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -483,7 +483,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['800px', '400px'],
-                content: ["{% url 'dqe:inventory-update' %}" + '?id=' + id,],
+                content: ["{% url 'process:inventory-update' %}" + '?id=' + id,],
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -502,7 +502,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'dqe:inventory-delete' %}",
+                        url: "{% url 'process:inventory-delete' %}",
                         data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                         cache: false,
                         success: function (msg) {
@@ -539,7 +539,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'dqe:inventory-addToShopping' %}",
+                        url: "{% url 'process:inventory-addToShopping' %}",
                         data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                         cache: false,
                         success: function (msg) {
@@ -572,7 +572,7 @@
                 maxmin: true,
                 area: ['1200px', '600px'],
                 //所謂的借出確認申請，就是一個操作緩存記錄
-                content: "{% url 'dqe:oct' %}",
+                content: "{% url 'process:oct' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -635,7 +635,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'dqe:inventory-out' %}",
+                        url: "{% url 'process:inventory-out' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -655,7 +655,7 @@
         //详情
         //此处inventoryId确定某一机台
         function doDetail(id) {
-            window.location.href = "{% url 'dqe:inventory-detail' %}?inventoryId=" + id;
+            window.location.href = "{% url 'process:inventory-detail' %}?inventoryId=" + id;
         }
 
         /*input 时间输入选择*/
@@ -722,7 +722,7 @@
                 maxmin: true,
                 area: ['800px', '400px'],
                 //所謂的借出確認申請，就是一個操作緩存記錄
-                content: "{% url 'dqe:inventory-scanApply' %}",
+                content: "{% url 'process:inventory-scanApply' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();

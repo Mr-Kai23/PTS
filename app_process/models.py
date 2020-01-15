@@ -50,7 +50,7 @@ class Segment(models.Model):
         db_table = 'Segment'
 
 
-class OderInfo(models.Model):
+class OrderInfo(models.Model):
     """
     工单基本信息表
     """
@@ -77,7 +77,7 @@ class OderInfo(models.Model):
     publish_status = models.SmallIntegerField(choices=publish_status_choice, default=0, verbose_name='发布状态')
     publish_time = models.DateTimeField(null=True, blank=True, verbose_name='发布时间')
     subject = models.CharField(max_length=64, null=True, blank=True, verbose_name='主旨')
-    oder = models.CharField(max_length=20, null=True, blank=True, verbose_name='工单')
+    order = models.CharField(max_length=20, null=True, blank=True, verbose_name='工单')
     key_content = models.CharField(max_length=128, null=True, blank=True, verbose_name='重点注意流程内容')
     segment = models.CharField(max_length=32, null=True, blank=True, verbose_name='接收段别')
     receiver = models.CharField(max_length=20, null=True, blank=True, verbose_name='接收人')
@@ -87,7 +87,7 @@ class OderInfo(models.Model):
 
     def __str__(self):
         """定义每个数据对象的显示信息"""
-        return self.oder
+        return self.order
 
     class Meta:
         """内部类，它用于定义一些Django模型类的行为特性"""

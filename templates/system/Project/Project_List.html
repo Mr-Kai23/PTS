@@ -42,10 +42,10 @@
                 <form class="form-inline" id="queryForm">
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>專案名：</label>
-                        <select class="form-control inputText select2" name="pname" id="pname">
+                        <select class="form-control inputText select2" name="project" id="project">
                             <option></option>
                             {% for project in projects %}
-                            <option value="{{ project.pname }}">{{ project.pname }}</option>
+                            <option value="{{ project.project }}">{{ project.project }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -109,7 +109,7 @@
                     ajax: {
                         "url": "{% url 'system:basic-project-list' %}",
                         "data": function (d) {
-                            d.pname = $("#pname").val();
+                            d.project = $("#project").val();
                         }
                     },
                     columns: [
@@ -119,7 +119,7 @@
                             width: "5%",
                         },
                         {
-                            data: "pname",
+                            data: "project",
                         },
 
                         {

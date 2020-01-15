@@ -4,7 +4,7 @@
 {% block css %}
 <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
 <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
-<link rel="stylesheet" href="{%static 'plugins/select2/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
 <!-- iCheck for checkboxes and radio inputs -->
 {% endblock %}
@@ -42,19 +42,19 @@
                 <form class="form-inline" id="queryForm">
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>專案名：</label>
-                        <select class="form-control inputText select2" name="fk_project__pname" id="fk_project__pname">
+                        <select class="form-control inputText select2" name="project" id="project">
                             <option></option>
                             {% for project in projects %}
-                            <option value="{{ project.pname }}">{{ project.pname }}</option>
+                            <option value="{{ project.project }}">{{ project.project }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>階段名：</label>
-                        <select class="form-control inputText select2" name="sname" id="sname">
+                        <select class="form-control inputText select2" name="build" id="build">
                             <option></option>
-                            {% for stage in stages %}
-                            <option value="{{ stage.sname }}">{{ stage.sname }}</option>
+                            {% for build in builds %}
+                            <option value="{{ build.build }}">{{ build.build }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -117,10 +117,10 @@
                 DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
                 {
                     ajax: {
-                        "url": "{% url 'system:basic-stage-list' %}",
+                        "url": "{% url 'system:basic-build-list' %}",
                         "data": function (d) {
-                            d.fk_project__pname = $("#fk_project__pname").val();
-                            d.sname = $("#sname").val();
+                            d.project = $("#project").val();
+                            d.build = $("#build").val();
                         }
                     },
                     columns: [
@@ -130,10 +130,10 @@
                             width: "5%",
                         },
                         {
-                            data: "fk_project__pname",
+                            data: "project",
                         },
                         {
-                            data: "sname",
+                            data: "build",
                         },
                         {
                             data: "id",
@@ -181,7 +181,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['800px', '400px'],
-                content: "{% url 'system:basic-stage-update' %}",
+                content: "{% url 'system:basic-build-update' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -213,7 +213,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'system:basic-stage-delete' %}",
+                        url: "{% url 'system:basic-build-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -241,7 +241,7 @@
             shadeClose: false,
             maxmin: true,
             area: ['800px', '400px'],
-            content: ["{% url 'system:basic-stage-update' %}" + '?id=' + id,],
+            content: ["{% url 'system:basic-build-update' %}" + '?id=' + id,],
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
@@ -260,7 +260,7 @@
                 layer.close(index);
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'system:basic-stage-delete' %}",
+                    url: "{% url 'system:basic-build-delete' %}",
                     data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                     cache: false,
                     success: function (msg) {

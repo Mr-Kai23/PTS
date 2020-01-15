@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+
+from system.views import SystemView
 from system.views_user import IndexView, LoginView, LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('', IndexView.as_view(), name='pmsLogin'),
+    # path('', SystemView.as_view(), name='login'),
     # 登录、登出
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
@@ -29,6 +33,6 @@ urlpatterns = [
     path('system/', include('system.urls', namespace='system')),
 
     # process
-    path('process/', include('app_process.urls', namespace='process')),
+    path('process/', include(('app_process.urls', 'app_process'), namespace='process')),
 
 ]

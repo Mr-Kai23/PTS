@@ -52,13 +52,13 @@ urlpatterns = [
     url(r'^basic/project/delete$', views_project.ProjectDeleteView.as_view(), name='basic-project-delete'),
 
     # 阶段
-    url(r'^basic/stage/$', views_build.BuildView.as_view(), name='basic-stage'),
-    url(r'^basic/stage/list$', views_build.BuildListView.as_view(), name='basic-stage-list'),
-    url(r'^basic/stage/update$', views_build.BuildUpdateView.as_view(), name='basic-stage-update'),
-    url(r'^basic/stage/delete$', views_build.BuildDeleteView.as_view(), name='basic-stage-delete'),
+    url(r'^basic/build/$', views_build.BuildView.as_view(), name='basic-build'),
+    url(r'^basic/build/list$', views_build.BuildListView.as_view(), name='basic-build-list'),
+    url(r'^basic/build/update$', views_build.BuildUpdateView.as_view(), name='basic-build-update'),
+    url(r'^basic/build/delete$', views_build.BuildDeleteView.as_view(), name='basic-build-delete'),
 
     # 专案 和 阶段 联动
-    url(r'^basic/project/stage$', views_build.ProjectAndStageLinkageView.as_view(), name='basic-project-stage'),
+    url(r'^basic/project/build$', views_build.ProjectAndBuildLinkageView.as_view(), name='basic-project-build'),
 
 
 ]

@@ -244,7 +244,7 @@
 
     // 返回
     $("#btnNowReturn").on("click", function () {
-        window.location.href = "{% url 'dqe:mt-loanconfirm' %}";
+        window.location.href = "{% url '' %}";
     });
 
     // 这里开始为申请详情
@@ -257,7 +257,7 @@
                 DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
                 {
                     ajax: {
-                        "url": "{% url 'dqe:inventory-detail-list' %}",
+                        "url": "{% url 'process:inventory-detail-list' %}",
                         "data": function (d) {
                             d.applyId = "{{ apply.id }}";
                         }
@@ -429,7 +429,7 @@
             shadeClose: false,
             maxmin: true,
             area: ['800px', '400px'],
-            content: "{% url 'dqe:mt-loanconfirmdetail-machremark' %}?applyDetailIds=" + sId + "&applyId=" + applyId,        //'/dqe/mt/loanconfirm/aremark?applyId=2',
+            content: "{% url 'process:mt-loanconfirmdetail-machremark' %}?applyDetailIds=" + sId + "&applyId=" + applyId,        //'/dqe/mt/loanconfirm/aremark?applyId=2',
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
@@ -441,7 +441,7 @@
 
     //详情
     // function doDetail(id){
-    //     window.location.href="{% url 'dqe:mt-apply-detail' %}?id="+id+"&applyid="+applyid;
+    //     window.location.href="{% url 'process:mt-apply-detail' %}?id="+id+"&applyid="+applyid;
     // }
 
     //增加機台备注
@@ -452,7 +452,7 @@
             shadeClose: false,
             maxmin: true,
             area: ['800px', '400px'],
-            content: "{% url 'dqe:mt-loanconfirmdetail-addremark' %}?applyDetailId=" + id,
+            content: "{% url 'process:mt-loanconfirmdetail-addremark' %}?applyDetailId=" + id,
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
@@ -462,7 +462,7 @@
 
     // 返回
     $("#btnOriReturn").on("click", function () {
-        window.location.href = "{% url 'dqe:inventory' %}";
+        window.location.href = "{% url 'process:inventory' %}";
     });
 
 </script>

@@ -68,17 +68,25 @@ class UserInfo(AbstractUser):
         (1, '接收者'),
     )
 
-    name = models.CharField(max_length=20, null=True, blank=True, verbose_name='姓名')
-    work_num = models.CharField(max_length=10, null=True, blank=True, verbose_name='工号')
+    name = models.CharField(max_length=20, default="", verbose_name="姓名")
+    birthday = models.DateField(null=True, blank=True, verbose_name="出生日期")
+    gender = models.CharField(max_length=10, choices=(("male", "男"), ("female", "女")), default="male",
+                              verbose_name="性别")
+    mobile = models.CharField(max_length=11, default="", verbose_name="手机号码")
+    email = models.EmailField(max_length=50, verbose_name="邮箱")
+    image = models.ImageField(upload_to="image/%Y/%m", default="image/default.jpg", max_length=100, null=True,
+                              blank=True)
     department = models.ForeignKey("Structure", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="部门")
+    post = models.CharField(max_length=50, null=True, blank=True, verbose_name="职位")
+    superior = models.ForeignKey("self", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="上级主管")
+    roles = models.ManyToManyField("role", verbose_name="角色", blank=True)
+
+    work_num = models.CharField(max_length=10, null=True, blank=True, verbose_name='工号')
     project = models.CharField(max_length=10, null=True, blank=True, verbose_name='专案')
-    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name='电话')
-    email = models.CharField(max_length=32, null=True, blank=True, verbose_name='邮件')
     segment = models.CharField(max_length=20, null=True, blank=True, verbose_name='段别')
     account_type = models.SmallIntegerField(choices=account_type_choice, default=0, verbose_name='账号类别')
     is_admin = models.BooleanField(default=False)
     remark = models.CharField(max_length=64, null=True, blank=True, verbose_name='备注')
-    roles = models.ManyToManyField("role", verbose_name="角色", blank=True)
 
     def __str__(self):
         return self.name
