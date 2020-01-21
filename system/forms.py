@@ -14,7 +14,7 @@ class LoginForm(forms.Form):
 class StructureForm(forms.ModelForm):
     class Meta:
         model = Structure
-        fields = ['type', 'name', 'parent', 'resetTime', 'sendUserEmail']
+        fields = ['type', 'name', 'parent']
 
 
 class UserCreateForm(forms.ModelForm):
@@ -41,9 +41,8 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'department', 'project', 'mobile', 'email',
-            'segment', 'account_type', 'is_admin', 'roles', 'password',
-            'remark'
+            'name', 'work_num', 'username', 'department', 'project', 'mobile', 'email',
+            'segment', 'account_type', 'is_admin', 'roles', 'password', 'remark'
         ]
 
         error_messages = {
@@ -86,9 +85,8 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'department', 'project', 'mobile', 'email',
-            'segment', 'account_type', 'is_admin', 'roles', 'password',
-            'remark'
+            'name', 'work_num', 'username', 'department', 'project', 'mobile', 'email',
+            'segment', 'account_type', 'is_admin', 'roles', 'remark'
         ]
 
 

@@ -20,7 +20,7 @@ from custom import BreadcrumbMixin
 from django import forms
 from django.contrib.auth import get_user_model
 from system.models import Structure, Menu
-from app_process.models import OrderInfo
+from app_process.models import OrderInfo, Project, Segment
 from datetime import datetime
 from django.db.models import Count, Q
 User = get_user_model()
@@ -98,11 +98,15 @@ class UserCreateView(LoginRequiredMixin, View):
     def get(self, request):
         users = User.objects.exclude(username='admin')
         structures = Structure.objects.values()
+        projects = Project.objects.values()
+        segments = Segment.objects.values()
         roles = Role.objects.values()
 
         ret = {
             'users': users,
             'structures': structures,
+            'projects': projects,
+            'segments': segments,
             'roles': roles,
         }
         return render(request, 'system/users/user_create.html', ret)
@@ -132,11 +136,15 @@ class UserDetailView(LoginRequiredMixin, View):
         user = get_object_or_404(User, pk=int(request.GET['id']))
         users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
         structures = Structure.objects.values()
+        segments = Segment.objects.values()
+        projects = Project.objects.values()
         roles = Role.objects.values()
         user_roles = user.roles.values()
         ret = {
             'user': user,
             'structures': structures,
+            'projects': projects,
+            'segments': segments,
             'users': users,
             'roles': roles,
             'user_roles': user_roles

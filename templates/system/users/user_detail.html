@@ -22,85 +22,28 @@
                         <div class="col-sm-3">
                             <input class="form-control" name="name" type="text" value="{{ user.name }}"/>
                         </div>
-                        <label class="col-sm-2 control-label">性别</label>
-                        <div class="col-sm-3">
-                            <select class="form-control" name="gender">
-                                <option value={{ user.gender }}> {{ user.get_gender_display }} </option>
-                                <option value="male">男</option>
-                                <option value="female">女</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">生日</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control pull-right form_datetime" name="birthday"
-                                   value="{{ user.birthday|date:"Y-m-d" }}"/>
-                        </div>
-
-                    </div>
-
-                    <legend>
-                        <h4 clase="">賬號密碼</h4>
-                    </legend>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">登錄賬號</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="username" value="{{ user.username }}" readonly="readonly"/>
-                        </div>
                         <label class="col-sm-2 control-label">工號</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" name="worknum"  value="{{ user.worknum }}" />
+                            <input type="text" class="form-control" name="work_num"  value="{{ user.work_num }}" />
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">用戶名</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="username" type="text" value="{{ user.username }}" readonly="readonly"/>
                         </div>
                     </div>
 
                     <legend>
-                        <h4>职员信息</h4>
+                        <h4>聯繫信息</h4>
                     </legend>
                     <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">入职日期</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control pull-right form_datetime" name="joined_date"
-                                   value="{{ user.date_joined|date:"Y-m-d" }}"/>
-                        </div>
-                        <label class="col-sm-2 control-label">部门</label>
-                        <div class="col-sm-3">
-                            <select class="form-control select2" style="width:100%;" name="department">
-                                <option value="{{ user.department.id }}">{{ user.department.name|default:"--部门--" }}</option>
-                                {% for structure in structures %}
-                                    <option value="{{ structure.id }}">{{ structure.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
 
-                    </div>
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">岗位</label>
-                        <div class="col-sm-3">
-                            <input class="form-control" name="post" type="text"
-                                   value="{{ user.post|default_if_none:"" }}"/>
-                        </div>
-                        <label class="col-sm-2 control-label">上级</label>
-                        <div class="col-sm-3">
-                            <select class="form-control select2" style="width:100%;" name="superior">
-                                <option value="{{ user.superior.id }}">{{ user.superior.name|default:"--上级--" }}</option>
-                                {% for user in users %}
-                                    <option value="{{ user.id }}">{{ user.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="form-group has-feedback">
-
-                        <label class="col-sm-2 control-label">邮箱</label>
+                        <label class="col-sm-2 control-label">郵箱</label>
                         <div class="col-sm-3">
                             <input class="form-control" name="email" type="text" value="{{ user.email }}"/>
                         </div>
-                        <label class="col-sm-2 control-label">手机</label>
+                        <label class="col-sm-2 control-label">手機</label>
                         <div class="col-sm-3">
                             <input class="form-control" name="mobile" type="text"
                                    value="{{ user.mobile }}"/>
@@ -108,14 +51,63 @@
                     </div>
 
                     <legend>
-                        <h4>权限信息</h4>
+                        <h4>職員信息</h4>
                     </legend>
                     <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">启用状态</label>
+                        <label class="col-sm-2 control-label">部門</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="department">
+                                <option value="{{ user.department }}">{{ user.department|default:"--部門--" }}</option>
+                                {% for structure in structures %}
+                                    <option value="{{ structure.name }}">{{ structure.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label">專案</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="project">
+                                <option value="{{ user.project }}">{{ user.project|default:"--專案--" }}</option>
+                                {% for project in projects %}
+                                    <option value="{{ project.id }}">{{ project.project }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">段別</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="segment">
+                                <option value="{{ user.segment }}">{{ user.segment|default:"--段別--" }}</option>
+                                {% for segment in segments %}
+                                    <option value="{{ segment.segment }}">{{ segment.segment }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <legend>
+                        <h4>權限信息</h4>
+                    </legend>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">賬號類型</label>
+                        <div class="col-sm-6">
+                            <label class="control-label">
+                                <input type="radio" class="minimal" name="account_type" value="0"
+                                {% if user.account_type == 0 %}checked{% endif %}>發佈者
+                            </label>
+                            <label class="control-label">
+                                <input type="radio" class="minimal" name="account_type" value="1"
+                                {% if user.account_type == 1 %}checked{% endif %}>接收者
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">啟用狀態</label>
                         <div class="col-sm-6">
                             <label class="control-label">
                                 <input type="radio" class="minimal" name="is_active" value="True"
-                                {% ifequal user.is_active True %}checked{% endifequal %}>启用
+                                {% ifequal user.is_active True %}checked{% endifequal %}>啟用
                             </label>
                             <label class="control-label">
                                 <input type="radio" class="minimal" name="is_active" value="False"
@@ -124,34 +116,19 @@
                         </div>
                     </div>
 
-                     <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">超時郵箱發送人員標識</label>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">管理員</label>
                         <div class="col-sm-6">
                             <label class="control-label">
-                                <input type="radio" class="minimal" name="sendEmailFlag" value="True"
-                                {% ifequal user.sendEmailFlag True %}checked{% endifequal %}>拥有
+                                <input type="radio" class="minimal" name="is_admin" value="True"
+                                {% ifequal user.is_admin True %}checked{% endifequal %}>是
                             </label>
                             <label class="control-label">
-                                <input type="radio" class="minimal" name="sendEmailFlag" value="False"
-                                {% ifequal user.sendEmailFlag False %}checked{% endifequal %}>未拥有
+                                <input type="radio" class="minimal" name="is_admin" value="False"
+                                {% ifequal user.is_admin False %}checked{% endifequal %}>否
                             </label>
                         </div>
                     </div>
-
-                     <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">RESET人員標識</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="resetFlag" value="True"
-                                {% ifequal user.resetFlag True %}checked{% endifequal %}>拥有
-                            </label>
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="resetFlag" value="False"
-                                {% ifequal user.resetFlag False %}checked{% endifequal %}>未拥有
-                            </label>
-                        </div>
-                    </div>
-
 
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">所属角色组</label>

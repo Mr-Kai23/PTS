@@ -15,28 +15,29 @@
         <div class="box box-primary" id="liebiao">
             <div class="box-header">
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnRefresh" class="btn btn-default">
+                    <button type="button" id="btnRefresh" class="btn btn-info">
                         <i class="glyphicon glyphicon-repeat"></i>刷新
                     </button>
                 </div>
                 <div class="btn-group pull-left">&nbsp</div>
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnCreate" class="btn btn-default">
+                    <button type="button" id="btnCreate" class="btn btn-success">
                         <i class="glyphicon glyphicon-plus"></i>新增
                     </button>
                 </div>
                 <div class="btn-group pull-left">&nbsp</div>
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnDelete" class="btn btn-default">
+                    <button type="button" id="btnDelete" class="btn btn-danger">
                         <i class="glyphicon glyphicon-trash"></i>删除
                     </button>
                 </div>
                 <div class="btn-group pull-left">&nbsp</div>
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnEnable" class="btn btn-default">
+                    <button type="button" id="btnEnable" class="btn btn-primary">
                         <i class="glyphicon glyphicon-ok-circle"></i>启用
                     </button>
-                    <button type="button" id="btnDisable" class="btn btn-default">
+                <div class="btn-group pull-left">&nbsp&nbsp</div>
+                    <button type="button" id="btnDisable" class="btn btn-warning">
                         <i class="glyphicon glyphicon-ban-circle"></i>禁用
                     </button>
                 </div>
@@ -59,20 +60,15 @@
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>ID</th>
-                        <th>姓名</th>
-                        <th>部门</th>
-                        <th>性别</th>
-                        <th>手机</th>
-                        <th>邮箱</th>
-
-                        <th>登录账号</th>
                         <th>工號</th>
-                        <th>超時郵箱發送人員標識</th>
-                        <th>RESET人員標識</th>
-
-                        <th>职位</th>
-                        <th>上级</th>
-                        <th>状态</th>
+                        <th>姓名</th>
+                        <th>手機長號</th>
+                        <th>郵箱地址</th>
+                        <th>部門</th>
+                        <th>專案</th>
+                        <th>段別</th>
+                        <th>賬號類型</th>
+                        <th>備註</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -124,22 +120,11 @@
                             width: "5%",
                         },
                         {
+                            data: "work_num",
+                        },
+                        {
                             data: "name",//parent
                             width: "8%",
-                        },
-                        {
-                            data: "department__name",
-                        },
-                        {
-                            data: "gender",
-                            width: "4%",
-                            render: function (data, type, row, meta) {
-                                if (data == 'male') {
-                                    return "男";
-                                } else {
-                                    return "女";
-                                }
-                            }
                         },
                         {
                             data: "mobile",
@@ -148,33 +133,29 @@
                             data: "email",
                         },
                         {
-                            data: "username",
+                            data: "department",
                         },
                         {
-                            data: "worknum",
+                            data: "project",
                         },
                         {
-                            data: "sendEmailFlag",
+                            data: "segment",
                         },
                         {
-                            data: "resetFlag",
-                        },
-                        {
-                            data: "post",
-                        },
-                        {
-                            data: "superior__name",
-                        },
-                        {
-                            data: "is_active",
-                            render: function (data) {
-                                if (data == true) {
-                                    return "启用";
+                            data: "account_type",
+                            width: "8%",
+                            render: function (data, type, row, meta) {
+                                if (data == 0) {
+                                    return "發佈者";
                                 } else {
-                                    return "禁用";
+                                    return "接收者";
                                 }
                             }
                         },
+                        {
+                            data: "remark",
+                        },
+
                         {
                             data: "id",
                             width: "10%",
@@ -205,14 +186,14 @@
             title: '新增',
             shadeClose: false,
             maxmin: true,
-            area: ['800px', '720px'],
+            area: ['60%', '85%'],
             content: '/system/basic/user/create',
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
             }
         });
-        layer.full(div)
+        {#layer.full(div)#}
     });
 
     // 跳转到用户详情页面
@@ -222,13 +203,13 @@
             title: '编辑',
             shadeClose: false,
             maxmin: true,
-            area: ['800px', '650px'],
+            area: ['60%', '75%'],
             content: ["{% url 'system:basic-user-detail' %}" + '?id=' + id, 'no'],
             end: function () {
                 oDataTable.ajax.reload();
             }
         });
-        layer.full(div)
+        {#layer.full(div)#}
     }
 
     function doChangepasswd(id) {
