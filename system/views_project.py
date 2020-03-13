@@ -28,7 +28,7 @@ class ProjectView(LoginRequiredMixin, View):
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
-        return render(request, 'system/Project/Project_List.html',res)
+        return render(request, 'system/Project/Project_List.html', res)
 
 
 # 申请详情列表

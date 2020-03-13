@@ -20,14 +20,6 @@ class WorkFlowView(LoginRequiredMixin, View):
         segments = Segment.objects.all()
         res['segments'] = segments
 
-        # 执行状况
-        statuses, restatuses = tuple(OrderInfo.objects.values_list('status', 'receive_status'))
-
-        res = {
-            'statues': statuses,
-            'restatues': restatuses
-        }
-
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
@@ -56,4 +48,33 @@ class WorkFlowListView(LoginRequiredMixin, View):
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
+
+class WorkFlowCreateView(LoginRequiredMixin, View):
+    """
+    工單創建视图
+    """
+    pass
+
+
+class WorkFlowDeleteView(LoginRequiredMixin, View):
+    """
+    工單刪除視圖
+    """
+    def post(self, request):
+        res = dict(result=False)
+        if 'id' in request.POST and request.POST.get('id'):
+            ids = map(int, request.POST.get('id').split(','))
+
+            OrderInfo.objects.filter(id__in=ids).delete()
+
+            res['result'] = True
+
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
+
+class WorkFlowDetailView(LoginRequiredMixin, View):
+    """
+    工單详情視圖
+    """
+    pass
 

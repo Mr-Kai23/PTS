@@ -59,7 +59,7 @@
                             <select class="form-control select2" style="width:100%;" name="department">
                                 <option value="{{ user.department }}">{{ user.department|default:"--部門--" }}</option>
                                 {% for structure in structures %}
-                                    <option value="{{ structure.name }}">{{ structure.name }}</option>
+                                    <option value="{{ structure.id }}">{{ structure.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -68,7 +68,7 @@
                             <select class="form-control select2" style="width:100%;" name="project">
                                 <option value="{{ user.project }}">{{ user.project|default:"--專案--" }}</option>
                                 {% for project in projects %}
-                                    <option value="{{ project.id }}">{{ project.project }}</option>
+                                    <option value="{{ project.project }}">{{ project.project }}</option>
                                 {% endfor %}
                             </select>
                         </div>

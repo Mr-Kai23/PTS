@@ -133,7 +133,7 @@
                             data: "email",
                         },
                         {
-                            data: "department",
+                            data: "department__name",
                         },
                         {
                             data: "project",
@@ -143,14 +143,14 @@
                         },
                         {
                             data: "account_type",
-                            width: "8%",
-                            render: function (data, type, row, meta) {
-                                if (data == 0) {
-                                    return "發佈者";
-                                } else {
-                                    return "接收者";
-                                }
-                            }
+                            {#width: "8%",#}
+                            {#render: function (data, type, row, meta) {#}
+                            {#    if (data == 0) {#}
+                            {#        return "發佈者";#}
+                            {#    } else {#}
+                            {#        return "接收者";#}
+                            {#    }#}
+                            {# }#}
                         },
                         {
                             data: "remark",

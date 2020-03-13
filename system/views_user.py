@@ -81,12 +81,19 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
 
 class UserListView(LoginRequiredMixin, View):
     def get(self, request):
-        fields = ['id', 'work_num', 'name', 'mobile', 'email', 'department', 'project', 'segment', 'account_type',
+        fields = ['id', 'work_num', 'name', 'mobile', 'email', 'department__name', 'project', 'segment', 'account_type',
                   'is_admin', 'remark']
         filters = dict()
         if 'select' in request.GET and request.GET['select']:
             filters['is_active'] = request.GET['select']
-        ret = dict(data=list(User.objects.filter(**filters).values(*fields)))
+
+        users = list(User.objects.filter(**filters).values(*fields))
+
+        # 更新前端显示为choice文字显示
+        for user in users:
+            user['account_type'] = User.objects.get(id=user['id']).get_account_type_display()
+
+        ret = dict(data=users)
         return HttpResponse(json.dumps(ret), content_type='application/json')
 
 
@@ -240,6 +247,7 @@ class UserUpdateView(LoginRequiredMixin, View):
     def post(self, request):
         if 'id' in request.POST and request.POST['id']:
             user = get_object_or_404(User, pk=int(request.POST['id']))
+
         else:
             user = get_object_or_404(User, pk=int(request.user.id))
         user_update_form = UserUpdateForm(request.POST, instance=user)

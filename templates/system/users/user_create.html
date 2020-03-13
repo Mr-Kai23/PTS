@@ -86,7 +86,7 @@
                             <select class="form-control select2" style="width:100%;" name="project">
                                 <option value="">--專案--</option>
                                 {% for project in projects %}
-                                    <option value="{{ project.id }}">{{ project.project }}</option>
+                                    <option value="{{ project.project }}">{{ project.project }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -112,11 +112,11 @@
                         <label class="col-sm-2 control-label">賬號類型</label>
                         <div class="col-sm-6">
                             <label class="control-label">
-                                <input type="radio" class="minimal" name="account_type" value="True"
+                                <input type="radio" class="minimal" name="account_type" value="0"
                                 {% ifequal user.account_type 0 %}checked{% endifequal %}>發佈者
                             </label>
                             <label class="control-label">
-                                <input type="radio" class="minimal" name="account_type" value="False"
+                                <input type="radio" class="minimal" name="account_type" value="1"
                                 {% ifequal user.account_type 1 %}checked{% endifequal %}>接收者
                             </label>
                         </div>
@@ -155,7 +155,7 @@
                         <div class="col-sm-6">
                             {% for role in roles %}
                                 <label class="control-label">
-                                    <input type="checkbox" class="minimal" name="roles" value=""
+                                    <input type="checkbox" class="minimal" name="roles" value="{{ role.id }}"
                                            {% if role in user_roles %}checked{% endif %}>
                                     {{ role.name }}
                                 </label>
