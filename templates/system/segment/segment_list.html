@@ -41,11 +41,11 @@
             <div class="box-header">
                 <form class="form-inline" id="queryForm">
                     <div class="form-group searchArea margin-r-5 margin-top-5">
-                        <label>專案名：</label>
-                        <select class="form-control inputText select2" name="project" id="project">
+                        <label>段別名：</label>
+                        <select class="form-control inputText select2" name="segment" id="segment">
                             <option></option>
-                            {% for project in projects %}
-                            <option value="{{ project.project }}">{{ project.project }}</option>
+                            {% for segment in segments %}
+                            <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -66,7 +66,7 @@
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>ID</th>
-                        <th>專案名</th>
+                        <th>段別</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -107,9 +107,9 @@
                 DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
                 {
                     ajax: {
-                        "url": "{% url 'system:basic-project-list' %}",
+                        "url": "{% url 'system:basic-segment-list' %}",
                         "data": function (d) {
-                            d.project = $("#project").val();
+                            d.segment = $("#segment").val();
                         }
                     },
                     columns: [
@@ -119,7 +119,7 @@
                             width: "5%",
                         },
                         {
-                            data: "project",
+                            data: "segment",
                         },
 
                         {
@@ -168,7 +168,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['800px', '400px'],
-                content: "{% url 'system:basic-project-update' %}",
+                content: "{% url 'system:basic-segment-update' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -200,7 +200,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'system:basic-project-delete' %}",
+                        url: "{% url 'system:basic-segment-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -228,7 +228,7 @@
             shadeClose: false,
             maxmin: true,
             area: ['800px', '400px'],
-            content: ["{% url 'system:basic-project-update' %}" + '?id=' + id,],
+            content: ["{% url 'system:basic-segment-update' %}" + '?id=' + id,],
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
@@ -247,7 +247,7 @@
                 layer.close(index);
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'system:basic-project-delete' %}",
+                    url: "{% url 'system:basic-segment-delete' %}",
                     data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                     cache: false,
                     success: function (msg) {

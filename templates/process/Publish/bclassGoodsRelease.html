@@ -1,0 +1,358 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link href="{% static 'css/bootstrap-table.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <style>
+        table { /* 表格整体样式 */
+            border-collapse: collapse; /* 合并为单一的边框线 */
+        }
+
+        /* 设置tb1类的表格样式 */
+        table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        table td input {
+        {#border-radius: 2px;#} border: 1px solid #ccc;
+            height: 28px;
+        {#display: block;#}{#width: 45%;#}{#padding: 6px 12px;#}{#font-size: 14px;#}{#line-height: 1.42857143;#}{#color: #555;#}{#background-color: #fff;#}{#background-image: none;#}{#border: 1px solid #ccc;#}
+        }
+    </style>
+           <style>
+            .table-bordered   tr , td {
+                border: 1px solid #ccc; /* 整体表格边框 */
+             }
+
+            .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+                    border: 1px solid #ccc;
+                }
+
+        </style>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="col-md-14">
+            <!--外訪權限申請單-->
+            <div class="box-header with-border">
+                <h3 class="box-title">B類物品放行單</h3>
+            </div>
+
+            <div class="box-body no-padding ">
+                <form action="" class="form-horizontal" method="post" enctype="multipart/form-data" name="form"
+                      id="form" autocomplete="off">
+
+                    {% csrf_token %}
+
+                    <div class="table-responsive mailbox-messages">
+
+                        <table width="100%" border="1" cellpadding="1" cellspacing="1" id="table1">
+                            <tr>
+                                <td height="36" colspan="2" align="center" valign="middle">發貨部門(詳細到課級)</td>
+                                <td height="36" colspan="2"><label for="shipDept"></label>
+                                    <input name="shipDept" type="text" id="shipDept"/></td>
+{#                                <td height="36" colspan="2" align="center" valign="middle">有效時間</td>#}
+{#                                <td height="36" colspan="2"><label for="effectTime"></label>#}
+{#                                    <input name="effectTime" type="text" id="effectTime"/></td>#}
+{#                                <td width="133" height="36" align="center" valign="middle">單號</td>#}
+{#                                <td width="231" height="36"><label for="oddNumber"></label>#}
+{#                                    <input name="oddNumber" type="text" id="oddNumber"/></td>#}
+                            </tr>
+                            <tr>
+                                <td height="36" colspan="2" align="center" valign="middle">接收部門</td>
+                                <td height="36" colspan="2">
+{#                                    <input name="recdept" type="text" id="recdept"/>#}
+                                <select class="form-control inputText select2" style="height: 28px;width: 155px" name="recdept" id="recdept">
+                                        <option></option>
+                                        {% for recdept in recdepts %}
+                                            <option value="{{ recdept.id }}">{{ recdept.name }}</option>
+                                        {% endfor %}
+                            </select></td>
+                                <td height="36" colspan="2" align="center" valign="middle">接收人</td>
+                                <td height="36" colspan="2">
+{#                                    <input name="recuser" type="text" id="recuser"/>#}
+                                <select class="form-control select2" style="height: 28px;width: 155px" name="recuser" id="recuser">
+                                        <option></option>
+                                        {% for recuser in recusers %}
+                                            <option value="{{ recuser.id }}">{{ recuser.name }}</option>
+                                        {% endfor %}
+                            </select></td>
+                                <td height="36" align="center" valign="middle">接收位置</td>
+                                <td height="36">
+{#                                    <input name="reclocation" type="text" id="reclocation"/>#}
+                                <select class="form-control inputText select2" style="height: 28px;width: 155px" name="reclocation" id="reclocation">
+                                        <option></option>
+                                        {% for reclocation in reclocations %}
+                                            <option value="{{ reclocation.id }}">{{ reclocation.name }}</option>
+                                        {% endfor %}
+                            </select></td>
+                            </tr>
+                            <tr>
+                                <td height="36" colspan="10" align="center" valign="middle">
+                                <table data-toggle="table" data-toolbar="#toolbar"
+                                       id="BClassDetail">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="goodsName" data-formatter="editCol">物品名稱</th>
+                                        <th data-field="unit" data-formatter="editCol">單位</th>
+                                        <th data-field="number" data-formatter="editCol">數量</th>
+                                        <th data-field="reason" data-formatter="editCol">備註(原因)</th>
+                                        <th data-field="" data-formatter="viewOptions">操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="36" colspan="2" align="center" valign="middle">申請人/分機</td>
+                                <td height="36" colspan="8"><label for="applicant"></label>
+                                    <input name="applicant" type="text" id="applicant"/></td>
+                                {#                                        <input name="applicant" type="text" id="applicant"/></td>#}
+                            </tr>
+                            <tr>
+                                <td height="36" colspan="10" align="center">運輸聯繫人</td>
+                            </tr>
+
+                            <tr>
+                                <td height="36" colspan="2" align="center" valign="middle">姓名</td>
+                                <td height="36" colspan="2"><label for="transportName"></label>
+                                    <input name="transportName" type="text" id="transportName"/></td>
+                                <td height="36" colspan="2" align="center" valign="middle">工號</td>
+                                <td height="36" colspan="2"><label for="transportWorknum"></label>
+                                    <input name="transportWorknum" type="text" id="transportWorknum"/>
+                                </td>
+                                <td height="36" align="center" valign="middle">聯繫電話</td>
+                                <td height="36"><label for="transportPhone"></label>
+                                    <input name="transportPhone" type="text" id="transportPhone"/></td>
+                            </tr>
+
+                            {#                                <tr>#}
+                            {#                                    <td height="36" colspan="4" align="center" valign="middle">發貨區警衛查驗記錄</td>#}
+                            {#                                    <td height="36" colspan="4" align="center" valign="middle">接收單位警衛查驗記錄</td>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle">接收單位查驗記錄</td>#}
+                            {#                                </tr>#}
+                            {#                                <tr>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle">物料/數量是否一致</td>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle"><input type="radio"#}
+                            {#                                                                                                      name="radio"#}
+                            {#                                                                                                      id="shipGuard"#}
+                            {#                                                                                                      value="shipGuard"/>#}
+                            {#                                        <label for="shipGuard">是</label>#}
+                            {#                                        <input name="radio" type="radio" id="shipGuard2" value="shipGuard"#}
+                            {#                                               checked="checked"/>#}
+                            {#                                        <label for="shipGuard">否</label></td>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle">物料/數量是否一致</td>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle"><input name="radio"#}
+                            {#                                                                                                      type="radio"#}
+                            {#                                                                                                      id="recUnitGuard"#}
+                            {#                                                                                                      value="recUnitGuard"#}
+                            {#                                                                                                      checked="checked"/>#}
+                            {#                                        <label for="recUnitGuard">是</label>#}
+                            {#                                        <input type="radio" name="radio" id="recUnitGuard" value="recUnitGuard"/>#}
+                            {#                                        <label for="recUnitGuard">否</label></td>#}
+                            {#                                    <td height="36" align="center" valign="middle">物料/數量是否一致</td>#}
+                            {#                                    <td height="36" align="center" valign="middle"><input name="radio" type="radio"#}
+                            {#                                                                                          id="recUnit" value="recUnit"#}
+                            {#                                                                                          checked="checked"/>#}
+                            {#                                        <label for="recUnit">是</label>#}
+                            {#                                        <input type="radio" name="radio" id="recUnit" value="recUnit"/>#}
+                            {#                                        <label for="recUnit">否</label></td>#}
+                            {#                                </tr>#}
+
+                            {#                                <tr>#}
+                            {#                                    <td width="86" height="36" align="center" valign="middle">當前警衛</td>#}
+                            {#                                    <td width="65" height="36"><label for="shipGuardName"></label>#}
+                            {#                                        <input type="text" name="shipGuardName" id="shipGuardName"/></td>#}
+                            {#                                    <td width="52" height="36" align="center" valign="middle">放行時間</td>#}
+                            {#                                    <td width="84" height="36"><label for="shipGuardPassTime"></label>#}
+                            {#                                        <input name="shipGuardPassTime" type="text" id="shipGuardPassTime" />#}
+                            {#                                    </td>#}
+                            {#                                    <td width="70" height="36" align="center" valign="middle">當前警衛</td>#}
+                            {#                                    <td width="60" height="36"><label for="recUnitGuardName"></label>#}
+                            {#                                        <input name="recUnitGuardName" type="text" id="recUnitGuardName" />#}
+                            {#                                    </td>#}
+                            {#                                    <td width="79" height="36" align="center" valign="middle">放行時間</td>#}
+                            {#                                    <td width="78" height="36"><label for="textfield"></label>#}
+                            {#                                        <label for="recUnitGuardRecTime"></label>#}
+                            {#                                        <input name="recUnitGuardRecTime" type="text" id="recUnitGuardRecTime"/></td>#}
+                            {#                                    <td height="36" colspan="2" align="center" valign="middle">&nbsp;</td>#}
+                            {#                                </tr>#}
+
+
+                            {#                                <tr>#}
+                            {#                                 <div id="toolbar">#}
+                            {#                                    <button type="button" id="button" align="center" class="btn btn-secondary">append</button>#}
+                            {#                                </div>#}
+                            {#                                #}
+                            {#                                </tr>#}
+
+                            <tr>
+                            <td height="36" colspan="2" align="center" valign="middle">流程選擇</td>
+                            <td height="36" colspan="10" valign="middle">
+                            <select class="form-control inputText select2" style="height: 28px;width: 155px" name="modal" id="modal">
+                                        <option></option>
+                                        {% for MODAL in MODALS %}
+                                            <option value="{{ MODAL.id }}">{{ MODAL.name }}</option>
+                                        {% endfor %}
+                            </select></td>
+                            </tr>
+
+
+                            <tr>
+                                <td height="36" colspan="10" align="center" valign="middle">
+                                    <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置
+                                    </button>
+                                    <button type="button" id="btnSave" class="btn btn-info margin-right"
+                                            onclick="Save()">保存
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+        {#        </div>#}
+
+    </section>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.const.js' %}"></script>
+    <script src="{% static 'plugins/datatables/moment.min.js' %}"></script>
+    <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
+    <script src="{% static 'js/bootstrap-table.min.js' %}"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#WORKFLOW-CREATWF').addClass('active');
+            $('#WORKFLOW-CREATWF-BCGR').addClass('active');
+        });
+    </script>
+
+    <script type="text/javascript">
+            $(function () {
+            //Initialize Select2 Elements
+            $(".select2").select2();
+        });
+
+        var Index = 1
+
+        $(function () {
+            $('#BClassDetail').bootstrapTable('insertRow', {
+                index: 0,
+                row: {'Index': 0, 'goodsName': '', 'unit': '', 'number': '', 'reason': ''}
+            })
+            $('#button').click(function () {
+                $('#BClassDetail').bootstrapTable('insertRow', {
+                    index: Index,
+                    row: {'Index': Index, 'goodsName': '', 'unit': '', 'number': '', 'reason': ''}
+                })
+                $('#BClassDetail').bootstrapTable('scrollTo', 'bottom')
+                Index = Index + 1
+            })
+        })
+
+        function editCol(value, row, index, key) {
+            return "<div><input type=\"text\" value=\"" + value + "\" onchange='reloadRowData($(this), " + JSON.stringify(row) + ", \"" + key + "\", " + index + ")' /></div>";
+        }
+
+        function viewIndex(value, row, index) {
+            return '<div>' + (index + 1) + '</div>';
+        }
+
+        function reloadRowData(obj, row, key, index) {
+            row[key] = obj.val();
+            $('#BClassDetail').bootstrapTable('updateRow', {index: index, row: row});
+        }
+
+        function viewOptions(value, row, index) {
+            if(index==0){
+                bt=["<a class=\"like\" href='javascript:addRow(" + JSON.stringify(row) + ")' title=\"新增行\">",
+                '<i class="glyphicon glyphicon-plus"></i>',
+                '</a>  ']
+            }else {
+                bt=["<a class=\"like\" href='javascript:addRow(" + JSON.stringify(row) + ")' title=\"新增行\">",
+                '<i class="glyphicon glyphicon-plus"></i>',
+                '</a>  ',
+                '<a class="remove" href="javascript:removeRow(\'' + row.Index + '\')" title="删除行">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>']
+            }
+            return bt.join('');
+        }
+
+        function removeRow(Index) {
+            console.log(Index)
+            $('#BClassDetail').bootstrapTable('remove', {field: 'Index', values: Index})
+        }
+
+        function addRow(rowObj) {
+            var insertRow = rowObj;
+            $.each(insertRow, function (name, value) {
+                insertRow[name] = '';
+                insertRow['Index'] = Index
+            });
+            var params = {index: Index, row: insertRow};
+            $('#BClassDetail').bootstrapTable('insertRow', params);
+            Index = Index + 1
+            console.log($('#table').bootstrapTable('getData'))
+
+        }
+
+
+        function Save() {
+            var tabledata = $('#BClassDetail').bootstrapTable('getData');
+            $.ajax({
+                url: "{% url 'workflow:creatwf-bcgr-save' %}",
+                type: 'POST',
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}',
+                       'shipDept': $('#shipDept').val(),
+                       'effectTime': $('#effectTime').val(),
+                       'oddNumber': $('#oddNumber').val(),
+                       'recdept': $('#recdept').val(),
+                       'recuser': $('#recuser').val(),
+                       'reclocation': $('#reclocation').val(),
+                       'tabledata': JSON.stringify(tabledata),
+                       'applicant': $('#applicant').val(),
+                       'transportName': $('#transportName').val(),
+                       'transportWorknum': $('#transportWorknum').val(),
+                       'transportPhone': $('#transportPhone').val(),
+                       "modal": $("#modal").val(),},
+                success: function(data){
+                    if (data.result){
+                        alert("保存成功");
+                        window.location.reload();
+                    }else {
+                        alert(data.msg)
+                    }
+                },
+                error: function(){
+                    alert("error");
+                }
+            })
+        }
+
+    </script>
+
+{% endblock %}
+
+
+

@@ -7,6 +7,7 @@ from django.conf.urls import url
 
 import system.views_project as views_project
 import system.views_build as views_build
+import system.views_segment as views_segment
 
 app_name = 'system'
 
@@ -59,6 +60,12 @@ urlpatterns = [
 
     # 专案 和 阶段 联动
     url(r'^basic/project/build$', views_build.ProjectAndBuildLinkageView.as_view(), name='basic-project-build'),
+
+    # 阶段
+    url(r'^basic/segment/$', views_segment.SegmentView.as_view(), name='basic-segment'),
+    url(r'^basic/segment/list$', views_segment.SegmentListView.as_view(), name='basic-segment-list'),
+    url(r'^basic/segment/update$', views_segment.SegmentUpdateView.as_view(), name='basic-segment-update'),
+    url(r'^basic/segment/delete$', views_segment.SegmentDeleteView.as_view(), name='basic-segment-delete'),
 
 
 ]

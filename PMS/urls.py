@@ -33,6 +33,6 @@ urlpatterns = [
     path('system/', include('system.urls', namespace='system')),
 
     # process
-    path('workflow/', include(('app_process.urls', 'app_process'), namespace='process')),
+    path('order/', include(('app_process.urls', 'app_process'), namespace='order')),
 
 ]

@@ -35,11 +35,23 @@ class Build(models.Model):
         db_table = 'Build'
 
 
+class UnitType(models.Model):
+    """
+    机种信息表
+    """
+    unit_type = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='机种')
+
+    class Meta:
+        verbose_name = '机种表'
+        verbose_name_plural = verbose_name
+        db_table = 'UnitType'
+
+
 class Segment(models.Model):
     """
     段别信息表
     """
-    segment = models.CharField(max_length=20, null=True, blank=True, verbose_name='段别')
+    segment = models.CharField(max_length=20, null=True, blank=True, default="", verbose_name='段别')
 
     def __str__(self):
         return self.segment
@@ -79,11 +91,12 @@ class OrderInfo(models.Model):
     subject = models.CharField(max_length=64, null=True, blank=True, verbose_name='主旨')
     order = models.CharField(max_length=20, null=True, blank=True, verbose_name='工单')
     key_content = models.CharField(max_length=128, null=True, blank=True, verbose_name='重点注意流程内容')
+    unit_type = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='机种')
     segment = models.CharField(max_length=32, null=True, blank=True, verbose_name='接收段别')
     receiver = models.CharField(max_length=20, null=True, blank=True, verbose_name='接收人')
     receive_status = models.SmallIntegerField(choices=receive_status_choice, default=0, verbose_name='接收状态')
     status = models.SmallIntegerField(choices=status_choice, default=0, verbose_name='执行状态')
-    withdraw_time = models.DateTimeField(null=True, blank=True, verbose_name='发布时间')
+    withdraw_time = models.DateTimeField(null=True, blank=True, verbose_name='接收时间')
 
     def __str__(self):
         """定义每个数据对象的显示信息"""
