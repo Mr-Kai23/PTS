@@ -23,11 +23,11 @@
                 <div class="form-group has-feedback">
                     <label class="col-sm-2 control-label">專案名</label>
                     <div class="col-sm-3">
-                        <select class="form-control select2" style="width:100%;" name="fk_project">
-                            <option value="{{ stage.fk_project.id }}">{{ stage.fk_project.pname | default:"--请选择--" }}</option>
+                        <select class="form-control select2" style="width:100%;" name="project">
+                            <option value="{{ build.project.project }}">{{ build.project.project | default:"--请选择--" }}</option>
                             {% for project in projects %}
-                                {%  if stage.fk_project.pname != project.pname  %}
-                                    <option value="{{ project.id }}">{{ project.pname }}</option>
+                                {%  if build.project.project != project.project  %}
+                                    <option value="{{ project.project }}">{{ project.project }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -35,7 +35,7 @@
 
                     <label class="col-sm-2 control-label">階段名</label>
                     <div class="col-sm-3">
-                        <input class="form-control" name="sname" type="text" value="{{ stage.sname }}"/>
+                        <input class="form-control" name="build" type="text" value="{{ build.build }}"/>
                     </div>
 
                 </div>
@@ -67,7 +67,7 @@
         var data = $("#addForm").serialize();
         $.ajax({
             type: $("#addForm").attr('method'),
-            url: "{% url 'system:basic-stage-update' %}",
+            url: "{% url 'system:basic-build-update' %}",
             data: data,
             cache: false,
             success: function (msg) {

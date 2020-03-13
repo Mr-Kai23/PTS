@@ -1,5 +1,4 @@
 import json
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
@@ -28,7 +27,7 @@ class ProjectView(LoginRequiredMixin, View):
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
-        return render(request, 'system/Project/Project_List.html',res)
+        return render(request, 'system/segment/segment_list.html',res)
 
 
 # 申请详情列表
@@ -56,7 +55,7 @@ class ProjectUpdateView(LoginRequiredMixin, View):
             projects = Project.objects.all()
             res['projects'] = projects
 
-        return render(request, 'system/Project/Project_Update.html', res)
+        return render(request, 'system/segment/segment_Updata.html', res)
 
     def post(self, request):
         res = dict(result=False)
