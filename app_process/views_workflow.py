@@ -1,4 +1,4 @@
-from django.core.serializers import json
+import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render

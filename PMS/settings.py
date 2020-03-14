@@ -119,6 +119,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# # 缓存配置
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'redis_cache.cache.RedisCache',
+#         'LOCATION': '127.0.0.1:6379',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'redis_cache.client.DefaultClient'
+#         }
+#     }
+# }
+#
+# # 后面这三句可以不需要
+# # 设置缓存过期时间
+# REDIS_TIMEOUT = 7*24*60*60
+# CUBES_REDIS_TIMEOUT = 60*60
+# NEVER_REDIS_TIMEOUT = 365*24*60*60
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
