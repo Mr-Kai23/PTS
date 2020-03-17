@@ -8,6 +8,7 @@ from django.conf.urls import url
 import system.views_project as views_project
 import system.views_build as views_build
 import system.views_segment as views_segment
+import system.views_unit_type as views_unit_type
 
 app_name = 'system'
 
@@ -67,5 +68,9 @@ urlpatterns = [
     url(r'^basic/segment/update$', views_segment.SegmentUpdateView.as_view(), name='basic-segment-update'),
     url(r'^basic/segment/delete$', views_segment.SegmentDeleteView.as_view(), name='basic-segment-delete'),
 
-
+    # 机种
+    url(r'^basic/unit_type/$', views_unit_type.UnitTypeView.as_view(), name='basic-unit_type'),
+    url(r'^basic/unit_type/list$', views_unit_type.UnitTypeListView.as_view(), name='basic-unit_type-list'),
+    url(r'^basic/unit_type/update$', views_unit_type.UnitTypeUpdateView.as_view(), name='basic-unit_type-update'),
+    url(r'^basic/unit_type/delete$', views_unit_type.UnitTypeDeleteView.as_view(), name='basic-unit_type-delete'),
 ]

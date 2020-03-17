@@ -5,7 +5,7 @@
 import re
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import Project, Build, Segment
+from .models import Project, Build, Segment,UnitType
 
 
 class ProjectCreateForm(forms.ModelForm):
@@ -34,4 +34,11 @@ class SegmentCreateForm(forms.ModelForm):
         model = Segment
         fields = '__all__'
 
+class UnitTypeCreateForm(forms.ModelForm):
+    """
+    机种表
+    """
+    class Meta:
+        model = UnitType
+        fields = '__all__'
 
