@@ -53,7 +53,11 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     """
     工單創建视图
     """
-    pass
+    def get(self, request):
+        return render(request, 'process/WorkFlow/WorkFlow_Create.html')
+
+    def post(self, request):
+        pass
 
 
 class WorkFlowDeleteView(LoginRequiredMixin, View):

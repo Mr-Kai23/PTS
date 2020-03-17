@@ -95,8 +95,9 @@
 					<div>
 						<button>發佈</button>
 					</div>
-
-    </div>
+                </fieldset>
+            </div>
+        </form>
 
 {% endblock %}
 
@@ -114,7 +115,7 @@
                 cache: false,
                 success: function (msg) {
                     if (msg.status == 'success') {
-                        layer.alert('用户添加成功！', {icon: 1}, function (index) {
+                        layer.alert('工單添加成功！', {icon: 1}, function (index) {
                             parent.layer.closeAll(); //关闭所有弹窗
                         });
                     } else if (msg.status == 'fail') {
