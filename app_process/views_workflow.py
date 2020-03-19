@@ -1,9 +1,10 @@
-import json
+import json, time
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 
+from app_process.forms import WorkflowForm
 from app_process.models import Segment, OrderInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
@@ -54,11 +55,26 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     工單創建视图
     """
     def get(self, request):
-        return render(request, 'process/WorkFlow/WorkFlow_Create.html')
+        res = dict()
+        user = request.user.name
+        t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+        res['time'] = t
+
+        return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
 
     def post(self, request):
-        pass
+        res = dict(result=False)
+        if 'id' in request.POST and request.POST['id']:
+            workflow = get_object_or_404(OrderInfo, id=request.POST['id'])
+        else:
+            workflow = OrderInfo()
 
+        workflow_form = WorkflowForm(request.POST, instance=workflow)
+
+        if workflow_form.is_valid():
+            workflow.save()
+            res['result'] = True
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 class WorkFlowDeleteView(LoginRequiredMixin, View):
     """

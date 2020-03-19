@@ -5,7 +5,7 @@
 import re
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import Project, Build, Segment,UnitType
+from .models import Project, Build, Segment,UnitType,OrderInfo
 
 
 class ProjectCreateForm(forms.ModelForm):
@@ -42,3 +42,10 @@ class UnitTypeCreateForm(forms.ModelForm):
         model = UnitType
         fields = '__all__'
 
+class WorkflowForm(forms.ModelForm):
+    """
+    机种表
+    """
+    class Meta:
+        model = OrderInfo
+        fields = '__all__'
