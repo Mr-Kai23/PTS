@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <style>
+        textarea{
+            height:'150px',
+        }
+    </style>
 {% endblock %}
 
 {% block main %}
@@ -16,85 +21,62 @@
             <div class="box-body">
                 <fieldset>
 
-					<div class="form-group has-feedback">
-						<label class="col-sm-2 control-label">日期</label>
-						<div class="col-sm-3">
-							<select class="form-control select2" style="width:100%;" name="department">
-								<option value="">--日期--</option>
-								{% for structure in structures %}
-									<option value="{{ structure.id }}">{{ structure.name }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<label class="col-sm-2 control-label">機種</label>
-						<div class="col-sm-3">
-							<select class="form-control select2" style="width:100%;" name="project">
-								<option value="">--機種--</option>
-								{% for project in projects %}
-									<option value="{{ project.id }}">{{ project.project }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-
-					<div class="form-group has-feedback">
-						<label class="col-sm-2 control-label">段別</label>
-						<div class="col-sm-3">
-							<select class="form-control select2" style="width:100%;" name="segment">
-								<option value="">--段別--</option>
-								{% for segment in segments %}
-									<option value="{{ segment.segment }}">{{ segment.segment }}</option>
-								{% endfor %}
-							</select>
-						</div>
-					</div>
-
-
                     <legend>
                         <h4>信息發佈</h4>
                     </legend>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈者部門</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="name" type="text" value=""/>
-                        </div>
-                        <label class="col-sm-2 control-label">發佈者姓名</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="work_num"  value="" />
+                            <input class="form-control" name="publish_dept" type="text" value=""/>
                         </div>
                     </div>
-
+                    <div class="form-group has-feedback">
+                         <label class="col-sm-2 control-label">發佈者姓名</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="publisher" type="text" value=""/>
+                        </div>
+                    </div>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈時間</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" name="username"/>
+                            <input class="form-control" name="publish_time" type="text" value=""/>
                         </div>
                     </div>
 
 					<div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">主旨</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="name" type="text" value=""/>
+                            <textarea class="form-control" name="subject" style="width:300%">
+                            </textarea>
                         </div>
-                        <label class="col-sm-2 control-label">工單</label>
+
+                    </div>
+                    <div class="form-group has-feedback">
+                         <label class="col-sm-2 control-label">工單</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" name="work_num"  value="" />
+                            <textarea  class="form-control" name="order"  style="width:300%" >
+                            </textarea>
                         </div>
                     </div>
-
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">重點注意流程內容</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" name="username"/>
+                     <div class="form-group has-feedback">
+                         <label class="col-sm-2 control-label">重點注意流程內容</label>
+                         <div class="col-sm-3">
+                            <textarea class="form-control" name="key_content" style="width:300%">
+                            </textarea>
                         </div>
+                    </div>
+                    <div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">接受DRI</label>
 						<div class="col-sm-3">
-							<input type="text" class="form-control" name="username"/>
+							<input type="checkbox" class="form-control" name="receiver"/>
 						</div>
                     </div>
-					<div>
-						<button>發佈</button>
-					</div>
+                    <div class="box-footer ">
+                        <div class="row span7 text-center ">
+                            <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
+                            <button type="button" id="btnSave" class="btn btn-info margin-right ">發佈</button>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </form>
