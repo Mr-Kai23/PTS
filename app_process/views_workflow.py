@@ -6,6 +6,7 @@ from django.views import View
 
 from app_process.forms import WorkflowForm
 from app_process.models import Segment, OrderInfo
+from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
 
@@ -58,7 +59,11 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict()
         user = request.user.name
         t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
-        res['time'] = t
+        dris = UserInfo.objects.filter(is_admin=True)
+        res = {
+            'time': t,
+            'dris': dris
+        }
 
         return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
 
@@ -75,6 +80,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             workflow.save()
             res['result'] = True
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
 
 class WorkFlowDeleteView(LoginRequiredMixin, View):
     """

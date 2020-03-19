@@ -68,10 +68,9 @@
                     <div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">接受DRI</label>
 						<div class="col-sm-3">
-
-                            {% for user in users %}
-							    <input type="checkbox" name="receiver" value="user.name"/>
-                                <label >{{ user.name }}</label>
+                            {% for dri in dris %}
+							    <input type="checkbox" name="receiver" value="dri.name"/>
+                                <label >{{ dri.name }}</label>
                             {% endfor %}
 						</div>
                     </div>
