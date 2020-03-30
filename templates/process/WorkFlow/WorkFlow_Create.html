@@ -16,7 +16,7 @@
     <div class="box box-danger">
         <form class="form-horizontal" id="addForm" method="post">
             {% csrf_token %}
-            <input type="hidden" name='id' value="{{ user.id }}"/>
+            <input type="hidden" name='id' value="{{ workflow.id }}"/>
             <input type="hidden" name='user' value="save"/>
             <div class="box-body">
                 <fieldset>
@@ -69,7 +69,7 @@
 						<label class="col-sm-2 control-label">接受DRI</label>
 						<div class="col-sm-3">
                             {% for dri in dris %}
-							    <input type="checkbox" name="receiver" value="dri.name"/>
+							    <input type="checkbox" name="receiver" value="{{ dri.name }}"/>
                                 <label >{{ dri.name }}</label>
                             {% endfor %}
 						</div>
@@ -95,7 +95,7 @@
             var data = $("#addForm").serialize();
             $.ajax({
                 type: $("#addForm").attr('method'),
-                url: "{% url 'system:basic-user-create' %}",
+                url: "{% url 'process:order-workflow-create' %}",
                 data: data,
                 cache: false,
                 success: function (msg) {

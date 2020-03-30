@@ -86,7 +86,7 @@ class OrderInfo(models.Model):
     build = models.CharField(max_length=10, null=True, blank=True, verbose_name='阶段')
     publish_dept = models.CharField(max_length=10, default='', verbose_name='发布部门')
     publisher = models.CharField(max_length=20, null=True, blank=True, verbose_name='发布人')
-    publish_status = models.SmallIntegerField(choices=publish_status_choice, default=0, verbose_name='发布状态')
+    publish_status = models.SmallIntegerField(choices=publish_status_choice, default=0, blank=True, verbose_name='发布状态')
     publish_time = models.DateTimeField(null=True, blank=True, verbose_name='发布时间')
     subject = models.CharField(max_length=64, null=True, blank=True, verbose_name='主旨')
     order = models.CharField(max_length=20, null=True, blank=True, verbose_name='工单')
@@ -94,8 +94,8 @@ class OrderInfo(models.Model):
     unit_type = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='机种')
     segment = models.CharField(max_length=32, null=True, blank=True, verbose_name='接收段别')
     receiver = models.CharField(max_length=20, null=True, blank=True, verbose_name='接收人')
-    receive_status = models.SmallIntegerField(choices=receive_status_choice, default=0, verbose_name='接收状态')
-    status = models.SmallIntegerField(choices=status_choice, default=0, verbose_name='执行状态')
+    receive_status = models.SmallIntegerField(choices=receive_status_choice, default=0, blank=True, verbose_name='接收状态')
+    status = models.SmallIntegerField(choices=status_choice, default=0, blank=True, verbose_name='执行状态')
     withdraw_time = models.DateTimeField(null=True, blank=True, verbose_name='接收时间')
 
     def __str__(self):

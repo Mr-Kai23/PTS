@@ -35,7 +35,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
-        fields = ['project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
+        fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
                   'status', 'withdraw_time', 'unit_type']
 

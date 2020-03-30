@@ -34,6 +34,7 @@ class SegmentCreateForm(forms.ModelForm):
         model = Segment
         fields = '__all__'
 
+
 class UnitTypeCreateForm(forms.ModelForm):
     """
     机种表
@@ -41,6 +42,7 @@ class UnitTypeCreateForm(forms.ModelForm):
     class Meta:
         model = UnitType
         fields = '__all__'
+
 
 class WorkflowForm(forms.ModelForm):
     """
