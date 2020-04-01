@@ -78,8 +78,9 @@ class OrderInfo(models.Model):
 
     # 执行状态
     status_choice = (
-        (0, 'Ongoing'),
-        (1, 'Closed'),
+        (0, ''),
+        (1, 'Ongoing'),
+        (2, 'Closed'),
     )
 
     project = models.CharField(max_length=10, null=True, blank=True, verbose_name='专案')

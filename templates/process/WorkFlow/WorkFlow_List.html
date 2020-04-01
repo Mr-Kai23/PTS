@@ -305,6 +305,19 @@
                             },
                             {
                                 data: "status",
+                                render: function (data, type, row, meta) {
+                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
+                                    if (data == 0) {
+                                        $("tr td:eq(11)").css('background', 'red');
+                                        return ""
+                                    } else if (data == 1) {
+                                        $("tr td:eq(11)").css('background', 'yellow');
+                                        return "Ongoing"
+                                    } else if (data == 2){
+                                        $("tr td:eq(11)").css('background', 'green');
+                                        return "Closed"
+                                    }
+                                }
                             },
 
                             {#{#}
@@ -315,7 +328,6 @@
                                 width: "12%",
                                 bSortable: "false",
                                 render: function (data, type, row, meta) {
-
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
                                     ret = ret + "<button title='编辑' onclick='doUpdate("
@@ -370,7 +382,7 @@
                 title: '新增',
                 shadeClose: false,
                 maxmin: true,
-                area: ['870px', '600px'],
+                area: ['60%', '60%'],
                 content: "{% url 'process:order-workflow-create' %}",
                 end: function () {
                     //关闭时做的事情
@@ -428,7 +440,7 @@
                 title: '编辑',
                 shadeClose: false,
                 maxmin: true,
-                area: ['800px', '400px'],
+                area: ['60%', '60%'],
                 content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id,],
                 end: function () {
                     //关闭时做的事情

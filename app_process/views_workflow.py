@@ -57,13 +57,22 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     """
     def get(self, request):
         res = dict()
-        user = request.user.name
-        t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
-        dris = UserInfo.objects.filter(is_admin=True)
-        res = {
-            'time': t,
-            'dris': dris
-        }
+        if 'id' in request.GET and request.GET['id']:
+            workflow = get_object_or_404(OrderInfo, pk=request.GET.get('id'))
+            res['workflow'] = workflow
+            dris = UserInfo.objects.filter(is_admin=True)
+            res['dris'] = dris
+
+        else:
+            workflow = OrderInfo.objects.all()
+            res['workflow'] = workflow
+
+            t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+            dris = UserInfo.objects.filter(is_admin=True)
+            res = {
+                'time': t,
+                'dris': dris
+            }
 
         return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
 

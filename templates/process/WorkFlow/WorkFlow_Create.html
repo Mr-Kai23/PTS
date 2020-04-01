@@ -17,7 +17,7 @@
         <form class="form-horizontal" id="addForm" method="post">
             {% csrf_token %}
             <input type="hidden" name='id' value="{{ workflow.id }}"/>
-            <input type="hidden" name='user' value="save"/>
+
             <div class="box-body">
                 <fieldset>
 
@@ -27,19 +27,19 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈者部門</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="publish_dept" type="text" value="{{ request.user.department.name }}"/>
+                            <input class="form-control" name="publish_dept" type="text" {% if workflow %} value="{{ workflow.publish_dept }}" {% else %} value="{{ request.user.department.name }}" {% endif %}/>
                         </div>
                     </div>
                     <div class="form-group has-feedback">
                          <label class="col-sm-2 control-label">發佈者姓名</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="publisher" type="text" value="{{ request.user.name }}"/>
+                            <input class="form-control" name="publisher" type="text" {% if workflow %} value="{{ workflow.publisher }}" {% else %} value="{{ request.user.name }}" {% endif %}/>
                         </div>
                     </div>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈時間</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="publish_time" type="text" value="{{ time }}"/>
+                            <input class="form-control" name="publish_time" type="text" {% if workflow %} value="{{ workflow.publish_time }}" {% else %} value="{{ time }}" {% endif %}/>
                         </div>
                     </div>
 
@@ -47,6 +47,7 @@
                         <label class="col-sm-2 control-label">主旨</label>
                         <div class="col-sm-3">
                             <textarea class="form-control" name="subject" style="width:300%" value="{{ workflow.subject }}">
+                                {{ workflow.subject }}
                             </textarea>
                         </div>
 
@@ -55,6 +56,7 @@
                          <label class="col-sm-2 control-label">工單</label>
                         <div class="col-sm-3">
                             <textarea  class="form-control" name="order"  style="width:300%" value="{{ workflow.order}}" >
+                                {{ workflow.order}}
                             </textarea>
                         </div>
                     </div>
@@ -62,6 +64,7 @@
                          <label class="col-sm-2 control-label">重點注意流程內容</label>
                          <div class="col-sm-3">
                             <textarea class="form-control" name="key_content" style="width:300%" value="{{ workflow.key_content}}">
+                                {{ workflow.key_content}}
                             </textarea>
                         </div>
                     </div>
@@ -69,8 +72,14 @@
 						<label class="col-sm-2 control-label">接受DRI</label>
 						<div class="col-sm-3">
                             {% for dri in dris %}
-							    <input type="checkbox" name="receiver" value="{{ dri.name }}"/>
-                                <label >{{ dri.name }}</label>
+                                {% if workflow.receiver == dri.name %}
+							        <input type="checkbox" name="receiver" value="{{ dri.name }} checked='True' "/>
+                                    <label >{{ dri.name }}</label>
+                                {% else %}
+                                    <input type="checkbox" name="receiver" value="{{ dri.name }}"/>
+                                    <label >{{ dri.name }}</label>
+                                {% endif %}
+
                             {% endfor %}
 						</div>
                     </div>
