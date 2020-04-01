@@ -136,8 +136,9 @@
                             <label>執行狀況:</label>
                             <select class="form-control inputText select2" name="status" id="status">
                                 <option></option>
-                                <option value="Closed">Closed</option>
-                                <option value="Ongoing">Ongoing</option>
+                                <option value="0"> </option>
+                                <option value="1">Closed</option>
+                                <option value="2">Ongoing</option>
 
                             </select>
                         </div>
@@ -147,8 +148,8 @@
                             <label>接收狀態:</label>
                             <select class="form-control inputText select2" name="restatus" id="restatus">
                                 <option></option>
-                                <option value="未接收">未接收</option>
-                                <option value="已接收">已接收</option>
+                                <option value="0">未接收</option>
+                                <option value="1">已接收</option>
 
                             </select>
                         </div>
@@ -252,7 +253,7 @@
                                 d.unit_type = $("#unit_type").val();
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
-                                d.restatus = $("#restatus").val();
+                                d.receive_status = $("#restatus").val();
 
                             },
                         },

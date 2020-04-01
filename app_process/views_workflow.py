@@ -1,6 +1,6 @@
 import json, time
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
+from django.http import HttpResponse, QueryDict
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
@@ -59,11 +59,16 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict()
         if 'id' in request.GET and request.GET['id']:
             workflow = get_object_or_404(OrderInfo, pk=request.GET.get('id'))
+            # 用于编辑时，前端的显示
             res['workflow'] = workflow
-
+            # 获取工单发布时间
+            res['time'] = workflow.publish_time.strftime("%Y-%m-%d %H:%M")
+            # 获取工单的接收者，由于没用外键，所以以字符串形式拼接存储
+            res['receivers'] = workflow.receiver.split(';')
         else:
             # workflow = OrderInfo.objects.all()
             # res['workflow'] = workflow
+            # 新建的时候，获取当前的时间为工单创建时间
             t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
             res['time'] = t
 
@@ -75,12 +80,25 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     def post(self, request):
         res = dict(result=False)
         if 'id' in request.POST and request.POST['id']:
-            workflow = get_object_or_404(OrderInfo, id=request.POST['id'])
+            workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
+
         else:
             workflow = OrderInfo()
 
+        request.POST.getlist('receiver')
+
         workflow_form = WorkflowForm(request.POST, instance=workflow)
 
+        # 判断工单接收DRI,以字符串的形式存储
+        if 'All' not in request.POST.getlist('receiver'):
+            receiver = ';'.join(request.POST.getlist('receiver'))
+        else:
+            # 如果选择了 All,则接受者为 All
+            receiver = request.POST.getlist('receiver')[0]
+
+        workflow.receiver = receiver
+
+        # 判断表单是否有效
         if workflow_form.is_valid():
             workflow.save()
             res['result'] = True
@@ -93,6 +111,8 @@ class WorkFlowDeleteView(LoginRequiredMixin, View):
     """
     def post(self, request):
         res = dict(result=False)
+
+        # 判断获取前端传过来的要删除的id
         if 'id' in request.POST and request.POST.get('id'):
             ids = map(int, request.POST.get('id').split(','))
 
