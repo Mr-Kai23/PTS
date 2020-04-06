@@ -33,7 +33,9 @@
                     <div class="icon">
                         <i class="fa fa-pencil"></i>
                     </div>
-                    <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer">請點擊</a>
+                    {% if request.user.account_type == 1 %}
+                        <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer" disabled="true" >請點擊</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -43,7 +45,7 @@
                     <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
                         <thead>
                         <tr valign="middle">
-                            <th>ID</th>
+{#                            <th>ID</th>#}
                             <th>發佈部門</th>
                             <th>發佈DRI</th>
                             <th>發佈時間</th>
@@ -54,14 +56,14 @@
                             <th>接收DRI</th>
                             <th>接收狀態</th>
                             <th>執行狀況</th>
-                            <th>操作</th>
+{#                            <th>操作</th>#}
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
                     <tbody id="imp" role="imp">
-                    <tr> <tr>
+{#                    <tr> <tr>#}
                     </tbody>
                 </div>
             </div>
@@ -126,12 +128,12 @@
                         },
 
                         columns: [
-                            DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
+                            {#DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,#}
 
-                            {
-                                data: "id",
-                                width: "5%",
-                            },
+                            {#{#}
+                            {#    data: "id",#}
+                            {#    width: "5%",#}
+                            {# },#}
                             {
                                 data: "publish_dept",
                             },
@@ -189,30 +191,28 @@
                             },
 
                             {#{#}
-                            {#    data: "remark",#}
-                            {# },#}
-                            {
-                                data: "id",
-                                width: "12%",
-                                bSortable: "false",
-                                render: function (data, type, row, meta) {
-                                    var ret = "<button title='详情' onclick='doDetail("
-                                        + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
-                                    ret = ret + "<button title='编辑' onclick='doUpdate("
-                                        + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
-                                    ret = ret + "<button title='删除' onclick='doDelete("
-                                        + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
-                                    return ret;
-                                }
-                            }],
+                            {#    data: "id",#}
+                            {#    width: "12%",#}
+                            {#    bSortable: "false",#}
+                            {#    render: function (data, type, row, meta) {#}
+                            {#        var ret = "<button title='详情' onclick='doDetail("#}
+                            {#            + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";#}
+                            {#        ret = ret + "<button title='编辑' onclick='doUpdate("#}
+                            {#            + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";#}
+                            {#        ret = ret + "<button title='删除' onclick='doDelete("#}
+                            {#            + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";#}
+                            {#        return ret;#}
+                            {#    }#}
+                            {# }#}
+                            ],
 
                         // "order": [[1, 'id']],
 
                     },
 
-                    {
-                        "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]
-                    }
+                    {#{#}
+                    {#    "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]#}
+                    {# }#}
                 ));
                 oTable.order([1, 'asc']).draw();
 

@@ -63,6 +63,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <label class="col-sm-2 control-label">上級主管</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="superior">
+                                <option value="">--上級主管--</option>
+                                {% for superior in superiors %}
+                                    <option value="{{ superior.id }}">{{ superior.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">專案</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="project">
@@ -72,8 +84,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    </div>
-                    <div class="form-group has-feedback">
+
                         <label class="col-sm-2 control-label">段別</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="segment">

@@ -25,24 +25,24 @@
                     </div>
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
-                        <button type="button" id="btnCreate" class="btn btn-default">
+                        <button type="button" id="btnCreate" class="btn btn-default" {% if request.user.account_type == 1 %} disabled="true" {% endif %}>
                             <i class="glyphicon glyphicon-plus"></i> 新增
                         </button>
                     </div>
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
-                        <button type="button" id="btnDelete" class="btn btn-danger">
+                        <button type="button" id="btnDelete" class="btn btn-danger" {% if not request.user.is_admin %} disabled="true" {% endif %}>
                             <i class="glyphicon glyphicon-trash"></i> 删除
                         </button>
                     </div>
 
 
-                    <div class="btn-group pull-right">&nbsp</div>
-                    <div class="btn-group pull-right">
-                        <button type="button" id="btnImport" class="btn btn-info">
-                            <i class="glyphicon glyphicon-log-in"></i> 導入
-                        </button>
-                    </div>
+{#                    <div class="btn-group pull-right">&nbsp</div>#}
+{#                    <div class="btn-group pull-right">#}
+{#                        <button type="button" id="btnImport" class="btn btn-info">#}
+{#                            <i class="glyphicon glyphicon-log-in"></i> 導入#}
+{#                        </button>#}
+{#                    </div>#}
                     <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
                     <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
 
@@ -461,22 +461,22 @@
         }
 
 
-        // 導入  id="btnImport"
-        $("#btnImport").on("click", function () {
-            // alert("导入功能在此书写");
-            layer.open({
-                type: 1,
-                title: "批量导入",
-                closeBtn: 1,
-                shadeClose: false,
-                area: ['600px', '200px'],
-                content: $("#upload"),
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
-        });
+        {#// 導入  id="btnImport"#}
+        {#$("#btnImport").on("click", function () {#}
+        {#    // alert("导入功能在此书写");#}
+        {#    layer.open({#}
+        {#        type: 1,#}
+        {#        title: "批量导入",#}
+        {#        closeBtn: 1,#}
+        {#        shadeClose: false,#}
+        {#        area: ['600px', '200px'],#}
+        {#        content: $("#upload"),#}
+        {#        end: function () {#}
+        {#            //关闭时做的事情#}
+        {#            oDataTable.ajax.reload();#}
+        {#        }#}
+        {#    });#}
+        {# });#}
 
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
         // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==

@@ -166,3 +166,11 @@ LOGIN_URL = '/login/'
 
 SAFE_URL = ['/admin/', '/login/', '/logout/', '/']
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = False
+EMAIL_HOST = '127.0.0.1'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWOED = ''
+DEFAULT_FROM_EMAIL = 'PMS@mail.foxconn.com'

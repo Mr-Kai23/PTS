@@ -104,6 +104,7 @@ class UserCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         users = User.objects.exclude(username='admin')
+        superiors = User.objects.filter(is_admin=True).values()
         structures = Structure.objects.values()
         projects = Project.objects.values()
         segments = Segment.objects.values()
@@ -111,6 +112,7 @@ class UserCreateView(LoginRequiredMixin, View):
 
         ret = {
             'users': users,
+            'superior': superiors,
             'structures': structures,
             'projects': projects,
             'segments': segments,
@@ -142,6 +144,7 @@ class UserDetailView(LoginRequiredMixin, View):
     def get(self, request):
         user = get_object_or_404(User, pk=int(request.GET['id']))
         users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
+        superiors = User.objects.filter(is_admin=True).values()
         structures = Structure.objects.values()
         segments = Segment.objects.values()
         projects = Project.objects.values()
@@ -149,6 +152,7 @@ class UserDetailView(LoginRequiredMixin, View):
         user_roles = user.roles.values()
         ret = {
             'user': user,
+            'superior': superiors,
             'structures': structures,
             'projects': projects,
             'segments': segments,
