@@ -3,13 +3,20 @@
 
 {% block title %}PMS{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+
+    <!-- iCheck for checkboxes and radio inputs -->
+{% endblock %}
 {% block content %}
 
     <section class="content-header">
         <h1>
             創建工單
         </h1>
-
     </section>
 
     <section class="content">
@@ -29,313 +36,403 @@
                     <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer">請點擊</a>
                 </div>
             </div>
-
-            {#            <!-- ./col -->#}
-            {#            <div class="col-lg-3 col-xs-6">#}
-            {#                <!-- small box -->#}
-            {#                <div class="small-box bg-yellow ">#}
-            {#                    <div class="inner">#}
-            {#                        <h3>新增</h3>#}
-            {#                        <p>B類物品放行單</p>#}
-            {#                    </div>#}
-            {#                    <div class="icon">#}
-            {#                        <i class="fa fa-pencil"></i>#}
-            {#                    </div>#}
-            {#                    <a href="{% url 'workflow:creatwf-bcgr' %}" class="small-box-footer">請點擊</a>#}
-            {#                </div>#}
-            {#            </div>#}
-            {#            <!-- ./col -->#}
-            {#{% if request.user.department.name == 'EPM' %}#}
-            {#            <div class="col-lg-3 col-xs-6">#}
-            {#                <!-- small box -->#}
-            {#                <div class="small-box bg-green">#}
-            {#                    <div class="inner">#}
-            {#                        <h3>新增</h3>#}
-            {##}
-            {#                        <p>NPI主管簽核權限單</p>#}
-            {#                    </div>#}
-            {#                    <div class="icon">#}
-            {#                        <i class="fa fa-pencil"></i>#}
-            {#                    </div>#}
-            {#                    <a href="{% url 'workflow:creatwf-ncp' %}" class="small-box-footer">請點擊</a>#}
-            {#                </div>#}
-            {#            </div>#}
-            {#            <!-- ./col -->#}
-            {#            <div class="col-lg-3 col-xs-6">#}
-            {#                <!-- small box -->#}
-            {#                <div class="small-box bg-gray">#}
-            {#                    <div class="inner">#}
-            {#                        <h3>新增</h3>#}
-            {##}
-            {#                        <p>NPI管制辦法單</p>#}
-            {#                    </div>#}
-            {#                    <div class="icon">#}
-            {#                        <i class="fa fa-pencil"></i>#}
-            {#                    </div>#}
-            {#                    <a href="{% url 'workflow:creatwf-nc' %}" class="small-box-footer">請點擊</a>#}
-            {#                </div>#}
-            {#            </div>#}
-            {#{% endif %}#}
-            <!-- ./col -->
         </div>
-        <!-- /.row -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">工单数据统计</h3>
-                        <div class="box-tools pull-right">
-
-                        </div>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="row">
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-aqua"><i class="fa fa-pencil-square-o"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">我的创建</span>
-                                    <span class="info-box-number">{{ created }}</span>
-                                </div><!-- /.info-box-content -->
-                            </div><!-- /.info-box -->
-                        </a><!-- /.col -->
-
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-green"><i class="fa fa-hourglass-2"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">待接收工單</span>
-                                    <span class="info-box-number">{{ receive }}</span>
-                                </div><!-- /.info-box-content -->
-                            </div><!-- /.info-box -->
-                        </a><!-- /.col -->
-
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="">
-                            <div class="info-box">
-                                <span class="info-box-icon bg-yellow"><i class="fa fa-check"></i></span>
-                                <div class="info-box-content">
-                                    <span class="info-box-text">已结案</span>
-                                    <span class="info-box-number">{{ finished }}</span>
-                                </div><!-- /.info-box-content -->
-                            </div><!-- /.info-box -->
-                        </a><!-- /.col -->
-
-                    </div><!-- /.row -->
+        <div id="devlist">
+            <div class="box box-primary" id="liebiao">
+             <div class="box-body">
+                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
+                        <thead>
+                        <tr valign="middle">
+                            <th>ID</th>
+                            <th>發佈部門</th>
+                            <th>發佈DRI</th>
+                            <th>發佈時間</th>
+                            <th>主旨</th>
+                            <th>工單</th>
+                            <th>重點注意流程內容</th>
+                            <th>段別</th>
+                            <th>接收DRI</th>
+                            <th>接收狀態</th>
+                            <th>執行狀況</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <tbody id="imp" role="imp">
+                    <tr> <tr>
+                    </tbody>
                 </div>
             </div>
         </div>
     </section>
-
 {% endblock %}
 
 {% block javascripts %}
-    <!-- 注意：在static中要引入echart包 -->
-    <script type="text/javascript" src="{% static 'plugins/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/dataTables.const.js' %}"></script>
+    <script src="{% static 'plugins/datatables/moment.min.js' %}"></script>
+    <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
+    <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
+
+    <!--导出excel-->
+    <script src="{% static 'export/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'export/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'export/js/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'export/js/jszip.min.js' %}"></script>
+    <script src="{% static 'export/js/pdfmake.min.js' %}"></script>
+    <script src="{% static 'export/js/vfs_fonts.js' %}"></script>
+    <script src="{% static 'export/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'export/js/buttons.print.min.js' %}"></script>
+
+    <!-- iCheck 1.0.1 -->
+    <script type="text/javascript">
+        $(function () {
+            $('#DQE-IM').addClass('active');
+            $('#DQE-IM-INVENTORY').addClass('active');
+
+        });
+    </script>
+
     <script type="text/javascript">
 
+
+        var oDataTable = null;
         $(function () {
-            $('#WORKFLOW-WFSYS').addClass('active');
-            $('#WORKFLOW-WFSYS-NEWWF').addClass('active');
+
+            oDataTable = initTable();
+
+            function initTable() {
+                var oTable = $('#dtbList').DataTable($.extend(true, {},
+
+                    DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
+
+                    {
+
+                        ajax: {
+                            "url": "{% url 'process:order-workflow-list' %}",
+                            "data": function (d) {
+
+                                d.project = $("#project").val();
+                                d.build = $("#build").val();
+                                d.unit_type = $("#unit_type").val();
+                                d.segment = $("#segment").val();
+                                d.status = $("#status").val();
+                                d.receive_status = $("#restatus").val();
+
+                            },
+                        },
+
+                        columns: [
+                            DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
+
+                            {
+                                data: "id",
+                                width: "5%",
+                            },
+                            {
+                                data: "publish_dept",
+                            },
+                            {
+                                data: "publisher",
+                            },
+                            {
+                                data: "publish_time",
+                                render: function (data, type, full, meta) {
+                                    return moment(data).format("YYYY-MM-DD HH:mm");
+                                }
+                            },
+                            {
+                                data: "subject",
+                            },
+
+                            {
+                                data: "order",
+                            },
+                            {
+                                data: "key_content",
+                            },
+                            {
+                                data: "segment",
+                            },
+                            {
+                                data: "receiver",
+                            },
+                            {
+                                data: "receive_status",
+                                render: function (data, type, row, meta) {
+                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
+                                    if (data == 0) {
+                                        return "未接收"
+                                    } else if (data == 1) {
+                                        return "已接收"
+                                    }
+                                }
+                            },
+                            {
+                                data: "status",
+                                render: function (data, type, row, meta) {
+                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
+                                    if (data == 0) {
+                                        $("tr td:eq(11)").css('background', 'red');
+                                        return ""
+                                    } else if (data == 1) {
+                                        $("tr td:eq(11)").css('background', 'yellow');
+                                        return "Ongoing"
+                                    } else if (data == 2){
+                                        $("tr td:eq(11)").css('background', 'green');
+                                        return "Closed"
+                                    }
+                                }
+                            },
+
+                            {#{#}
+                            {#    data: "remark",#}
+                            {# },#}
+                            {
+                                data: "id",
+                                width: "12%",
+                                bSortable: "false",
+                                render: function (data, type, row, meta) {
+                                    var ret = "<button title='详情' onclick='doDetail("
+                                        + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
+                                    ret = ret + "<button title='编辑' onclick='doUpdate("
+                                        + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
+                                    ret = ret + "<button title='删除' onclick='doDelete("
+                                        + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
+                                    return ret;
+                                }
+                            }],
+
+                        // "order": [[1, 'id']],
+
+                    },
+
+                    {
+                        "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]
+                    }
+                ));
+                oTable.order([1, 'asc']).draw();
+
+                return oTable;
+            }
+
         });
 
-        /*---柱形图---*/
-        //echarts
-        {#var bar_dom = document.getElementById("bar_container");#}
-        {#var myBarChart = echarts.init(bar_dom);#}
-        {#option = null;#}
-        {#option = {#}
-        {#    title: {#}
-        {#        text: '創建-待辦-相關',#}
-        {#        subtext: ''#}
-        {#    },#}
-        {#    tooltip: {#}
-        {#        trigger: 'axis'#}
-        {#    },#}
-        {#    legend: {#}
-        {#        data: [#}
-        {#            '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'#}
-        {#                {% for data in datas %}'{{ data.fk_structure__name }}',{% endfor %}#}
-        {#        ]#}
-        {#    },#}
-        {##}
-        {#    toolbox: {#}
-        {#        show: true,#}
-        {#        feature: {#}
-        {#            dataView: {show: true, readOnly: false},#}
-        {#            saveAsImage: {show: true}#}
-        {#        }#}
-        {#    }#}
-        {#    ,#}
-        {#    calculable: true,#}
-        {#    xAxis: [#}
-        {#        {#}
-        {#            type: 'category',#}
-        {#            data: [{% for data in datas %}'{{ data.fk_structure__name }}',{% endfor %}] //'1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'#}
-        {#            //{% for data in datas %}'{{ data.fk_structure__name }}',{% endfor %}#}
-        {#        }#}
-        {#    ],#}
-        {#    yAxis: [#}
-        {#        {#}
-        {#            type: 'value'#}
-        {#        }#}
-        {#    ],#}
-        {#    series: [#}
-        {##}
-        {##}
-        {#        {#}
-        {#            name: '访问来源', //作用用于点选隐藏的#}
-        {#            type: 'bar',#}
-        {#            data: [#}
-        {#                {% for data in datas %}#}
-        {#                    {value:{{ data.count }}, name: '{{ data.fk_structure__name }}'},#}
-        {#                {% endfor %}#}
-        {#            ],#}
-        {##}
-        {#            markPoint: {#}
-        {#                data: [#}
-        {#                    {type: 'max', name: '最大值'},#}
-        {#                    {type: 'min', name: '最小值'}#}
-        {#                ]#}
-        {#            },#}
-        {##}
-        {#        },#}
-        {##}
-        {##}
-        {#        {#}
-        {#            name: 'ECharts2 - 2k数据',#}
-        {#            type: 'bar',#}
-        {#            itemStyle: {normal: {color: 'rgba(193,35,43,1)', label: {show: true}}},#}
-        {##}
-        {#            data: [40, 155, 95, 75,],#}
-        {#            markPoint: {#}
-        {#                data: [#}
-        {#                    {type: 'max', name: '最大值'},#}
-        {#                    {type: 'min', name: '最小值'}#}
-        {#                ]#}
-        {#            },#}
-        {#        },#}
-        {#        {#}
-        {#            name: 'ECharts2 - 2w数据',#}
-        {#            type: 'bar',#}
-        {#            itemStyle: {#}
-        {#                normal: {#}
-        {#                    color: 'rgba(181,195,52,1)',#}
-        {#                    label: {show: true, textStyle: {color: '#27727B'}}#}
-        {#                }#}
-        {#            },#}
-        {#            data: [100, 200, 105, 100,]#}
-        {#        },#}
-        {#        {#}
-        {#            name: 'FA',#}
-        {#            type: 'bar',#}
-        {#            itemStyle: {#}
-        {#                normal: {#}
-        {#                    color: 'rgba(252,206,16,1)',#}
-        {#                    label: {show: true, textStyle: {color: '#E87C25'}}#}
-        {#                }#}
-        {#            },#}
-        {#            data: [900, 911, 908, 778,]#}
-        {#        },#}
-        {##}
-        {#        {#}
-        {#            name: 'DQE',#}
-        {#            type: 'bar',#}
-        {#            itemStyle: {#}
-        {#                normal: {#}
-        {#                    color: 'rgba(193,35,43,0.5)', label: {#}
-        {#                        show: true, formatter: function (p) {#}
-        {#                            return p.value > 0 ? (p.value + '\n') : '';#}
-        {#                        }#}
-        {#                    }#}
-        {#                }#}
-        {#            },#}
-        {#            data: [96, 224, 164, 124,]#}
-        {#        }#}
-        {##}
-        {#    ]#}
-        {
-            #};
-            #}
-            {#if (option && typeof option === "object") {#}
-            {#    myBarChart.setOption(option, true);#}
-            {#}#}
-                {#/*------*/#}
-                {##}
-                {##}
-                {##}
-                {#/*---饼形图---*/#}
-                {#//echarts bar#}
-                {##}
-                {#var pie_dom = document.getElementById("pie_container");#}
-                {#var myPieChart = echarts.init(pie_dom);#}
-                {#option = null;#}
-                {##}
-                {#option = {#}
-                {#    title: {#}
-                {#        text: '創建-待辦-相關佔比',#}
-                {#        subtext: '',#}
-                {#        x: 'center'#}
-                {#    },#}
-                {#    tooltip: {#}
-                {#        trigger: 'item',#}
-                {#        formatter: "{a} <br/>{b} : {c} ({d}%)"#}
-                {#    },#}
-                {#    legend: {#}
-                {#        orient: 'vertical',#}
-                {#        left: 'left',#}
-                {#        data: [#}
-                {#            '直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎',]#}
-                {##}
-                {#            {% for data in datas %}'{{ data.fk_structure__name }}',{% endfor %}#}
-                {#    },#}
-                {#    series: [#}
-                {#        {#}
-                {#            name: '访问来源',#}
-                {#            type: 'pie',#}
-                {#            radius: '55%',#}
-                {#            center: ['50%', '60%'],#}
-                {#            data: [#}
-                {#                {value: 335, name: '直接访问'},#}
-                {#                {value: 310, name: '邮件营销'},#}
-                {#                {value: 234, name: '联盟广告'},#}
-                {#                {value: 135, name: '视频广告'},#}
-                {#                {value: 1548, name: '搜索引擎'}#}
-                {##}
-                {#                   {% for data in datas %}#}
-                {#                       {value:{{ data.count }}, name:'{{ data.fk_structure__name }}'},#}
-                {#                   {% endfor %}#}
-                {##}
-                {#            ],#}
-                {#                {% for data in year_work_order_count %}#}
-                {#                    {value:{{ data.count }}, name:'{{ data.name }}'},#}
-                {#                {% endfor %}#}
-                {#            itemStyle: {#}
-                {#                emphasis: {#}
-                {#                    shadowBlur: 10,#}
-                {#                    shadowOffsetX: 0,#}
-                {#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
-                {#                }#}
-                {#            }#}
-                {#        }#}
-                {#    ]#}
-                {
-                    #};
-                    #}
-                    {##}
-                    {#if (option && typeof option === "object") {#}
-                    {#    myPieChart.setOption(option, true);#}
-                    {#}#}
+
+        //查询
+        $("#btnSearch").click(function () {
+            oDataTable.ajax.reload();
+        });
+
+        //checkbox全选
+        $("#checkAll").on("click", function () {
+            if ($(this).prop("checked") === true) {
+                $("input[name='checkList']").prop("checked", $(this).prop("checked"));
+                $('#example tbody tr').addClass('selected');
+            } else {
+                $("input[name='checkList']").prop("checked", false);
+                $('#example tbody tr').removeClass('selected');
+            }
+        });
+
+        //刷新
+        $("#btnRefresh").click(function () {
+            oDataTable.ajax.reload();
+        });
+
+        //新增
+        $("#btnCreate").click(function () {
+            layer.open({
+                type: 2,
+                title: '新增',
+                shadeClose: false,
+                maxmin: true,
+                area: ['60%', '60%'],
+                content: "{% url 'process:order-workflow-create' %}",
+                end: function () {
+                    //关闭时做的事情
+                    oDataTable.ajax.reload();
+                }
+            });
+        });
+
+        //批量删除
+        $("#btnDelete").click(function () {
+            if ($("input[name='checkList']:checked").length == 0) {
+                layer.msg("请选择要删除的记录");
+                return;
+            }
+
+            var arrId = [];
+            $("input[name='checkList']:checked").each(function () {
+                //alert($(this).val());
+                arrId.push($(this).val());
+            });
+
+            sId = arrId.join(',');
+
+            layer.alert('确定删除吗？', {
+                title: '提示'
+                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
+                , time: 0 //不自动关闭
+                , btn: ['YES', 'NO']
+                , yes: function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'process:order-workflow-delete' %}",
+                        data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        cache: false,
+                        success: function (msg) {
+                            if (msg.result) {
+                                layer.alert("操作成功！", {icon: 1});
+                                oDataTable.ajax.reload();
+                            } else {
+                                layer.alert("操作失败！", {icon: 2});
+                            }
+
+                        }
+                    });
+                }
+            });
+        });
 
 
-                        /*------*/
+        //编辑
+        function doUpdate(id) {
+            var div = layer.open({
+                type: 2,
+                title: '编辑',
+                shadeClose: false,
+                maxmin: true,
+                area: ['60%', '60%'],
+                content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id,],
+                end: function () {
+                    //关闭时做的事情
+                    oDataTable.ajax.reload();
+                }
+            });
+        }
 
-                        //图表窗体自适应
-                        {#$(window).resize(function () {#}
-                        {#    myBarChart.resize();#}
-                        {#    myPieChart.resize();#}
-                        {#})
-        ;
-        #}
+        //删除物料
+        function doDelete(id) {
+            layer.alert('确定删除吗？', {
+                title: '提示'
+                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
+                , time: 0 //不自动关闭
+                , btn: ['YES', 'NO']
+                , yes: function (index) {
+                    layer.close(index);
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'process:order-workflow-delete' %}",
+                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
+                        cache: false,
+                        success: function (msg) {
+                            if (msg.result) {
+                                layer.alert('删除成功！', {icon: 1});
+                                oDataTable.ajax.reload();
+                            } else {
+                                //alert(msg.message);
+                                layer.alert('删除失败！', {icon: 2});
+                            }
+
+                        }
+                    });
+                }
+            });
+
+        }
+
+
+        // 導入  id="btnImport"
+        $("#btnImport").on("click", function () {
+            // alert("导入功能在此书写");
+            layer.open({
+                type: 1,
+                title: "批量导入",
+                closeBtn: 1,
+                shadeClose: false,
+                area: ['600px', '200px'],
+                content: $("#upload"),
+                end: function () {
+                    //关闭时做的事情
+                    oDataTable.ajax.reload();
+                }
+            });
+        });
+
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
+
+
+        //详情
+        //此处inventoryId确定某一机台
+        function doDetail(id) {
+            window.location.href = "{% url 'process:order-workflow-detail' %}?inventoryId=" + id;
+        }
+
+        /*input 时间输入选择*/
+        $(".form_datetime").datetimepicker({
+            language: 'zh',
+            minView: 'month', //选择范围知道日期，不选择时分
+            //weekStart: 1,
+            //todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            //startView: 2,
+            forceParse: 0,
+            showMeridian: 1,
+            format: 'yyyy-mm-dd'
+        }).on('changeDate', function (ev) {
+            $(this).datetimepicker('hide');
+        });
+
+        $(function () {
+            //Initialize Select2 Elements
+            $(".select2").select2();
+        });
+
+        /*专案阶段二级联动*/
+
+        $("select[name='project']").change(function () {
+
+            var project = $("select[name='project']").val();
+
+            //alert(fk_project_id);
+
+            $.ajax({
+                type: "POST",
+
+                url: "{% url 'system:basic-project-build' %}",
+
+                data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
+
+                success: function (data) {
+
+                    var fk_st = $("select[name='build']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
+                    fk_st.append('<option></option>')
+                    $.each(data.builds, function (i, val) {
+                        //console.log(i + "===" + val.id)  // #表示浏览器控制台下打印消息
+                        fk_st.append('<option value="' + val.id + '">' + val.build + '</option>')
+                    })
+
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+
+        //上传
+        $('#lefile').on("change", (function () {
+            //alert($(this).val());
+            $("#fi").val($(this).val());
+        }));
 
     </script>
 

@@ -46,7 +46,15 @@ class UnitTypeCreateForm(forms.ModelForm):
 
 class WorkflowForm(forms.ModelForm):
     """
-    机种表
+    工单表
+    """
+    class Meta:
+        model = OrderInfo
+        fields = '__all__'
+
+class RecipientForm(forms.ModelForm):
+    """
+    待接收工单表
     """
     class Meta:
         model = OrderInfo

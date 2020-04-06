@@ -23,12 +23,12 @@
                             <i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
-                    <div class="btn-group pull-left">&nbsp</div>
-                    <div class="btn-group pull-left">
-                        <button type="button" id="btnCreate" class="btn btn-default">
-                            <i class="glyphicon glyphicon-plus"></i> 新增
-                        </button>
-                    </div>
+<!--                    <div class="btn-group pull-left">&nbsp</div>-->
+<!--                    <div class="btn-group pull-left">-->
+<!--                        <button type="button" id="btnCreate" class="btn btn-default">-->
+<!--                            <i class="glyphicon glyphicon-plus"></i> 新增-->
+<!--                        </button>-->
+<!--                    </div>-->
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
                         <button type="button" id="btnDelete" class="btn btn-danger">
@@ -69,77 +69,77 @@
                     <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
                 </div>
 
-                <div class="box-header">
-                    <form class="form-inline" id="queryForm">
+<!--                <div class="box-header">-->
+<!--                    <form class="form-inline" id="queryForm">-->
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>專案：</label>
-                            <select class="form-control inputText select2" name="project" id="project">
-                                <option></option>
-                                {% for project in projects %}
-                                    <option value="{{ project.id }}">{{ project.project }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>專案：</label>-->
+<!--                            <select class="form-control inputText select2" name="project" id="project">-->
+<!--                                <option></option>-->
+<!--                                {% for project in projects %}-->
+<!--                                    <option value="{{ project.id }}">{{ project.project }}</option>-->
+<!--                                {% endfor %}-->
+<!--                            </select>-->
+<!--                        </div>-->
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>階段：</label>
-                            <select class="form-control inputText select2" name="build" id="build">
-                                <option></option>
-                                {% for build in builds %}
-                                    <option value="{{ build.id }}">{{ build.sname }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>階段：</label>-->
+<!--                            <select class="form-control inputText select2" name="build" id="build">-->
+<!--                                <option></option>-->
+<!--                                {% for build in builds %}-->
+<!--                                    <option value="{{ build.id }}">{{ build.sname }}</option>-->
+<!--                                {% endfor %}-->
+<!--                            </select>-->
+<!--                        </div>-->
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>機種：</label>
-                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
-                                <option></option>
-                                {% for unit_type in unit_types %}
-                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>機種：</label>-->
+<!--                            <select class="form-control inputText select2" name="unit_type" id="unit_type">-->
+<!--                                <option></option>-->
+<!--                                {% for unit_type in unit_types %}-->
+<!--                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>-->
+<!--                                {% endfor %}-->
+<!--                            </select>-->
+<!--                        </div>-->
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>段別：</label>
-                            <select class="form-control inputText select2" name="segment" id="segment">
-                                <option></option>
-                                {% for segment in segments %}
-                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>段別：</label>-->
+<!--                            <select class="form-control inputText select2" name="segment" id="segment">-->
+<!--                                <option></option>-->
+<!--                                {% for segment in segments %}-->
+<!--                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>-->
+<!--                                {% endfor %}-->
+<!--                            </select>-->
+<!--                        </div>-->
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>執行狀況:</label>
-                            <select class="form-control inputText select2" name="status" id="status">
-                                <option></option>
-                                <option value="0"> </option>
-                                <option value="1">Closed</option>
-                                <option value="2">Ongoing</option>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>執行狀況:</label>-->
+<!--                            <select class="form-control inputText select2" name="status" id="status">-->
+<!--                                <option></option>-->
+<!--                                <option value="0"> </option>-->
+<!--                                <option value="1">Closed</option>-->
+<!--                                <option value="2">Ongoing</option>-->
 
-                            </select>
-                        </div>
+<!--                            </select>-->
+<!--                        </div>-->
 
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>接收狀態:</label>
-                            <select class="form-control inputText select2" name="restatus" id="restatus">
-                                <option></option>
-                                <option value="0">未接收</option>
-                                <option value="1">已接收</option>
+<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
+<!--                            <label>接收狀態:</label>-->
+<!--                            <select class="form-control inputText select2" name="restatus" id="restatus">-->
+<!--                                <option></option>-->
+<!--                                <option value="0">未接收</option>-->
+<!--                                <option value="1">已接收</option>-->
 
-                            </select>
-                        </div>
+<!--                            </select>-->
+<!--                        </div>-->
 
-                        <button type="button" id="btnSearch" class="btn btn-default">
-                            <i class="glyphicon glyphicon-search"></i>查询
-                        </button>
+<!--                        <button type="button" id="btnSearch" class="btn btn-default">-->
+<!--                            <i class="glyphicon glyphicon-search"></i>查询-->
+<!--                        </button>-->
 
-                    </form>
-                </div>
+<!--                    </form>-->
+<!--                </div>-->
 
                 <div class="box-body">
                     <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
@@ -153,11 +153,8 @@
                             <th>主旨</th>
                             <th>工單</th>
                             <th>重點注意流程內容</th>
-                            <th>段別</th>
-                            <th>接收DRI</th>
                             <th>接收狀態</th>
-                            <th>執行狀況</th>
-{#                            <th>備註</th>#}
+                            <th>         </th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -225,7 +222,7 @@
                     {
 
                         ajax: {
-                            "url": "{% url 'process:order-workflow-list' %}",
+                            "url": "{% url 'process:order-receve-list' %}",
                             "data": function (d) {
 
                                 d.project = $("#project").val();
@@ -266,12 +263,6 @@
                             },
                             {
                                 data: "key_content",
-                            },
-                            {
-                                data: "segment",
-                            },
-                            {
-                                data: "receiver",
                             },
                             {
                                 data: "receive_status",
@@ -364,7 +355,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['60%', '60%'],
-                content: "{% url 'process:order-workflow-create' %}",
+                content: "{% url 'process:order-receve-create' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -396,7 +387,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-workflow-delete' %}",
+                        url: "{% url 'process:order-receve-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
