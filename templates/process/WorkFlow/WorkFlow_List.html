@@ -25,13 +25,13 @@
                     </div>
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
-                        <button type="button" id="btnCreate" class="btn btn-default" {% if request.user.account_type == 1 %} disabled="true" {% endif %}>
+                        <button type="button" id="btnCreate" class="btn btn-default" >
                             <i class="glyphicon glyphicon-plus"></i> 新增
                         </button>
                     </div>
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
-                        <button type="button" id="btnDelete" class="btn btn-danger" {% if not request.user.is_admin %} disabled="true" {% endif %}>
+                        <button type="button" id="btnDelete" class="btn btn-danger" >
                             <i class="glyphicon glyphicon-trash"></i> 删除
                         </button>
                     </div>
@@ -355,6 +355,7 @@
         $("#btnRefresh").click(function () {
             oDataTable.ajax.reload();
         });
+
 
         //新增
         $("#btnCreate").click(function () {

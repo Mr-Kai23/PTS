@@ -222,7 +222,7 @@
                     {
 
                         ajax: {
-                            "url": "{% url 'process:order-receve-list' %}",
+                            "url": "{% url 'process:order-receive-list' %}",
                             "data": function (d) {
 
                                 d.project = $("#project").val();
@@ -355,7 +355,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['60%', '60%'],
-                content: "{% url 'process:order-receve-create' %}",
+                content: "{% url 'process:order-receive-create' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -387,7 +387,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-receve-delete' %}",
+                        url: "{% url 'process:order-receive-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {

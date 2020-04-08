@@ -19,10 +19,11 @@ urlpatterns = [
     url(r'^order/workflow/detail$', views_workflow.WorkFlowDetailView.as_view(), name='order-workflow-detail'),
     # url(r'^order/workflow/hello$', views_workflow.HelloView.as_view(), name='hello-detail'),
 
-    #待接收工單路由
-    url(r'^order/receve/$', views_recept.ReceptView.as_view(), name='order-receve'),
-    url(r'^order/receve/list/$', views_recept.ReceptListView.as_view(), name='order-receve-list'),
-    url(r'^order/receve/create/$', views_recept.ReceptCreateView.as_view(), name='order-receve-create'),
-    url(r'^order/receve/delete/$', views_recept.ReceptDeleteView.as_view(), name='order-receve-delete'),
+    # 待接收工單路由
+    url(r'^order/receive/$', views_recept.ReceptView.as_view(), name='order-receive'),
+    url(r'^order/receive/list/$', views_recept.ReceptListView.as_view(), name='order-receive-list'),
+    url(r'^order/receive/create/$', views_recept.ReceptCreateView.as_view(), name='order-receive-create'),
+    url(r'^order/receive/delete/$', views_recept.ReceptDeleteView.as_view(), name='order-receive-delete'),
     # url(r'^order/workflow/detail$', views_workflow.WorkFlowDetailView.as_view(), name='order-workflow-detail'),
+    url(r'^order/receive/accept', views_recept.WorkFlowReceiveView.as_view(), name='order-receiver-accept')
 ]

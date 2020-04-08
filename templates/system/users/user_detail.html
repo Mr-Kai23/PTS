@@ -57,7 +57,7 @@
                         <label class="col-sm-2 control-label">部門</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="department">
-                                <option value="{{ user.department }}">{{ user.department|default:"--部門--" }}</option>
+                                <option value="{{ user.department.id }}">{{ user.department|default:"--部門--" }}</option>
                                 {% for structure in structures %}
                                     <option value="{{ structure.id }}">{{ structure.name }}</option>
                                 {% endfor %}

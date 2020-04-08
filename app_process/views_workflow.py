@@ -87,6 +87,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict(result=False)
         email = False
         message = False
+
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
@@ -178,4 +179,6 @@ class WorkFlowDetailView(LoginRequiredMixin, View):
     工單详情視圖
     """
     pass
+
+
 

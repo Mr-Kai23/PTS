@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 
-from app_process.forms import WorkflowForm,RecipientForm
+from app_process.forms import WorkflowForm, RecipientForm
 from app_process.models import Segment, OrderInfo
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
@@ -37,7 +37,7 @@ class ReceptListView(LoginRequiredMixin, View):
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receive_status','status',
-                  'withdraw_time', 'unit_type',]
+                  'withdraw_time', 'unit_type']
 
         searchfields = ['segment', 'status', 'receive_status', 'unit_type']
 
@@ -48,6 +48,24 @@ class ReceptListView(LoginRequiredMixin, View):
         workflows = list(OrderInfo.objects.filter(**filters, receive_status=0).values(*fields).order_by('-id'))
 
         res = dict(data=workflows)
+
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
+
+class WorkFlowReceiveView(LoginRequiredMixin, View):
+    """
+    工单接收视图
+    """
+    def post(self, request):
+        res = dict(result=False)
+
+        if 'id' in request.POST and request.POST['id']:
+            ids = map(int, request.POST['id'].split(','))
+
+            # 将工单接收状态更新为已接收
+            OrderInfo.objects.filter(id__in=ids).update(receive_status=1)
+
+            res['result'] = True
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

@@ -21,38 +21,38 @@
                 </div>
                 <div class="btn-group pull-left">&nbsp</div>
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnCreate" class="btn btn-success">
+                    <button type="button" id="btnCreate" class="btn btn-success" >
                         <i class="glyphicon glyphicon-plus"></i>新增
                     </button>
                 </div>
                 <div class="btn-group pull-left">&nbsp</div>
                 <div class="btn-group pull-left">
-                    <button type="button" id="btnDelete" class="btn btn-danger">
+                    <button type="button" id="btnDelete" class="btn btn-danger" >
                         <i class="glyphicon glyphicon-trash"></i>删除
                     </button>
                 </div>
-                <div class="btn-group pull-left">&nbsp</div>
-                <div class="btn-group pull-left">
-                    <button type="button" id="btnEnable" class="btn btn-primary">
-                        <i class="glyphicon glyphicon-ok-circle"></i>启用
-                    </button>
-                <div class="btn-group pull-left">&nbsp&nbsp</div>
-                    <button type="button" id="btnDisable" class="btn btn-warning">
-                        <i class="glyphicon glyphicon-ban-circle"></i>禁用
-                    </button>
-                </div>
-                <div class="btn-group pull-right">
-                    <form class="form-inline">
-                        <div class="form-group">
-                            <label>用户状态：</label>
-                            <select id="select" name="select" class="form-control">
-                                <option style='text-align:center' value=''>-----所有-----</option>
-                                <option value="True">启用</option>
-                                <option value="False">禁用</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
+{#                <div class="btn-group pull-left">&nbsp</div>#}
+{#                <div class="btn-group pull-left">#}
+{#                    <button type="button" id="btnEnable" class="btn btn-primary">#}
+{#                        <i class="glyphicon glyphicon-ok-circle"></i>启用#}
+{#                    </button>#}
+{#                <div class="btn-group pull-left">&nbsp&nbsp</div>#}
+{#                    <button type="button" id="btnDisable" class="btn btn-warning">#}
+{#                        <i class="glyphicon glyphicon-ban-circle"></i>禁用#}
+{#                    </button>#}
+{#                </div>#}
+{#                <div class="btn-group pull-right">#}
+{#                    <form class="form-inline">#}
+{#                        <div class="form-group">#}
+{#                            <label>用户状态：</label>#}
+{#                            <select id="select" name="select" class="form-control">#}
+{#                                <option style='text-align:center' value=''>-----所有-----</option>#}
+{#                                <option value="True">启用</option>#}
+{#                                <option value="False">禁用</option>#}
+{#                            </select>#}
+{#                        </div>#}
+{#                    </form>#}
+{#                </div>#}
             </div>
             <div class="box-body">
                 <table id="dtbList" class="display" cellspacing="0" width="100%">
@@ -170,6 +170,7 @@
                                     + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
                                 return ret;
                             }
+
                         }],
                     "order": [
                         [2, 'desc']
