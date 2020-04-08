@@ -33,7 +33,7 @@
                     <div class="icon">
                         <i class="fa fa-pencil"></i>
                     </div>
-                    {% if request.user.account_type == 1 %}
+                    {% if not request.user.account_type == 1 %}
                         <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer" disabled="true" >請點擊</a>
                     {% endif %}
                 </div>
@@ -210,9 +210,9 @@
 
                     },
 
-                    {#{#}
-                    {#    "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]#}
-                    {# }#}
+                    {
+                        "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]
+                     }
                 ));
                 oTable.order([1, 'asc']).draw();
 

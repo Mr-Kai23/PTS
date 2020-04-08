@@ -16,38 +16,34 @@
     <section class="content">
         <div id="devlist">
             <div class="box box-primary" id="liebiao">
-
                 <div class="box-header">
                     <div class="btn-group pull-left">
                         <button type="button" id="btnRefresh" class="btn btn-default">
                             <i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
+
                     </div>
-<!--                    <div class="btn-group pull-left">&nbsp</div>-->
-<!--                    <div class="btn-group pull-left">-->
-<!--                        <button type="button" id="btnCreate" class="btn btn-default">-->
-<!--                            <i class="glyphicon glyphicon-plus"></i> 新增-->
-<!--                        </button>-->
-<!--                    </div>-->
+                     <div class="btn-group pull-left">&nbsp</div>
+                      <div class="btn-group pull-left">
+                        <button type="button" id="btnRefresh" class="btn btn-default">
+                            <i class="glyphicon glyphicon-check"></i> 接收
+                        </button>
+                     </div>
+
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
                         <button type="button" id="btnDelete" class="btn btn-danger">
                             <i class="glyphicon glyphicon-trash"></i> 删除
                         </button>
                     </div>
-
-
                     <div class="btn-group pull-right">&nbsp</div>
                     <div class="btn-group pull-right">
                         <button type="button" id="btnImport" class="btn btn-info">
                             <i class="glyphicon glyphicon-log-in"></i> 導入
                         </button>
                     </div>
-                    <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
-                    <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
 
                     <div id="upload" style="display: none">
-
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group text-center margin-top-5" style="margin-top: 24px;">
@@ -61,85 +57,77 @@
                                     <button type="submit" class="btn btn-primary btn-sm ">提交</button>
                                 </div>
                             </div>
-
                         </form>
-
                     </div>
-                    <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
-                    <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
                 </div>
 
-<!--                <div class="box-header">-->
-<!--                    <form class="form-inline" id="queryForm">-->
+                <div class="box-header">
+                    <form class="form-inline" id="queryForm">
 
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>專案：</label>-->
-<!--                            <select class="form-control inputText select2" name="project" id="project">-->
-<!--                                <option></option>-->
-<!--                                {% for project in projects %}-->
-<!--                                    <option value="{{ project.id }}">{{ project.project }}</option>-->
-<!--                                {% endfor %}-->
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>專案：</label>
+                            <select class="form-control inputText select2" name="project" id="project">
+                                <option></option>
+                                {% for project in projects %}
+                                    <option value="{{ project.id }}">{{ project.project }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>階段：</label>-->
-<!--                            <select class="form-control inputText select2" name="build" id="build">-->
-<!--                                <option></option>-->
-<!--                                {% for build in builds %}-->
-<!--                                    <option value="{{ build.id }}">{{ build.sname }}</option>-->
-<!--                                {% endfor %}-->
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>階段：</label>
+                            <select class="form-control inputText select2" name="build" id="build">
+                                <option></option>
+                                {% for build in builds %}
+                                    <option value="{{ build.id }}">{{ build.sname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>機種：</label>-->
-<!--                            <select class="form-control inputText select2" name="unit_type" id="unit_type">-->
-<!--                                <option></option>-->
-<!--                                {% for unit_type in unit_types %}-->
-<!--                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>-->
-<!--                                {% endfor %}-->
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>機種：</label>
+                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
+                                <option></option>
+                                {% for unit_type in unit_types %}
+                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>段別：</label>-->
-<!--                            <select class="form-control inputText select2" name="segment" id="segment">-->
-<!--                                <option></option>-->
-<!--                                {% for segment in segments %}-->
-<!--                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>-->
-<!--                                {% endfor %}-->
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>段別：</label>
+                            <select class="form-control inputText select2" name="segment" id="segment">
+                                <option></option>
+                                {% for segment in segments %}
+                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>執行狀況:</label>-->
-<!--                            <select class="form-control inputText select2" name="status" id="status">-->
-<!--                                <option></option>-->
-<!--                                <option value="0"> </option>-->
-<!--                                <option value="1">Closed</option>-->
-<!--                                <option value="2">Ongoing</option>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>執行狀況:</label>
+                            <select class="form-control inputText select2" name="status" id="status">
+                                <option></option>
+                                <option value="0"> </option>
+                                <option value="1">Closed</option>
+                                <option value="2">Ongoing</option>
+                            </select>
+                        </div>
 
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>接收狀態:</label>
+                            <select class="form-control inputText select2" name="restatus" id="restatus">
+                                <option></option>
+                                <option value="0">未接收</option>
+                                <option value="1">已接收</option>
+                            </select>
+                        </div>
 
-
-<!--                        <div class="form-group searchArea margin-r-5 margin-top-5">-->
-<!--                            <label>接收狀態:</label>-->
-<!--                            <select class="form-control inputText select2" name="restatus" id="restatus">-->
-<!--                                <option></option>-->
-<!--                                <option value="0">未接收</option>-->
-<!--                                <option value="1">已接收</option>-->
-
-<!--                            </select>-->
-<!--                        </div>-->
-
-<!--                        <button type="button" id="btnSearch" class="btn btn-default">-->
-<!--                            <i class="glyphicon glyphicon-search"></i>查询-->
-<!--                        </button>-->
-
-<!--                    </form>-->
-<!--                </div>-->
+                        <button type="button" id="btnSearch" class="btn btn-default">
+                            <i class="glyphicon glyphicon-search"></i>查询
+                        </button>
+                    </form>
+                </div>
 
                 <div class="box-body">
                     <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
@@ -153,8 +141,9 @@
                             <th>主旨</th>
                             <th>工單</th>
                             <th>重點注意流程內容</th>
+                            <th>段别</th>
                             <th>接收狀態</th>
-{#                            <th>         </th>#}
+                            <th>執行狀況</th>
                             <th>操作</th>
                         </tr>
                         </thead>
@@ -220,7 +209,6 @@
                     DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
 
                     {
-
                         ajax: {
                             "url": "{% url 'process:order-receve-list' %}",
                             "data": function (d) {
@@ -231,13 +219,11 @@
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
                                 d.receive_status = $("#restatus").val();
-
                             },
                         },
 
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
-
                             {
                                 data: "id",
                                 width: "5%",
@@ -264,6 +250,10 @@
                             {
                                 data: "key_content",
                             },
+                            {
+                                data: "segment",
+                            },
+
                             {
                                 data: "receive_status",
                                 render: function (data, type, row, meta) {
@@ -302,8 +292,8 @@
                                 render: function (data, type, row, meta) {
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
-                                    ret = ret + "<button title='编辑' onclick='doUpdate("
-                                        + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
+                                    ret = ret + "<button title='接收' onclick='doUpdate("
+                                        + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
                                     ret = ret + "<button title='删除' onclick='doDelete("
                                         + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
                                     return ret;

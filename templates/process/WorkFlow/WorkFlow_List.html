@@ -119,10 +119,8 @@
                                 <option value="0"> </option>
                                 <option value="1">Closed</option>
                                 <option value="2">Ongoing</option>
-
                             </select>
                         </div>
-
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>接收狀態:</label>
@@ -130,17 +128,14 @@
                                 <option></option>
                                 <option value="0">未接收</option>
                                 <option value="1">已接收</option>
-
                             </select>
                         </div>
 
                         <button type="button" id="btnSearch" class="btn btn-default">
                             <i class="glyphicon glyphicon-search"></i>查询
                         </button>
-
                     </form>
                 </div>
-
                 <div class="box-body">
                     <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
                         <thead>
@@ -214,16 +209,11 @@
 
         var oDataTable = null;
         $(function () {
-
             oDataTable = initTable();
-
             function initTable() {
                 var oTable = $('#dtbList').DataTable($.extend(true, {},
-
                     DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
-
                     {
-
                         ajax: {
                             "url": "{% url 'process:order-workflow-list' %}",
                             "data": function (d) {
@@ -234,13 +224,10 @@
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
                                 d.receive_status = $("#restatus").val();
-
                             },
                         },
-
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
-
                             {
                                 data: "id",
                                 width: "5%",
@@ -260,7 +247,6 @@
                             {
                                 data: "subject",
                             },
-
                             {
                                 data: "order",
                             },
