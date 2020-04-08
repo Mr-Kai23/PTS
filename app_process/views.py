@@ -8,7 +8,7 @@ from system.mixin import LoginRequiredMixin
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
-from suds.client import Client
+# from suds.client import Client
 
 
 class OrderView(LoginRequiredMixin, View):
