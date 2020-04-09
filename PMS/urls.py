@@ -17,14 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 
-from system.views import SystemView
+from app_process.views import BoardView, BoardListView
 from system.views_user import IndexView, LoginView, LogoutView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', IndexView.as_view(), name='pmsLogin'),
     # path('', SystemView.as_view(), name='login'),
+    path('board/', BoardView.as_view(), name='board'),
+    path('board/list/', BoardListView.as_view(), name='board-list'),
     # 登录、登出
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),

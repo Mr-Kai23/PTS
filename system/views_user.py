@@ -4,6 +4,7 @@
 
 import re
 import json
+import pandas as pd
 
 from django.shortcuts import render, HttpResponse
 from django.views.generic.base import View, TemplateView
@@ -19,6 +20,7 @@ from .models import Structure, Role
 from custom import BreadcrumbMixin
 from django import forms
 from django.contrib.auth import get_user_model
+from django.core.serializers.json import DjangoJSONEncoder
 from system.models import Structure, Menu
 from app_process.models import OrderInfo, Project, Segment
 from datetime import datetime
@@ -78,6 +80,53 @@ class LogoutView(View):
 class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
     template_name = 'system/users/user.html'
 
+    def post(self, request):
+        res = dict(msg='', result=False)
+
+        file = request.FILES['file']
+
+        # 獲取所有部門、專案和段別
+        projects = list(Project.objects.all())
+        departments = list(Structure.objects.all())
+        segments = list(Segment.objects.all())
+
+        if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
+            df = pd.read_excel(file, keep_default_na=False)
+
+            column_list = ['工號', '姓名', '電話', '郵箱', '部門', '專案', '段別', '賬號類型', '上級DRI']
+            if list(df.columns) == column_list:
+                for i in range(len(df)):
+
+                    # 如果存在部門和專案
+                    if str(df.loc[i, '部門']) in departments:
+                        if str(df.loc[i, '專案']) in projects:
+                            if str(df.loc[i, '段別']) in segments:
+                                defaults = {
+                                    'name': str(df.loc[i, '姓名']), 'mobile': str(df.loc[i, '電話']),
+                                    'email': str(df.loc[i, '郵箱']), 'department': str(df.loc[i, '部門']),
+                                    'project': str(df.loc[i, '專案']), 'segment': str(df.loc[i, '段別']),
+                                    'account_type': 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0,
+                                    'superior_id': df.loc[i, '上級DRI']
+                                }
+
+                                User.objects.update_or_create(work_num=str(df.loc[i, '工號']), defaults=defaults)
+
+                                res = {
+                                    'msg': '上傳成功！！',
+                                    'result': True
+                                }
+                            else:
+                                res['msg'] = '第' + str(i+1) + '行 段別 信息不存在！！'
+                                break
+                        else:
+                            res['msg'] = '第' + str(i+1) + '行 專案 信息不存在！！'
+                            break
+                    else:
+                        res['msg'] = '第' + str(i+1) + '行 部門 信息不存在！！'
+                        break
+
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
 
 class UserListView(LoginRequiredMixin, View):
     def get(self, request):
@@ -87,13 +136,13 @@ class UserListView(LoginRequiredMixin, View):
         if 'select' in request.GET and request.GET['select']:
             filters['is_active'] = request.GET['select']
 
-        users = list(User.objects.filter(**filters).values(*fields))
+        users = User.objects.filter(**filters).values(*fields)
 
         # 更新前端显示为choice文字显示
         for user in users:
             user['account_type'] = User.objects.get(id=user['id']).get_account_type_display()
 
-        ret = dict(data=users)
+        ret = dict(data=list(users))
         return HttpResponse(json.dumps(ret), content_type='application/json')
 
 

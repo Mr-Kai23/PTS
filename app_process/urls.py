@@ -25,5 +25,5 @@ urlpatterns = [
     url(r'^order/receive/create/$', views_recept.ReceptCreateView.as_view(), name='order-receive-create'),
     url(r'^order/receive/delete/$', views_recept.ReceptDeleteView.as_view(), name='order-receive-delete'),
     # url(r'^order/workflow/detail$', views_workflow.WorkFlowDetailView.as_view(), name='order-workflow-detail'),
-    url(r'^order/receive/accept', views_recept.WorkFlowReceiveView.as_view(), name='order-receiver-accept')
+    url(r'^order/receive/accept', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept')
 ]

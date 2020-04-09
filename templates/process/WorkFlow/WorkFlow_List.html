@@ -25,7 +25,7 @@
                     </div>
                     <div class="btn-group pull-left">&nbsp</div>
                     <div class="btn-group pull-left">
-                        <button type="button" id="btnCreate" class="btn btn-default" >
+                        <button type="button" id="btnCreate" class="btn btn-default" {% if request.user.account_type == 1 %} disabled="true" {% endif %}>
                             <i class="glyphicon glyphicon-plus"></i> 新增
                         </button>
                     </div>
@@ -252,6 +252,14 @@
                             },
                             {
                                 data: "key_content",
+                                render: function (data) {
+                                    if(data.length > 5){
+                                        return data.substring(0, 5)+'...';
+                                    }else {
+                                        return data;
+                                    }
+
+                                }
                             },
                             {
                                 data: "segment",
@@ -272,19 +280,18 @@
                             },
                             {
                                 data: "status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        $("tr td:eq(11)").css('background', 'red');
-                                        return ""
-                                    } else if (data == 1) {
-                                        $("tr td:eq(11)").css('background', 'yellow');
-                                        return "Ongoing"
-                                    } else if (data == 2){
-                                        $("tr td:eq(11)").css('background', 'green');
-                                        return "Closed"
-                                    }
-                                }
+                                {#render: function (data, type, row, meta) {#}
+                                {#    if (data == '未投產') {#}
+                                {#        $("tr td:eq(11)").css('background', 'red');#}
+                                {##}
+                                {#    } else if (data == 'Ongoing') {#}
+                                {#        $("tr td:eq(11)").css('background', 'yellow');#}
+                                {##}
+                                {#    } else if (data == 'Close'){#}
+                                {#        $("tr td:eq(11)").css('background', 'green');#}
+                                {##}
+                                {#    }#}
+                                {# }#}
                             },
 
                             {#{#}
@@ -341,7 +348,7 @@
         $("#btnRefresh").click(function () {
             oDataTable.ajax.reload();
         });
-
+        {}
 
         //新增
         $("#btnCreate").click(function () {
@@ -448,31 +455,11 @@
         }
 
 
-        {#// 導入  id="btnImport"#}
-        {#$("#btnImport").on("click", function () {#}
-        {#    // alert("导入功能在此书写");#}
-        {#    layer.open({#}
-        {#        type: 1,#}
-        {#        title: "批量导入",#}
-        {#        closeBtn: 1,#}
-        {#        shadeClose: false,#}
-        {#        area: ['600px', '200px'],#}
-        {#        content: $("#upload"),#}
-        {#        end: function () {#}
-        {#            //关闭时做的事情#}
-        {#            oDataTable.ajax.reload();#}
-        {#        }#}
-        {#    });#}
-        {# });#}
-
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-
 
         //详情
         //此处inventoryId确定某一机台
         function doDetail(id) {
-            window.location.href = "{% url 'process:order-workflow-detail' %}?inventoryId=" + id;
+            window.location.href = "{% url 'process:order-workflow-detail' %}?workflowId=" + id;
         }
 
         /*input 时间输入选择*/

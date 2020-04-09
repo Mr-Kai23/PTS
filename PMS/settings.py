@@ -28,7 +28,7 @@ SECRET_KEY = 'zmonaqk=2*-u0vc_shy+#4&d7b@67%dyrm3&4(rgx7)#r@5fug'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -162,9 +162,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_ROOT = ''
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/board/'
 
-SAFE_URL = ['/admin/', '/login/', '/logout/', '/']
+SAFE_URL = ['/admin/', '/login/', '/logout/', '/', '/board/']
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

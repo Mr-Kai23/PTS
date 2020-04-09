@@ -34,40 +34,84 @@
                         <i class="fa fa-pencil"></i>
                     </div>
                     {% if not request.user.account_type == 1 %}
-                        <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer" disabled="true" >請點擊</a>
+                        <a href="{% url 'process:order-workflow-create' %}" class="small-box-footer"
+                           disabled="true">請點擊</a>
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div id="devlist">
-            <div class="box box-primary" id="liebiao">
-             <div class="box-body">
-                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
-                        <thead>
-                        <tr valign="middle">
-{#                            <th>ID</th>#}
-                            <th>發佈部門</th>
-                            <th>發佈DRI</th>
-                            <th>發佈時間</th>
-                            <th>主旨</th>
-                            <th>工單</th>
-                            <th>重點注意流程內容</th>
-                            <th>段別</th>
-                            <th>接收DRI</th>
-                            <th>接收狀態</th>
-                            <th>執行狀況</th>
-{#                            <th>操作</th>#}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <tbody id="imp" role="imp">
-{#                    <tr> <tr>#}
-                    </tbody>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">工单数据统计</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="row">
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="/workflow/wfsys/icreated/">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-aqua"><i class="fa fa-pencil-square-o"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">我的创建</span>
+                                    <span class="info-box-number">{{ number.create_count }}</span>
+                                </div><!-- /.info-box-content -->
+                            </div><!-- /.info-box -->
+                        </a><!-- /.col -->
+
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'app_process:order-workflow-list' %}">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-green"><i class="fa fa-hourglass-2"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">待办事项</span>
+                                    <span class="info-box-number">{{ number.doing_count }}</span>
+                                </div><!-- /.info-box-content -->
+                            </div><!-- /.info-box -->
+                        </a><!-- /.col -->
+
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="/process/order/workflow/list/?status=Close">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-yellow"><i class="fa fa-check"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">已结案</span>
+                                    <span class="info-box-number">{{ number.did_count }}</span>
+                                </div><!-- /.info-box-content -->
+                            </div><!-- /.info-box -->
+                        </a><!-- /.col -->
+
+                    </div>
                 </div>
-            </div>
-        </div>
+
+
+                {#        <div id="devlist">#}
+                {#            <div class="box box-primary" id="liebiao">#}
+                {#             <div class="box-body">#}
+                {#                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">#}
+                {#                        <thead>#}
+                {#                        <tr valign="middle">#}
+                {#                            <th>ID</th>#}
+                {#                            <th>發佈部門</th>#}
+                {#                            <th>發佈DRI</th>#}
+                {#                            <th>發佈時間</th>#}
+                {#                            <th>主旨</th>#}
+                {#                            <th>工單</th>#}
+                {#                            <th>重點注意流程內容</th>#}
+                {#                            <th>段別</th>#}
+                {#                            <th>接收DRI</th>#}
+                {#                            <th>接收狀態</th>#}
+                {#                            <th>執行狀況</th>#}
+                {#                            <th>操作</th>#}
+                {#                        </tr>#}
+                {#                        </thead>#}
+                {#                        <tbody>#}
+                {#                        </tbody>#}
+                {#                    </table>#}
+                {#                    <tbody id="imp" role="imp">#}
+                {#                    <tr> <tr>#}
+                {#                    </tbody>#}
+                {#                </div>#}
+                {#            </div>#}
+                {#        </div>#}
     </section>
 {% endblock %}
 
@@ -183,7 +227,7 @@
                                     } else if (data == 1) {
                                         $("tr td:eq(11)").css('background', 'yellow');
                                         return "Ongoing"
-                                    } else if (data == 2){
+                                    } else if (data == 2) {
                                         $("tr td:eq(11)").css('background', 'green');
                                         return "Closed"
                                     }
@@ -204,7 +248,7 @@
                             {#        return ret;#}
                             {#    }#}
                             {# }#}
-                            ],
+                        ],
 
                         // "order": [[1, 'id']],
 
@@ -212,7 +256,7 @@
 
                     {
                         "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]
-                     }
+                    }
                 ));
                 oTable.order([1, 'asc']).draw();
 

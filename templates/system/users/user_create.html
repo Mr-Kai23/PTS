@@ -81,10 +81,10 @@
                             </select>
                         </div>
 
-                        <label class="col-sm-2 control-label">上級主管</label>
+                        <label class="col-sm-2 control-label">上級DRI</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="superior">
-                                <option value="">--上級主管--</option>
+                                <option value="">--上級DRI--</option>
                                 {% for superior in superiors %}
                                     <option value="{{ superior.id }}">{{ superior.name }}</option>
                                 {% endfor %}
@@ -132,19 +132,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">啟用狀態</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_active" value="True"
-                                {% ifequal user.is_active True %}checked{% endifequal %}>啟用
-                            </label>
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_active" value="False"
-                                {% ifequal user.is_active False %}checked{% endifequal %}>禁用
-                            </label>
-                        </div>
-                    </div>
+{#                    <div class="form-group has-feedback">#}
+{#                        <label class="col-sm-2 control-label">啟用狀態</label>#}
+{#                        <div class="col-sm-6">#}
+{#                            <label class="control-label">#}
+{#                                <input type="radio" class="minimal" name="is_active" value="True"#}
+{#                                {% ifequal user.is_active True %}checked{% endifequal %}>啟用#}
+{#                            </label>#}
+{#                            <label class="control-label">#}
+{#                                <input type="radio" class="minimal" name="is_active" value="False"#}
+{#                                {% ifequal user.is_active False %}checked{% endifequal %}>禁用#}
+{#                            </label>#}
+{#                        </div>#}
+{#                    </div>#}
 
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">DRI</label>

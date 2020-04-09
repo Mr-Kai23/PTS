@@ -46,9 +46,12 @@ class WorkFlowListView(LoginRequiredMixin, View):
         filters = {i + '__contains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 获取工单
-        workflows = list(OrderInfo.objects.filter(**filters).values(*fields).order_by('-id'))
+        workflows = OrderInfo.objects.filter(**filters).values(*fields).order_by('-id')
 
-        res = dict(data=workflows)
+        for workflow in workflows:
+            workflow['status'] = OrderInfo.objects.get(id=workflow['id']).get_status_display()
+
+        res = dict(data=list(workflows))
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
@@ -178,7 +181,16 @@ class WorkFlowDetailView(LoginRequiredMixin, View):
     """
     工單详情視圖
     """
-    pass
+    def get(self, request):
+        res = dict()
+
+        id = request.GET.get('workflowId')
+
+        workflow = OrderInfo.objects.get(id=id)
+
+        res['workflow'] = workflow
+
+        return render(request, 'process/WorkFlow/WorkFlow_Detail.html', res)
 
 
 
