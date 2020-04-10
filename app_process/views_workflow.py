@@ -49,7 +49,9 @@ class WorkFlowListView(LoginRequiredMixin, View):
         workflows = OrderInfo.objects.filter(**filters).values(*fields).order_by('-id')
 
         for workflow in workflows:
-            workflow['status'] = OrderInfo.objects.get(id=workflow['id']).get_status_display()
+            order = OrderInfo.objects.get(id=workflow['id'])
+            # workflow['status'] = order.get_status_display()
+            workflow['receive_status'] = order.get_receive_status_display()
 
         res = dict(data=list(workflows))
 
@@ -90,6 +92,13 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict(result=False)
         email = False
         message = False
+
+        # 手选编辑工单状态
+        if 'ids' in request.POST and request.POST['ids']:
+            OrderInfo.objects.filter(id=request.POST['ids']).update(status=int(request.POST['data']))
+            res['result'] = True
+
+            return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))

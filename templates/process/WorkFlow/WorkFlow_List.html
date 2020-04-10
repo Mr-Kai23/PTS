@@ -116,7 +116,7 @@
                             <label>執行狀況:</label>
                             <select class="form-control inputText select2" name="status" id="status">
                                 <option></option>
-                                <option value="0"> </option>
+                                <option value="0">未投產</option>
                                 <option value="1">Closed</option>
                                 <option value="2">Ongoing</option>
                             </select>
@@ -269,29 +269,27 @@
                             },
                             {
                                 data: "receive_status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        return "未接收"
-                                    } else if (data == 1) {
-                                        return "已接收"
-                                    }
-                                }
+                                {#render: function (data, type, row, meta) {#}
+                                {#    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);#}
+                                {#    if (data == 0) {#}
+                                {#        return "未接收"#}
+                                {#    } else if (data == 1) {#}
+                                {#        return "已接收"#}
+                                {#    }#}
+                                {# }#}
                             },
                             {
                                 data: "status",
-                                {#render: function (data, type, row, meta) {#}
-                                {#    if (data == '未投產') {#}
-                                {#        $("tr td:eq(11)").css('background', 'red');#}
-                                {##}
-                                {#    } else if (data == 'Ongoing') {#}
-                                {#        $("tr td:eq(11)").css('background', 'yellow');#}
-                                {##}
-                                {#    } else if (data == 'Close'){#}
-                                {#        $("tr td:eq(11)").css('background', 'green');#}
-                                {##}
-                                {#    }#}
-                                {# }#}
+                                render: function (data, type, row, meta) {
+                                    var res = "<select class='form-control select2' style='width:100%;' id='updatestatus' type='text'"+
+                                        "onchange='save(" + row['id'] +")'>" +
+                                        "<option id='type1' value='0'>未投產</option>" +
+                                        "<option id='type2' value='1'>Ongoing</option>"+
+                                        "<option id='type3' value='2'>Close</option>" +
+                                        "</select>";
+
+                                    return res;
+                                }
                             },
 
                             {#{#}
@@ -332,6 +330,7 @@
         $("#btnSearch").click(function () {
             oDataTable.ajax.reload();
         });
+
 
         //checkbox全选
         $("#checkAll").on("click", function () {
@@ -453,6 +452,43 @@
             });
 
         }
+
+        // 状态修改保存
+        function save(id){
+            var data = $('#updatestatus').val();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'process:order-workflow-create' %}",
+                data: {"data": data, "ids":id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                {#data: data,#}
+                cache: false,
+                success: function (msg) {
+                    if (msg.result) {
+
+                        var str = $('select#updatestatus')[id-1];
+                        for(var i=0; i<str.length; i++){
+                            if(str[i].value == data){
+                                str[i].selected == true;
+                            }
+                        }
+
+                        oDataTable.ajax.reload();
+                    } else {
+                        {#layer.alert("操作失败！", {icon: 2});#}
+                    }
+
+                }
+            });
+        }
+
+        {#var val = $('select#updatestatus option:first').val();#}
+        {#console.log(val)#}
+        {##}
+        {#var obj = document.getElementById("updatestatus");#}
+        {#for(var i=0;i<obj.length;i++){#}
+        {#    if(obj[i].value==str)#}
+        {#        obj[i].selected = true;#}
+        {# }#}
 
 
 
