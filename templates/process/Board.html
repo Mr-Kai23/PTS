@@ -56,7 +56,7 @@
         .tabel-list {
             background-color: #255e95;
             border-spacing: 0;
-            width: 100%;
+            width: 70%;
             height: 20px;
         }
 
@@ -66,46 +66,53 @@
             border-bottom: 1px solid black;
             color: white;
             width: auto;
+            height: 40px;
             white-space: nowrap;
         }
     </style>
 </head>
 <body>
-
-<div class="nav">
-    <div class="s9 clearfix">
-        <div class="nav-left">
-            <ul>
-                <li>产品流程看板系统</li>
-            </ul>
-        </div>
-        <div class="nav-right">
-            <a href="{% url 'login' %}">登录/Login</a>
+<div>
+    <div class="nav">
+        <div class="s9 clearfix">
+            <div class="nav-left">
+                <ul>
+                    <li>產品流程管理看板</li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <a href="{% url 'login' %}">登录/Login</a>
+            </div>
         </div>
     </div>
+
+    <table class="tabel-list" style="table-layout:fixed;float: left; ">
+        <thead class="tabel_head">
+        <tr>
+            <th>發佈部門</th>
+            <th>發佈DRI</th>
+            <th>發佈時間</th>
+            <th>主旨</th>
+            <th>工單</th>
+            <th>重點注意內容</th>
+            <th>段別</th>
+            <th>接收DRI</th>
+            <th>接收狀態</th>
+            <th>執行狀況</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+
+    <div id="workflow_echarts" style="height: 500%;width:30%;float: left;margin-top:5%;"></div>
+
+
 </div>
 
-<table class="tabel-list" style="table-layout:fixed">
-    <thead class="tabel_head">
-    <tr>
-
-        <th>發佈部門</th>
-        <th>發佈DRI</th>
-        <th>發佈時間</th>
-        <th>主旨</th>
-        <th>工單</th>
-        <th>重點注意流程內容</th>
-        <th>段別</th>
-        <th>接收DRI</th>
-        <th>接收狀態</th>
-        <th>執行狀況</th>
-    </tr>
-    </thead>
-    <tbody id="tbody">
-    </tbody>
-</table>
 
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
+<script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
     $(function () {
         setTimeout(function () {
@@ -132,9 +139,7 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                        console.log(data[i][arr[j]])
-
-                        tableData += "<td style='font-weight: 900;border-right:0.5px solid black; border-bottom:0.5px solid black; background-color:#FFCE44; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFCE44; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
                     }
                     tableData += "</tr>";
                 }
@@ -142,7 +147,62 @@
             }
         })
     }
+
     window.onload = creatTable();
+
+
+    // 環形圖
+    var myChart = echarts.init(document.getElementById("workflow_echarts"));
+
+    option = null;
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 10,
+            data: ['待接收工單', '已接收工單', '創建的工單']
+        },
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {value: {{ toreceive }}, name: '待接收工單'},
+                    {value: {{ received }}, name: '已接收工單'},
+                    {value: {{ created }}, name: '創建的工單'},
+                ]
+            }
+        ]
+    };
+
+    //使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    //图表窗体自适应
+    $(window).resize(function () {
+        myChart.resize();
+
+    });
+
 
 </script>
 

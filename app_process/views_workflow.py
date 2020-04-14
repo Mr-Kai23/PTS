@@ -73,7 +73,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             res['workflow'] = workflow
 
             # 获取工单发布时间
-            res['time'] = workflow.publish_time.strftime("%Y/%m/%d %H:%M")
+            res['time'] = workflow.publish_time.strftime("%Y-%m-%d %H:%M")
 
             # 获取工单的接收者，由于没用外键，所以以字符串形式拼接存储
             res['receivers'] = workflow.receiver.split(';')
@@ -81,7 +81,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # workflow = OrderInfo.objects.all()
             # res['workflow'] = workflow
             # 新建的时候，获取当前的时间为工单创建时间
-            t = time.strftime("%Y/%m/%d %H:%M", time.localtime())
+            t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
             res['time'] = t
 
         # 获取所有接收者DRI

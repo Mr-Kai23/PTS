@@ -19,7 +19,15 @@ class BoardView(View):
     看板视图
     """
     def get(self, request):
-        return render(request, 'process/Board.html', locals())
+        orders = OrderInfo.objects.all()
+
+        res = {
+            'created': orders.count(),
+            'toreceive': orders.filter(receive_status=0).count(),
+            'received': orders.filter(receive_status=1).count()
+        }
+
+        return render(request, 'process/Board.html', res)
 
 
 class BoardListView(View):
@@ -31,9 +39,15 @@ class BoardListView(View):
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
                   'status', 'withdraw_time', 'unit_type']
 
-        orders = list(OrderInfo.objects.values(*fields).order_by('-id'))
+        workflows = OrderInfo.objects.values(*fields).order_by('-id')
 
-        res = dict(data=orders)
+        for workflow in workflows:
+            order = OrderInfo.objects.get(id=workflow['id'])
+            workflow['status'] = order.get_status_display()
+            workflow['receive_status'] = order.get_receive_status_display()
+            workflow['publish_time'] = order.publish_time.strftime("%Y/%m/%d %H:%M")
+
+        res = dict(data=list(workflows))
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
