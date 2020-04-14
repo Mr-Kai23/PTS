@@ -3,6 +3,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.views.decorators.cache import cache_page
 
 from app_process.forms import WorkflowForm
 from app_process.models import Segment, OrderInfo
@@ -35,6 +36,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
     """
     工单显示视图
     """
+
     def get(self, request):
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',

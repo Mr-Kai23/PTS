@@ -70,49 +70,20 @@ class WorkFlowReceiveView(LoginRequiredMixin, View):
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 
-class ReceptCreateView(LoginRequiredMixin, View):
+class ReceptDetailView(LoginRequiredMixin, View):
     """
-    接收工單創建视图
+    工單详情視圖
     """
     def get(self, request):
         res = dict()
-        user = request.user.name
-        t = time.strftime("%Y/%m/%d %H:%M", time.localtime())
-        dris = UserInfo.objects.filter(is_admin=True)
-        res = {
-            'time': t,
-            'dris': dris
-        }
 
-        return render(request, 'process/Recipient/Recipient_Create.html', res)
+        id = request.GET.get('workflowId')
 
-    def post(self, request):
-        res = dict(result=False)
-        if 'id' in request.POST and request.POST['id']:
-            workflow = get_object_or_404(OrderInfo, id=request.POST['id'])
-        else:
-            workflow = OrderInfo()
+        workflow = OrderInfo.objects.get(id=id)
 
-        recipientform = RecipientForm(request.POST, instance=workflow)
+        res['workflow'] = workflow
 
-        if recipientform.is_valid():
-            workflow.save()
-            res['result'] = True
-        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+        return render(request, 'process/Recipient/Recipient_Detail.html', res)
 
-
-class ReceptDeleteView(LoginRequiredMixin, View):
-    """
-    接收工單刪除視圖
-    """
-    def post(self, request):
-        res = dict(result=False)
-        if 'id' in request.POST and request.POST.get('id'):
-            ids = map(int, request.POST.get('id').split(','))
-            OrderInfo.objects.filter(id__in=ids).delete()
-
-            res['result'] = True
-
-        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 

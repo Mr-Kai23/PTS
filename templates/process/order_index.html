@@ -49,32 +49,32 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="row">
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="/workflow/wfsys/icreated/">
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'process:order-workflow' %}">
                             <div class="info-box">
                                 <span class="info-box-icon bg-aqua"><i class="fa fa-pencil-square-o"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">我的创建</span>
-                                    <span class="info-box-number">{{ number.create_count }}</span>
+                                    <span class="info-box-number">{{ created }}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->
 
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'app_process:order-workflow-list' %}">
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'process:order-receive' %}">
                             <div class="info-box">
                                 <span class="info-box-icon bg-green"><i class="fa fa-hourglass-2"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">待办事项</span>
-                                    <span class="info-box-number">{{ number.doing_count }}</span>
+                                    <span class="info-box-number">{{ receive }}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->
 
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="/process/order/workflow/list/?status=Close">
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="/process/order/workflow/?status=Close">
                             <div class="info-box">
                                 <span class="info-box-icon bg-yellow"><i class="fa fa-check"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">已结案</span>
-                                    <span class="info-box-number">{{ number.did_count }}</span>
+                                    <span class="info-box-number">{{ finished }}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->

@@ -24,8 +24,6 @@ urlpatterns = [
     # 待接收工單路由
     url(r'^order/receive/$', views_recept.ReceptView.as_view(), name='order-receive'),
     url(r'^order/receive/list/$', views_recept.ReceptListView.as_view(), name='order-receive-list'),
-    url(r'^order/receive/create/$', views_recept.ReceptCreateView.as_view(), name='order-receive-create'),
-    url(r'^order/receive/delete/$', views_recept.ReceptDeleteView.as_view(), name='order-receive-delete'),
-    # url(r'^order/workflow/detail$', views_workflow.WorkFlowDetailView.as_view(), name='order-workflow-detail'),
-    url(r'^order/receive/accept', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept')
+    url(r'^order/receive/accept/$', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept'),
+    url(r'^order/receive/detail$', views_recept.ReceptDetailView.as_view(), name='order-receive-detail'),
 ]

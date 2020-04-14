@@ -7,10 +7,11 @@ from app_process.models import OrderInfo
 from system.mixin import LoginRequiredMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from django.views.decorators.cache import cache_page
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
-# from suds.client import Client
+from suds.client import Client
 
 
 class BoardView(View):
@@ -38,19 +39,41 @@ class BoardListView(View):
 
 
 class OrderView(LoginRequiredMixin, View):
+    """
+    工单主页面视图
+    """
     def get(self, request):
+        orders = OrderInfo.objects.all()
         res = {
-            'created': OrderInfo.objects.all().count(),
-            'receive': OrderInfo.objects.filter(receive_status=0).count(),
-            'finished': OrderInfo.objects.filter(receive_status=1, status=1).count()
+            'created': orders.count(),
+            'receive': orders.filter(receive_status=0).count(),
+            'finished': orders.filter(receive_status=1, status=1).count()
         }
 
         return render(request, 'process/order_index.html', res)
 
 
+# @cache_page(15*60)
+# def OrderView(request):
+#
+#     orders = OrderInfo.objects.all()
+#     res = {
+#         'created': orders.count(),
+#         'receive': orders.filter(receive_status=0).count(),
+#         'finished': orders.filter(receive_status=1, status=1).count()
+#     }
+#
+#     return render(request, 'process/order_index.html', res)
+
+
 def send_email(subject, message, from_email, receivers):
     """
-    發送郵件
+    发送邮件
+    :param subject:
+    :param message:
+    :param from_email:
+    :param receivers:
+    :return:
     """
 
     if subject and message and from_email:
@@ -68,6 +91,14 @@ def send_email(subject, message, from_email, receivers):
 
 
 def send_message(moblie_list, message, FormatID, SpaceNum):
+    """
+    发送短信
+    :param moblie_list:
+    :param message:
+    :param FormatID:
+    :param SpaceNum:
+    :return:
+    """
 
     for moblie in moblie_list:
         try:

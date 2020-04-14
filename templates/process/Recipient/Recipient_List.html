@@ -23,25 +23,14 @@
                         </button>
 
                     </div>
-                     <div class="btn-group pull-left">&nbsp</div>
-                      <div class="btn-group pull-left">
-                        <button type="button" id="btnRefresh" class="btn btn-default" {% if request.user.account_type == 0 %} disabled="true" {% endif %}>
-                            <i class="glyphicon glyphicon-check"></i> 接收
-                        </button>
-                     </div>
-
-{#                    <div class="btn-group pull-left">&nbsp</div>#}
-{#                    <div class="btn-group pull-left">#}
-{#                        <button type="button" id="btnDelete" class="btn btn-danger">#}
-{#                            <i class="glyphicon glyphicon-trash"></i> 删除#}
-{#                        </button>#}
-{#                    </div>#}
-{#                    <div class="btn-group pull-right">&nbsp</div>#}
-{#                    <div class="btn-group pull-right">#}
-{#                        <button type="button" id="btnImport" class="btn btn-info">#}
-{#                            <i class="glyphicon glyphicon-log-in"></i> 導入#}
-{#                        </button>#}
-{#                    </div>#}
+                    {% if request.user.account_type == 1 %}
+                        <div class="btn-group pull-left">&nbsp</div>
+                        <div class="btn-group pull-left">
+                            <button type="button" id="btnReceive" class="btn btn-default">
+                                <i class="glyphicon glyphicon-check"></i> 接收
+                            </button>
+                        </div>
+                    {% endif %}
 
                     <div id="upload" style="display: none">
                         <form method="post" enctype="multipart/form-data">
@@ -108,7 +97,7 @@
                             <label>執行狀況:</label>
                             <select class="form-control inputText select2" name="status" id="status">
                                 <option></option>
-                                <option value="0"> </option>
+                                <option value="0"></option>
                                 <option value="1">Closed</option>
                                 <option value="2">Ongoing</option>
                             </select>
@@ -249,6 +238,14 @@
                             },
                             {
                                 data: "key_content",
+                                render: function (data) {
+                                    if (data.length > 5) {
+                                        return data.substring(0, 5) + '...';
+                                    } else {
+                                        return data;
+                                    }
+
+                                }
                             },
                             {
                                 data: "segment",
@@ -275,16 +272,13 @@
                                     } else if (data == 1) {
                                         $("tr td:eq(11)").css('background', 'yellow');
                                         return "Ongoing"
-                                    } else if (data == 2){
+                                    } else if (data == 2) {
                                         $("tr td:eq(11)").css('background', 'green');
                                         return "Closed"
                                     }
                                 }
                             },
 
-                            {#{#}
-                            {#    data: "remark",#}
-                            {# },#}
                             {
                                 data: "id",
                                 width: "12%",
@@ -292,10 +286,11 @@
                                 render: function (data, type, row, meta) {
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
-                                    ret = ret + "<button title='接收' onclick='doReceive("
-                                        + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
-                                    ret = ret + "<button title='删除' onclick='doDelete("
-                                        + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
+                                    {% if request.user.account_type == 1 %}
+                                        ret = ret + "<button title='接收' onclick='doReceive("
+                                            + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
+                                    {% endif %}
+
                                     return ret;
                                 }
                             }],
@@ -337,26 +332,11 @@
             oDataTable.ajax.reload();
         });
 
-        //新增
-        $("#btnCreate").click(function () {
-            layer.open({
-                type: 2,
-                title: '新增',
-                shadeClose: false,
-                maxmin: true,
-                area: ['60%', '60%'],
-                content: "{% url 'process:order-receive-create' %}",
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
-        });
 
-        //批量删除
-        $("#btnDelete").click(function () {
+        //批量接收
+        $("#btnReceive").click(function () {
             if ($("input[name='checkList']:checked").length == 0) {
-                layer.msg("请选择要删除的记录");
+                layer.msg("请选择要接收的工單！");
                 return;
             }
 
@@ -368,7 +348,7 @@
 
             sId = arrId.join(',');
 
-            layer.alert('确定删除吗？', {
+            layer.alert('确定接收吗？', {
                 title: '提示'
                 , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
                 , time: 0 //不自动关闭
@@ -377,7 +357,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-receive-delete' %}",
+                        url: "{% url 'process:order-receive-accept' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -397,23 +377,7 @@
 
         //编辑
         function doReceive(id) {
-            var div = layer.open({
-                type: 2,
-                title: '编辑',
-                shadeClose: false,
-                maxmin: true,
-                area: ['60%', '60%'],
-                content: ["{% url 'process:order-receive-accept' %}" + '?id=' + id,],
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
-        }
-
-        //删除物料
-        function doDelete(id) {
-            layer.alert('确定删除吗？', {
+            layer.alert('确定接收吗？', {
                 title: '提示'
                 , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
                 , time: 0 //不自动关闭
@@ -422,16 +386,15 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-workflow-delete' %}",
-                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
+                        url: "{% url 'process:order-receive-accept' %}",
+                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
                             if (msg.result) {
-                                layer.alert('删除成功！', {icon: 1});
+                                layer.alert("操作成功！", {icon: 1});
                                 oDataTable.ajax.reload();
                             } else {
-                                //alert(msg.message);
-                                layer.alert('删除失败！', {icon: 2});
+                                layer.alert("操作失败！", {icon: 2});
                             }
 
                         }
@@ -466,7 +429,7 @@
         //详情
         //此处inventoryId确定某一机台
         function doDetail(id) {
-            window.location.href = "{% url 'process:order-workflow-detail' %}?inventoryId=" + id;
+            window.location.href = "{% url 'process:order-receive-detail' %}?workflowId=" + id;
         }
 
         /*input 时间输入选择*/
