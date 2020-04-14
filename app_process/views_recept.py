@@ -77,7 +77,7 @@ class ReceptCreateView(LoginRequiredMixin, View):
     def get(self, request):
         res = dict()
         user = request.user.name
-        t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+        t = time.strftime("%Y/%m/%d %H:%M", time.localtime())
         dris = UserInfo.objects.filter(is_admin=True)
         res = {
             'time': t,

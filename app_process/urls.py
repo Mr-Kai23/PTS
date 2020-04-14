@@ -4,12 +4,14 @@ from django.urls import path
 from app_process.views import OrderView
 import app_process.views_workflow as views_workflow
 import app_process.views_recept as views_recept
+# import app_process.views as views
 from system.views import SystemView
 
 app_name = 'app_process'
 
 urlpatterns = [
     path('', OrderView.as_view(), name='pmslogin'),
+
 
     # 工单路由
     url(r'^order/workflow/$', views_workflow.WorkFlowView.as_view(), name='order-workflow'),

@@ -1,13 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>專案生產流程管理實時看板系統</title>
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .nav-left li {
+            float: left;
+            padding-right: 20px;
+            color: white;
+        }
+
+        .nav-right {
+            float: right;
+        }
+
+        .nav {
+            background-color: #3c3c3c;
+            padding: 12px 0;
+            width: 100%;
+        }
+
+        .clearfix:after {
+            clear: both;
+            content: "";
+            display: block;
+        }
+
+        .s9 {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        a:hover {
+            background-color: lightslategrey;
+        }
+
+        li {
+            font-size: 18px;
+        }
+
+        .tabel-list {
+            background-color: #255e95;
+            border-spacing: 0;
+            width: 100%;
+            height: 20px;
+        }
+
+        .tabel-list th {
+            text-align: center;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            color: white;
+            width: auto;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
-    <a href="{% url 'login' %}">进入系统</a>
-    <table>
 
-    </table>
+<div class="nav">
+    <div class="s9 clearfix">
+        <div class="nav-left">
+            <ul>
+                <li>产品流程看板系统</li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'login' %}">登录/Login</a>
+        </div>
+    </div>
+</div>
+
+<table class="tabel-list" style="table-layout:fixed">
+    <thead class="tabel_head">
+    <tr>
+
+        <th>發佈部門</th>
+        <th>發佈DRI</th>
+        <th>發佈時間</th>
+        <th>主旨</th>
+        <th>工單</th>
+        <th>重點注意流程內容</th>
+        <th>段別</th>
+        <th>接收DRI</th>
+        <th>接收狀態</th>
+        <th>執行狀況</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+</table>
+
+<script type="text/javascript" src="/static/js/jquery.min.js "></script>
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            $('td').click(function () {
+                if ($(this).children().length == 0) {
+                    alert($(this).context.innerText)
+                }
+            })
+        }, 1000)
+    });
+
+    creatTable();
+    var interval3 = setInterval(function () {
+        creatTable()
+    }, 60000);
+
+    function creatTable() {
+        $.ajax({
+            url: "{% url 'board-list' %}",
+            success: function (e) {
+                var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
+                var data = e.data;
+
+                var tableData = "<tr>";
+                for (var i = 0; i < data.length; i++) {
+                    for (var j = 0; j < arr.length; j++) {
+                        console.log(data[i][arr[j]])
+
+                        tableData += "<td style='font-weight: 900;border-right:0.5px solid black; border-bottom:0.5px solid black; background-color:#FFCE44; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                    }
+                    tableData += "</tr>";
+                }
+                $("#tbody").html(tableData)
+            }
+        })
+    }
+    window.onload = creatTable();
+
+</script>
+
 </body>
 </html>
+
+
+
+
+
+
+
