@@ -139,7 +139,21 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                        tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFCE44; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        if(data[i][arr[j]] == "未投產")
+                        {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FF0000; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        }
+                        else if(data[i][arr[j]] == "Ongoing")
+                        {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFFF00; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        }
+                        else if(data[i][arr[j]] == "Closed")
+                        {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#07B050; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        }
+                        else{
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#C1DEC9; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                        }
                     }
                     tableData += "</tr>";
                 }
