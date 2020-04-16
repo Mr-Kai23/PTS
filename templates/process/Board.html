@@ -7,6 +7,9 @@
         * {
             margin: 0;
             padding: 0;
+            font-family: "Calibri","Arial Black", arial-black;
+            text-align:center;
+            font-size: 17px;
         }
 
         ul {
@@ -22,7 +25,6 @@
         .nav-right {
             float: right;
         }
-
         .nav {
             background-color: #3c3c3c;
             padding: 12px 0;
@@ -104,13 +106,9 @@
         <tbody id="tbody">
         </tbody>
     </table>
-
     <div id="workflow_echarts" style="height: 500%;width:30%;float: left;margin-top:5%;"></div>
 
-
 </div>
-
-
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
@@ -141,18 +139,18 @@
                     for (var j = 0; j < arr.length; j++) {
                         if(data[i][arr[j]] == "未投產")
                         {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FF0000; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                         else if(data[i][arr[j]] == "Ongoing")
                         {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFFF00; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFFF00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                         else if(data[i][arr[j]] == "Closed")
                         {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#07B050; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#07B050; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                         else{
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#C1DEC9; overflow:hidden;text-align:center;font-size:13px;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#DDEDE1; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
