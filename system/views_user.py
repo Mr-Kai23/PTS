@@ -74,7 +74,7 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect(reverse('login'))
+        return HttpResponseRedirect('/board')
 
 
 class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):

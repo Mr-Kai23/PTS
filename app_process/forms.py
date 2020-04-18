@@ -52,6 +52,7 @@ class WorkflowForm(forms.ModelForm):
         model = OrderInfo
         fields = '__all__'
 
+
 class RecipientForm(forms.ModelForm):
     """
     待接收工单表

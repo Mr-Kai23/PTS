@@ -1,4 +1,4 @@
-import json, time
+import json, time, datetime
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -65,7 +65,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     工單創建视图
     """
     def get(self, request):
-        res = dict()
+        res = dict(msg='')
         if 'id' in request.GET and request.GET['id']:
             workflow = get_object_or_404(OrderInfo, pk=request.GET.get('id'))
 
@@ -73,7 +73,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             res['workflow'] = workflow
 
             # 获取工单发布时间
-            res['time'] = workflow.publish_time.strftime("%Y-%m-%d %H:%M")
+            res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M:%S')
 
             # 获取工单的接收者，由于没用外键，所以以字符串形式拼接存储
             res['receivers'] = workflow.receiver.split(';')
@@ -81,7 +81,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # workflow = OrderInfo.objects.all()
             # res['workflow'] = workflow
             # 新建的时候，获取当前的时间为工单创建时间
-            t = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+            t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             res['time'] = t
 
         # 获取所有接收者DRI
@@ -97,11 +97,19 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
         # 手选编辑工单状态
         if 'ids' in request.POST and request.POST['ids']:
-            OrderInfo.objects.filter(id=request.POST['ids']).update(status=int(request.POST['data']))
-            res['result'] = True
+            # 獲取出工單
+            order = OrderInfo.objects.get(id=request.POST['ids'])
+
+            # 判斷工單是否接收，0:未接收 1:已接收
+            if order.receive_status == 0:
+                res['msg'] = '工單未接收！！'
+            else:
+                order.status = int(request.POST['data'])
+                res['result'] = True
 
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
+        # 編輯工單信息
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
@@ -134,7 +142,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
         if receiver == 'All':
             # 获取所有用户的邮箱和电话
-            for em in tuple(UserInfo.objects.filter(account_typ=1).values_list('email', 'mobile')):
+            for em in tuple(UserInfo.objects.filter(account_type=1).values_list('email', 'mobile')):
                 email, mobile = em
                 emails.append(email)
                 mobiles.append(mobile)
@@ -164,8 +172,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                            emails)
                 # 發送短信
                 send_message(mobiles,
-                             request.POST.get('subject')+':\n'+request.POST.get('key_content'),
-                             '', '')
+                             [request.user.name, ],
+                             '6311', '7')
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

@@ -1,9 +1,10 @@
+from django.db.models import Count
 from django.shortcuts import render
 
 # Create your views here.
 from django.views import View
 
-from app_process.models import OrderInfo
+from app_process.models import OrderInfo, Segment
 from system.mixin import LoginRequiredMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -19,12 +20,44 @@ class BoardView(View):
     看板视图
     """
     def get(self, request):
+
+        # 用于存放每个段别下的工单
+        segment_orders = []
+        # 用存放每个段别下每种执行状态下的工单
+        un_accept_list = []
+        un_product_list = []
+        Ongoing_list = []
+        Closed_list = []
+
         orders = OrderInfo.objects.all()
 
+        # 获取所有段别下的工单数量
+        segments = Segment.objects.all().order_by('id')
+
+        for segment in segments:
+            # 获取每个段别下的工单
+            segment_orders.append(orders.filter(segment=segment).all())
+            # 获取每个段别下的未接收的工单
+            un_accept_list.append(orders.filter(receive_status=0, segment=segment).count())
+            # 获取每个段别下的未投产的工单
+            un_product_list.append(orders.filter(status=0, segment=segment).count())
+            # 获取每个段别下的Ongoing的工单
+            Ongoing_list.append(orders.filter(status=1, segment=segment).count())
+            # 获取每个段别下的Closed的工单
+            Closed_list.append(orders.filter(status=2, segment=segment).count())
+
+        # 用于echarts显示
         res = {
-            'created': orders.count(),
-            'toreceive': orders.filter(receive_status=0).count(),
-            'received': orders.filter(receive_status=1).count()
+            'un_receive': orders.filter(receive_status=0).count(),  # 待接收工单数量
+            'un_product': orders.filter(status=0).count(),  # 未投产工单数量
+            'ongoing': orders.filter(status=1).count(),   # 进行中
+            'closed': orders.filter(status=2).count(),   # 已完成
+            'segments': segments,
+            'segment_orders': segment_orders,
+            'un_accept_list': un_accept_list,
+            'un_product_list': un_product_list,
+            'Ongoing_list': Ongoing_list,
+            'Closed_list': Closed_list,
         }
 
         return render(request, 'process/Board.html', res)
@@ -104,7 +137,7 @@ def send_email(subject, message, from_email, receivers):
         return HttpResponse('請確認所有信息是否無誤！！')
 
 
-def send_message(moblie_list, message, FormatID, SpaceNum):
+def send_message(moblie_list, message, FormatID='6311', SpaceNum='7'):
     """
     发送短信
     :param moblie_list:
@@ -117,7 +150,7 @@ def send_message(moblie_list, message, FormatID, SpaceNum):
     for moblie in moblie_list:
         try:
             client = Client('http://sms.efoxconn.com/Framework/index.aspx')
-            params = {'UserName': 'F8624523', 'PassWord': '42342314', 'Phone': moblie, 'FormatID': FormatID,
+            params = {'UserName': 'F8624523', 'PassWord': '42322317', 'Phone': moblie, 'FormatID': FormatID,
                       'SpaceNum': SpaceNum, 'Content': message}
 
             client.service.SendFormatSMS(**params)

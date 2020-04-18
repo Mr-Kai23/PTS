@@ -72,7 +72,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
         },
+
     },
 ]
 
@@ -170,7 +172,7 @@ SAFE_URL = ['/admin/', '/login/', '/logout/', '/', '/board/']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = False
-EMAIL_HOST = '127.0.0.1'
+EMAIL_HOST = '10.134.28.95'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWOED = ''

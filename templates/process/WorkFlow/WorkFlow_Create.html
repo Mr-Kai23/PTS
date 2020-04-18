@@ -27,7 +27,11 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈者部門</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="publish_dept" type="text" {% if workflow %} value="{{ workflow.publish_dept }}" {% else %} value="{{ request.user.department.name }}" {% endif %}/>
+                            {% if workflow %}
+                                <input class="form-control" name="publish_dept" type="text" value="{{ workflow.publish_dept }}" />
+                            {% else %}
+                                <input class="form-control" name="publish_dept" type="text" value="{{ request.user.department.name }}"/>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group has-feedback">
@@ -111,17 +115,6 @@
         $("#btnSave").click(function () {
 
             var data = $("#addForm").serialize();
-
-
-            {#// 获取选中的工单id#}
-            {#var id = $("input[name=id]").val();#}
-            {##}
-            {#// 获取接收DRI#}
-            {#var cks = new Array();#}
-            {#$("input:checkbox:checked").each(function(i){#}
-            {#    cks.push($(this).val());#}
-            {# });#}
-
 
             $.ajax({
                 type: $("#addForm").attr('method'),

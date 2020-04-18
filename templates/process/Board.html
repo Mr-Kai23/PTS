@@ -7,8 +7,8 @@
         * {
             margin: 0;
             padding: 0;
-            font-family: "Calibri","Arial Black", arial-black;
-            text-align:center;
+            font-family: "Calibri", "Arial Black", arial-black;
+            text-align: center;
             font-size: 17px;
         }
 
@@ -25,6 +25,7 @@
         .nav-right {
             float: right;
         }
+
         .nav {
             background-color: #3c3c3c;
             padding: 12px 0;
@@ -106,7 +107,9 @@
         <tbody id="tbody">
         </tbody>
     </table>
-    <div id="workflow_echarts" style="height: 500%;width:30%;float: left;margin-top:5%;"></div>
+    <div id="status_echarts" style="height: 300%; width:30%; float: left;"></div>
+    <div id="segment_echarts" style="height: 300%; width:30%; float: right;"></div>
+    <div id="segment_status_echarts" style="height: 300%; width:30%; float: right;margin-left: 70%;"></div>
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
@@ -137,19 +140,13 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                        if(data[i][arr[j]] == "未投產")
-                        {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        }
-                        else if(data[i][arr[j]] == "Ongoing")
-                        {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FFFF00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        }
-                        else if(data[i][arr[j]] == "Closed")
-                        {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#07B050; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        }
-                        else{
+                        if (data[i][arr[j]] == "未投產") {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        } else if (data[i][arr[j]] == "Ongoing") {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        } else if (data[i][arr[j]] == "Closed") {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        } else {
                             tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#DDEDE1; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
@@ -163,19 +160,30 @@
     window.onload = creatTable();
 
 
-    // 環形圖
-    var myChart = echarts.init(document.getElementById("workflow_echarts"));
+    // QN P1生產流程執行狀況環形圖
+    var myChart1 = echarts.init(document.getElementById("status_echarts"));
 
     option = null;
     option = {
+        // 默认色板
+        color: ['#FF0000', '#F79646', '#FBFB00', '#9BBB59'],
+
+        // 图表标题
+        title: {
+            text: 'QN P1生產流程執行狀況',
+            x: 'center',
+            y: 'top',
+        },
+
         tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
+
         legend: {
             orient: 'vertical',
             left: 10,
-            data: ['待接收工單', '已接收工單', '創建的工單']
+            data: ['待接收', '未投產', '進行中', '已完成']
         },
         series: [
             {
@@ -198,21 +206,175 @@
                     show: false
                 },
                 data: [
-                    {value: {{ toreceive }}, name: '待接收工單'},
-                    {value: {{ received }}, name: '已接收工單'},
-                    {value: {{ created }}, name: '創建的工單'},
+                    {value: {{ un_receive }}, name: '待接收'},
+                    {value: {{ un_product }}, name: '未投產'},
+                    {value: {{ ongoing }}, name: '進行中'},
+                    {value: {{ closed }}, name: '已完成'},
                 ]
             }
         ]
     };
 
     //使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart1.setOption(option);
+
+
+    // QN P1生產流程執行狀況環形圖
+    var myChart2 = echarts.init(document.getElementById("segment_echarts"));
+
+    option = null;
+    option = {
+        // 默认色板
+        color: ['#F79646', '#4F81BD', '#C0504D', '#9BBB59', '#8064A2', '#4BACC6'],
+
+        // 图表标题
+        title: {
+            text: 'QN P1生產流程格段分佈狀況',
+            x: 'center',
+            y: 'top',
+        },
+
+        tooltip: {
+            trigger: 'item',
+            {#formatter: '{a} <br/>{b}: {c} ({d}%)'#}
+        },
+
+        legend: {
+            orient: 'vertical',
+            left: 10,
+            {#data: [{% for segment_order in segment_orders %}'{{ segment_order.0.segment }}',{% endfor %}]#}
+            data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]
+        },
+        series: [
+            {
+                name: '访问来源',
+                type: 'pie',
+                radius: ['58%', '75%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    {% for segment_order in segment_orders %}
+                        {value: {{ segment_order|length }}, name: '{{ segment_order.0.segment }}'},
+                    {% endfor %}
+                ]
+            }
+        ]
+    };
+
+    //使用刚指定的配置项和数据显示图表。
+    myChart2.setOption(option);
+
+
+    // QN P1生產流程段别執行狀況圖
+    var myChart3 = echarts.init(document.getElementById('segment_status_echarts'));
+    option = {
+
+        // 默认色板
+        color: ['#FF0000', '#F79646', '#FBFB00', '#9BBB59'],
+
+        // 图表标题
+        title: {
+            text: 'QN P1生產流程格段執行分佈狀況',
+            x: 'center',
+            y: 'bottom',
+         },
+
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+            data: ['待接收', '未投產', '進行中', '已完成']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            max: 10,
+
+        },
+        yAxis: {
+            type: 'category',
+            {#data: [{% for segment_order in segment_orders %} '{{ segment_order.0.segment }}', {% endfor %}]#}
+            data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]
+        },
+        series: [
+            {
+                name: '待接收',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: [{% for accpet in un_accept_list %} '{{ accpet }}', {% endfor %}]
+                {#data: [2, 1, 1, 0, 2, 0]#}
+            },
+
+            {
+                name: '未投產',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: [{% for product in un_product_list %} '{{ product }}', {% endfor %}]
+                {#data: [1, 0, 0, 0, 2, 0]#}
+            },
+            {
+                name: '進行中',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: [{% for Ongoing in Ongoing_list %} '{{ Ongoing }}', {% endfor %}]
+                {#data: [1, 0, 0, 0, 0, 0]#}
+            },
+            {
+                name: '已完成',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: [{% for Close in Closed_list %} '{{ Close }}', {% endfor %}]
+                {#data: [0, 1, 1, 0, 0, 0]#}
+            },
+
+        ]
+    };
+
+    //使用刚指定的配置项和数据显示图表。
+    myChart3.setOption(option);
 
     //图表窗体自适应
     $(window).resize(function () {
-        myChart.resize();
-
+        myChart1.resize();
+        myChart2.resize();
+        myChart3.resize();
     });
 
 
