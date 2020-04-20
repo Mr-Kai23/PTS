@@ -95,7 +95,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         email = False
         message = False
 
-        # 手选编辑工单状态
+        # 手选编辑工单状态保存
         if 'ids' in request.POST and request.POST['ids']:
             # 獲取出工單
             order = OrderInfo.objects.get(id=request.POST['ids'])
@@ -109,14 +109,15 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
-        # 編輯工單信息
+        # 工单信息发布或编辑修改
+        # 存在 ID 是为编辑已存在工单，否则为创建新的工单
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
         else:
             workflow = OrderInfo()
 
-            # 新建时发送邮件和短信
+            # 新建时发送邮件和短信的标签
             email = True
             message = True
 
@@ -163,22 +164,23 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             workflow.save()
             res['result'] = True
 
-            # 工单信息
-            subject = workflow.subject
-            year = workflow.publish_time.year
-            month = workflow.publish_time.month
-            day = workflow.publish_time.day
-            hour = workflow.publish_time.hour
-            minute = workflow.publish_time.minute
-
-            # 发布者信息
-            name = request.user.name
-            department = request.user.department.name
-            project = request.user.project
-            #
-
             # 新建时发送邮件和短信
             if email and message:
+
+                # 邮件和短息发送
+                # 工单信息
+                subject = workflow.subject
+                year = workflow.publish_time.year
+                month = workflow.publish_time.month
+                day = workflow.publish_time.day
+                hour = workflow.publish_time.hour
+                minute = workflow.publish_time.minute
+
+                # 发布者信息
+                name = request.user.name
+                department = request.user.department.name
+                project = request.user.project
+
                 # 發送郵件
                 send_email(subject,
                            request.POST.get('key_content'),

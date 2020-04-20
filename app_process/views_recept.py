@@ -41,11 +41,15 @@ class ReceptListView(LoginRequiredMixin, View):
 
         searchfields = ['segment', 'status', 'receive_status', 'unit_type']
 
-
         filters = {i + '__contains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 获取工单
         workflows = list(OrderInfo.objects.filter(**filters, receive_status=0).values(*fields).order_by('-id'))
+
+        for workflow in workflows:
+            order = OrderInfo.objects.get(id=workflow['id'])
+            workflow['status'] = order.get_status_display()
+            workflow['receive_status'] = order.get_receive_status_display()
 
         res = dict(data=workflows)
 

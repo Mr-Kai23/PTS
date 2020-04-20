@@ -161,7 +161,7 @@ class UserCreateView(LoginRequiredMixin, View):
 
         ret = {
             'users': users,
-            'superior': superiors,
+            'superiors': superiors,
             'structures': structures,
             'projects': projects,
             'segments': segments,
@@ -201,7 +201,7 @@ class UserDetailView(LoginRequiredMixin, View):
         user_roles = user.roles.values()
         ret = {
             'user': user,
-            'superior': superiors,
+            'superiors': superiors,
             'structures': structures,
             'projects': projects,
             'segments': segments,

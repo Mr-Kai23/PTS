@@ -97,19 +97,30 @@
                     </div>
 
                     <legend>
+                        <h4>備註信息</h4>
+                    </legend>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">備註</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="remark" type="text" value="{{ user.remark }}"/>
+                        </div>
+                    </div>
+
+                    <legend>
                         <h4>權限信息</h4>
                     </legend>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">賬號類型</label>
                         <div class="col-sm-6">
-                            <label class="control-label">
+{#                            <label class="control-label">#}
                                 <input type="radio" class="minimal" name="account_type" value="0"
                                 {% if user.account_type == 0 %}checked{% endif %}>發佈者
-                            </label>
-                            <label class="control-label">
+{#                            </label>#}
+{#                            <label class="control-label">#}
                                 <input type="radio" class="minimal" name="account_type" value="1"
                                 {% if user.account_type == 1 %}checked{% endif %}>接收者
-                            </label>
+{#                            </label>#}
                         </div>
                     </div>
 

@@ -253,30 +253,9 @@
 
                             {
                                 data: "receive_status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        return "未接收"
-                                    } else if (data == 1) {
-                                        return "已接收"
-                                    }
-                                }
                             },
                             {
                                 data: "status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        $("tr td:eq(11)").css('background', 'red');
-                                        return ""
-                                    } else if (data == 1) {
-                                        $("tr td:eq(11)").css('background', 'yellow');
-                                        return "Ongoing"
-                                    } else if (data == 2) {
-                                        $("tr td:eq(11)").css('background', 'green');
-                                        return "Closed"
-                                    }
-                                }
                             },
 
                             {

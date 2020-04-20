@@ -81,11 +81,11 @@
         <div class="s9 clearfix">
             <div class="nav-left">
                 <ul>
-                    <li>產品流程管理看板</li>
+                    <li>生產流程管理實時看板</li>
                 </ul>
             </div>
             <div class="nav-right">
-                <a href="{% url 'login' %}">登录/Login</a>
+                <a href="{% url 'login' %}" >Login</a>
             </div>
         </div>
     </div>
@@ -108,9 +108,10 @@
         <tbody id="tbody">
         </tbody>
     </table>
-    <div id="status_echarts" style="height: 300%; width:30%; float: left;"></div>
-    <div id="segment_echarts" style="height: 300%; width:30%; float: right;"></div>
-    <div id="segment_status_echarts" style="height: 300%; width:30%; float: right;margin-left: 70%;"></div>
+
+    <div id="status_echarts" style="height: 310%; width:30%; float: left; margin-top: 1%"></div>
+    <div id="segment_echarts" style="height: 310%; width:30%; float: right; margin-top: 1%"></div>
+    <div id="segment_status_echarts" style="height: 310%; width:30%; float: right;margin-top: 1%;margin-left: 70%;"></div>
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
@@ -357,7 +358,7 @@
         },
         series: [
             {
-                name: '待接收',
+                name: '未接收',
                 type: 'bar',
                 stack: '总量',
                 label: {
@@ -365,7 +366,7 @@
                     position: 'insideRight'
                 },
                 data: [{% for accpet in un_accept_list %} '{{ accpet }}', {% endfor %}]
-                {#data: [2, 1, 1, 0, 2, 0]#}
+                {#data: [2, 1, 1, 2, 2, 1]#}
             },
 
             {
@@ -377,7 +378,7 @@
                     position: 'insideRight'
                 },
                 data: [{% for product in un_product_list %} '{{ product }}', {% endfor %}]
-                {#data: [1, 0, 0, 0, 2, 0]#}
+                {#data: [1, 2, 2, 1, 2, 1]#}
             },
             {
                 name: '進行中',
@@ -388,7 +389,7 @@
                     position: 'insideRight'
                 },
                 data: [{% for Ongoing in Ongoing_list %} '{{ Ongoing }}', {% endfor %}]
-                {#data: [1, 0, 0, 0, 0, 0]#}
+                {#data: [1, 2, 2, 1, 1, 1]#}
             },
             {
                 name: '已完成',
@@ -399,7 +400,7 @@
                     position: 'insideRight'
                 },
                 data: [{% for Close in Closed_list %} '{{ Close }}', {% endfor %}]
-                {#data: [0, 1, 1, 0, 0, 0]#}
+                {#data: [2, 1, 1, 2, 1, 2]#}
             },
 
         ]

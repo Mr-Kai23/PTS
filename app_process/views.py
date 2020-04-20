@@ -80,7 +80,9 @@ class BoardListView(View):
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
                   'status', 'withdraw_time', 'unit_type']
 
-        workflows = OrderInfo.objects.values(*fields).order_by('-id')
+        # 切片去50条数据
+        sli = slice(0, 50)
+        workflows = OrderInfo.objects.values(*fields).order_by('-id')[sli]
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])
