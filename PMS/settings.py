@@ -72,7 +72,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-
+            # # 自定义模板标签配置
+            # 'libraries': {
+            #     'custom_tags': 'app_process.template_tags.custom_tags'
+            # }
         },
 
     },

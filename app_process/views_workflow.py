@@ -10,7 +10,7 @@ from app_process.models import Segment, OrderInfo
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
-from app_process.views import send_email, send_message
+from message import send_email, send_message
 from django.conf import settings
 
 
@@ -73,7 +73,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             res['workflow'] = workflow
 
             # 获取工单发布时间
-            res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M:%S')
+            res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M')
 
             # 获取工单的接收者，由于没用外键，所以以字符串形式拼接存储
             res['receivers'] = workflow.receiver.split(';')
@@ -81,7 +81,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # workflow = OrderInfo.objects.all()
             # res['workflow'] = workflow
             # 新建的时候，获取当前的时间为工单创建时间
-            t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
             res['time'] = t
 
         # 获取所有接收者DRI
@@ -163,16 +163,30 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             workflow.save()
             res['result'] = True
 
+            # 工单信息
+            subject = workflow.subject
+            year = workflow.publish_time.year
+            month = workflow.publish_time.month
+            day = workflow.publish_time.day
+            hour = workflow.publish_time.hour
+            minute = workflow.publish_time.minute
+
+            # 发布者信息
+            name = request.user.name
+            department = request.user.department.name
+            project = request.user.project
+            #
+
             # 新建时发送邮件和短信
             if email and message:
                 # 發送郵件
-                send_email(request.POST.get('subject'),
+                send_email(subject,
                            request.POST.get('key_content'),
                            settings.DEFAULT_FROM_EMAIL,
                            emails)
                 # 發送短信
                 send_message(mobiles,
-                             [request.user.name, ],
+                             [project+"專案"+department+"部門"+name, year, month, day, hour, minute, subject],
                              '6311', '7')
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')

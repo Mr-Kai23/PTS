@@ -119,8 +119,8 @@
                             <select class="form-control inputText select2" name="status" id="status">
                                 <option></option>
                                 <option value="0">未投產</option>
-                                <option value="1">Closed</option>
-                                <option value="2">Ongoing</option>
+                                <option value="1">Ongoing</option>
+                                <option value="2">Closed</option>
                             </select>
                         </div>
 
@@ -278,28 +278,48 @@
                                 {#    }#}
                                 {# }#}
                             },
+
                             {
                                 data: "status",
                                 bSortable: "false",
                                 render: function (data, type, row, meta) {
+                                    {% if request.user.account_type == 1 %}
 
-                                    var str1 = data==0?"<option value='0' selected>未投產</option>":"<option value='0'>未投產</option>";
-                                    var str2 = data==1?"<option value='1' selected>Ongoing</option>":"<option value='1'>Ongoing</option>";
-                                    var str3 = data==2?"<option value='2' selected>Close</option>":"<option value='2'>Close</option>";
-
-                                    var res = "<select class='form-control select2' style='width:100%;' id='updatestatus"+row['id']+"' type='text'"+
-                                        "onchange='save(" + row['id'] + ")'>"
-                                        + str1 + str2 + str3;
-                                        "</select>"
+                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}') {
 
 
-                                    return res;
+                                            var str1 = data == 0 ? "<option value='0' selected>未投產</option>" : "<option value='0'>未投產</option>";
+                                            var str2 = data == 1 ? "<option value='1' selected>Ongoing</option>" : "<option value='1'>Ongoing</option>";
+                                            var str3 = data == 2 ? "<option value='2' selected>Closed</option>" : "<option value='2'>Closed</option>";
+
+                                            var res = "<select class='form-control select2' style='width:100%;' id='updatestatus" + row['id'] + "' type='text'" +
+                                                "onchange='save(" + row['id'] + ")'>"
+                                                + str1 + str2 + str3;
+                                            "</select>"
+
+
+                                            return res;
+                                        } else {
+                                            if(data == 0){
+                                                return '未投產'
+                                            }else if(data == 1){
+                                                return 'Ongoing'
+                                            }else {
+                                                return 'Closed'
+                                            }
+                                        }
+                                    {% else %}
+                                        if(data == 0){
+                                            return '未投產'
+                                        }else if(data == 1){
+                                            return 'Ongoing'
+                                        }else {
+                                            return 'Closed'
+                                        }
+                                    {% endif %}
                                 },
                             },
 
-                            {#{#}
-                            {#    data: "remark",#}
-                            {# },#}
                             {
                                 data: "id",
                                 width: "12%",

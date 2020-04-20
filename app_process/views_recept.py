@@ -36,7 +36,7 @@ class ReceptListView(LoginRequiredMixin, View):
     def get(self, request):
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
-                  'publish_time', 'subject', 'key_content', 'segment', 'receive_status','status',
+                  'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
                   'withdraw_time', 'unit_type']
 
         searchfields = ['segment', 'status', 'receive_status', 'unit_type']

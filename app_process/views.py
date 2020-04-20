@@ -1,4 +1,4 @@
-from django.db.models import Count
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -10,9 +10,7 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.cache import cache_page
 
-from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
-from suds.client import Client
 
 
 class BoardView(View):
@@ -20,6 +18,11 @@ class BoardView(View):
     看板视图
     """
     def get(self, request):
+        """
+        用于渲染看板页面
+        :param request:
+        :return:
+        """
 
         # 用于存放每个段别下的工单
         segment_orders = []
@@ -68,6 +71,11 @@ class BoardListView(View):
     看板数据显示视图
     """
     def get(self, request):
+        """
+        用于看板页面数据显示
+        :param request: 请求
+        :return:
+        """
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
                   'status', 'withdraw_time', 'unit_type']
@@ -112,52 +120,4 @@ class OrderView(LoginRequiredMixin, View):
 #
 #     return render(request, 'process/order_index.html', res)
 
-
-def send_email(subject, message, from_email, receivers):
-    """
-    发送邮件
-    :param subject:
-    :param message:
-    :param from_email:
-    :param receivers:
-    :return:
-    """
-
-    if subject and message and from_email:
-        try:
-            send_mail(subject, message, from_email, receivers)
-
-        except BadHeaderError:
-            return HttpResponse('信息有誤！！')
-
-        return '郵件已發送！！'
-
-    else:
-
-        return HttpResponse('請確認所有信息是否無誤！！')
-
-
-def send_message(moblie_list, message, FormatID='6311', SpaceNum='7'):
-    """
-    发送短信
-    :param moblie_list:
-    :param message:
-    :param FormatID:
-    :param SpaceNum:
-    :return:
-    """
-
-    for moblie in moblie_list:
-        try:
-            client = Client('http://sms.efoxconn.com/Framework/index.aspx')
-            params = {'UserName': 'F8624523', 'PassWord': '42322317', 'Phone': moblie, 'FormatID': FormatID,
-                      'SpaceNum': SpaceNum, 'Content': message}
-
-            client.service.SendFormatSMS(**params)
-
-        except Exception:
-
-            return HttpResponse('信息有誤！！')
-
-        return '短信已发送！！'
 

@@ -58,6 +58,7 @@
 
         .tabel-list {
             background-color: #255e95;
+            {#background-color: #061436;#}
             border-spacing: 0;
             width: 70%;
             height: 20px;
@@ -65,8 +66,8 @@
 
         .tabel-list th {
             text-align: center;
-            border-right: 1px solid black;
-            border-bottom: 1px solid black;
+            border-right: 1px solid white;
+            border-bottom: 1px solid white;
             color: white;
             width: auto;
             height: 40px;
@@ -74,7 +75,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background: #061436;">
 <div>
     <div class="nav">
         <div class="s9 clearfix">
@@ -125,9 +126,10 @@
         }, 1000)
     });
 
-    creatTable();
+    {#creatTable();#}
     var interval3 = setInterval(function () {
-        creatTable()
+        {#creatTable()#}
+        window.location.reload();
     }, 60000);
 
     function creatTable() {
@@ -141,13 +143,15 @@
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未投產") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#F79646; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#FBFB00; color:gray; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Closed") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        } else {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid black; height:30px; border-bottom:0.5px solid black; background-color:#DDEDE1; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#9BBB59; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        } else if (data[i][arr[j]] == "未接收") {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#FF0000; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        }else {
+                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
@@ -173,6 +177,9 @@
             text: 'QN P1生產流程執行狀況',
             x: 'center',
             y: 'top',
+            textStyle:{
+                color: 'white'//字体颜色
+            },
         },
 
         tooltip: {
@@ -183,7 +190,11 @@
         legend: {
             orient: 'vertical',
             left: 10,
-            data: ['待接收', '未投產', '進行中', '已完成']
+            textStyle:{
+                color: 'white'//字体颜色
+            },
+
+            data: ['未接收', '未投產', '進行中', '已完成']
         },
         series: [
             {
@@ -206,12 +217,14 @@
                     show: false
                 },
                 data: [
-                    {value: {{ un_receive }}, name: '待接收'},
+                    {value: {{ un_receive }}, name: '未接收'},
                     {value: {{ un_product }}, name: '未投產'},
                     {value: {{ ongoing }}, name: '進行中'},
                     {value: {{ closed }}, name: '已完成'},
-                ]
+                ],
+
             }
+
         ]
     };
 
@@ -230,18 +243,24 @@
         // 图表标题
         title: {
             text: 'QN P1生產流程格段分佈狀況',
+            textStyle:{
+                color: 'white'//字体颜色
+            },
             x: 'center',
             y: 'top',
         },
 
         tooltip: {
             trigger: 'item',
-            {#formatter: '{a} <br/>{b}: {c} ({d}%)'#}
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
 
         legend: {
             orient: 'vertical',
             left: 10,
+            textStyle:{
+                    color: 'white'//字体颜色
+            },
             {#data: [{% for segment_order in segment_orders %}'{{ segment_order.0.segment }}',{% endfor %}]#}
             data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]
         },
@@ -287,9 +306,12 @@
 
         // 图表标题
         title: {
-            text: 'QN P1生產流程格段執行分佈狀況',
+            text: 'QN P1生產流程各段執行分佈狀況',
+            textStyle:{
+                color: 'white'//字体颜色
+            },
             x: 'center',
-            y: 'bottom',
+            y: 'bottom'
          },
 
         tooltip: {
@@ -299,7 +321,11 @@
             }
         },
         legend: {
-            data: ['待接收', '未投產', '進行中', '已完成']
+            textStyle:{
+                color: 'white'//字体颜色
+            },
+            data: ['未接收', '未投產', '進行中', '已完成'],
+
         },
         grid: {
             left: '3%',
@@ -309,13 +335,25 @@
         },
         xAxis: {
             type: 'value',
-            max: 10,
+            max: 20,
+            axisLine:{
+                lineStyle:{
+                    color: 'white'
+                }
+             }
 
         },
         yAxis: {
             type: 'category',
+
             {#data: [{% for segment_order in segment_orders %} '{{ segment_order.0.segment }}', {% endfor %}]#}
-            data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]
+            data: [{% for segment in segments %} '{{ segment }}', {% endfor %}],
+            axisLine:{
+                lineStyle:{
+                    color: 'white'
+                }
+             }
+
         },
         series: [
             {
