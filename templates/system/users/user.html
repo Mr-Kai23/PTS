@@ -408,11 +408,11 @@
                     cache: false,
                     success: function (msg) {
                         if (msg.result) {
-                            layer.alert('删除成功', {icon: 1});
+                            layer.alert('删除成功!', {icon: 1});
                             oDataTable.ajax.reload();
                         } else {
                             //alert(msg.message);
-                            layer.alert('删除失败', {icon: 5});
+                            layer.alert('删除失败!', {icon: 5});
                         }
                         return;
                     }
@@ -432,9 +432,16 @@
             shadeClose: false,
             area: ['600px', '200px'],
             content: $("#upload"),
-            end: function () {
-                //关闭时做的事情
-                oDataTable.ajax.reload();
+            {#content: "{% url 'sycstem:basic-user' %}",#}
+            end: function (res) {
+                if(res.result) {
+                    layer.alert(res.msg, {icon: 1});
+                    oDataTable.ajax.reload();
+                }else {
+                    layer.alert(res.msg, {icon: 5});
+                    oDataTable.ajax.reload();
+                }
+
             }
         });
      });

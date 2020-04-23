@@ -1,6 +1,7 @@
 from django.core.mail import send_mail, BadHeaderError
+
 from django.http import HttpResponse
-from suds.client import Client
+# from suds.client import Client
 
 
 def send_email(subject, message, from_email, receivers):
@@ -37,21 +38,22 @@ def send_message(moblie_list, message, FormatID='6311', SpaceNum='7'):
     :return:
     """
 
-    for moblie in moblie_list:
-        try:
-
-            client = Client('http://sms.efoxconn.com/Framework/index.aspx')
-
-            params = {'UserName': 'F8624523', 'PassWord': '42322317', 'Phone': [moblie], 'FormatID': FormatID,
-                      'SpaceNum': SpaceNum, 'Content': message}
-
-            client.service.SendFormatSMS(**params)
-
-        except Exception:
-
-            return HttpResponse('信息有誤！！')
-
-        return '短信已发送！！'
+    # for moblie in moblie_list:
+    #     try:
+    #
+    #         client = Client('http://sms.efoxconn.com/Framework/index.aspx')
+    #
+    #         params = {'UserName': 'F8624523', 'PassWord': '42322317', 'Phone': [moblie], 'FormatID': FormatID,
+    #                   'SpaceNum': SpaceNum, 'Content': message}
+    #
+    #         client.service.SendFormatSMS(**params)
+    #
+    #     except Exception:
+    #
+    #         return HttpResponse('信息有誤！！')
+    #
+    #     return '短信已发送！！'
+    pass
 
 
 # if __name__ == '__main__':

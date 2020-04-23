@@ -41,7 +41,7 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'username', 'department', 'project', 'mobile', 'email',
+            'name', 'work_num', 'username', 'department', 'superior', 'project', 'mobile', 'email',
             'segment', 'account_type', 'is_admin', 'roles', 'password', 'remark'
         ]
 
@@ -77,15 +77,15 @@ class UserCreateForm(forms.ModelForm):
         if not re.match(REGEX_MOBILE, mobile):
             raise forms.ValidationError("手机号码非法")
 
-        if User.objects.filter(email=email).count():
-            raise forms.ValidationError('邮箱：{}已存在'.format(email))
+        # if User.objects.filter(email=email).count():
+        #     raise forms.ValidationError('邮箱：{}已存在'.format(email))
 
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'name', 'work_num', 'username', 'department', 'project', 'mobile', 'email',
+            'name', 'work_num', 'username', 'department', 'project', 'superior', 'mobile', 'email',
             'segment', 'account_type', 'is_admin', 'roles', 'remark'
         ]
 

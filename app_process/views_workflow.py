@@ -94,6 +94,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict(result=False)
         email = False
         message = False
+        emails = []  # 用于存放接收者邮箱
+        mobiles = []  # 用于存放接受者电话
 
         # 手选编辑工单状态保存
         if 'ids' in request.POST and request.POST['ids']:
@@ -114,82 +116,92 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
-        else:
-            workflow = OrderInfo()
+            workflow_form = WorkflowForm(request.POST, instance=workflow)
 
+            # 判断表单是否有效
+            if workflow_form.is_valid():
+                workflow.save()
+                res['result'] = True
+
+        else:
             # 新建时发送邮件和短信的标签
             email = True
             message = True
 
-        request.POST.getlist('receiver')
+            # 判断工单接收DRI,以字符串的形式存储
+            if 'All' not in request.POST.getlist('receiver'):
+                # 获取接收前端选中的接收者
+                receiver_list = request.POST.getlist('receiver')
 
-        workflow_form = WorkflowForm(request.POST, instance=workflow)
+                # 所有接收者DRI
+                users = UserInfo.objects.filter(name__in=receiver_list)
+                # 获取接收DRI姓名和段别
+                receivers = list(users.values_list('name', 'segment'))
 
-        # 获取接收前端选中的接收者
-        receivers = request.POST.getlist('receiver')
+                # 获取出所有接收的DRI
+                for user in users:
+                    emails.append(user.email)
+                    mobiles.append(user.mobile)
 
-        # 判断工单接收DRI,以字符串的形式存储
-        if 'All' not in receivers:
-            receiver = ';'.join(receivers)
-        else:
-            # 如果选择了 All,则接收者为 All
-            receiver = receivers[0]
+                    # 若果用户存在下属员工
+                    if user.userinfo_set.all():
+                        # 获取DRI下面的员工邮箱和电话
+                        for email, mobile in tuple(user.userinfo_set.values_list('email', 'mobile')):
+                            emails.append(email)
+                            mobiles.append(mobile)
 
-        # 工單接受者
-        workflow.receiver = receiver
+            else:
+                # 如果选择了 All
+                # 获取所有接收者信息
+                users = UserInfo.objects.filter(account_type=1).all()
+                # 获取所有接收DRI姓名和段别
+                receivers = list(users.filter(is_admin=True).values_list('name', 'segment'))
 
-        emails = []  # 用于存放邮箱
-        mobiles = []  # 用于存放电话
-
-        if receiver == 'All':
-            # 获取所有用户的邮箱和电话
-            for em in tuple(UserInfo.objects.filter(account_type=1).values_list('email', 'mobile')):
-                email, mobile = em
-                emails.append(email)
-                mobiles.append(mobile)
-        else:
-            # 获取出所有接收的DRI
-            for user in UserInfo.objects.filter(name__in=receivers):
-                emails.append(user.email)
-                mobiles.append(user.mobile)
-
-                # 获取DRI下面的员工邮箱和电话
-                for em in tuple(user.userinfo_set.values_list('email', 'mobile')):
-                    email, mobile = em
+                # 获取所有用户的邮箱和电话
+                for email, mobile in tuple(users.values_list('email', 'mobile')):
                     emails.append(email)
                     mobiles.append(mobile)
 
-        # 判断表单是否有效
-        if workflow_form.is_valid():
-            workflow.save()
-            res['result'] = True
+            # 为每个接收者创建工单数据
+            for receiver, segment in receivers:
+                # 实例一个新工单
+                workflow = OrderInfo()
+                workflow_form = WorkflowForm(request.POST, instance=workflow)
+
+                if workflow_form.is_valid():
+                    # 工單接收者和段别
+                    workflow.receiver = receiver
+                    workflow.segment = segment
+                    workflow.save()
+                    res['result'] = True
 
             # 新建时发送邮件和短信
             if email and message:
 
                 # 邮件和短息发送
                 # 工单信息
-                subject = workflow.subject
-                year = workflow.publish_time.year
-                month = workflow.publish_time.month
-                day = workflow.publish_time.day
-                hour = workflow.publish_time.hour
-                minute = workflow.publish_time.minute
+                subject = request.POST['subject']
+                date = request.POST['publish_time'].split('-')
+                year = date[0]
+                month = date[1]
+                day = date[-1].split()[0]
+                hour = date[-1].split()[-1].split(':')[0]
+                minute = date[-1].split()[-1].split(':')[1]
 
                 # 发布者信息
                 name = request.user.name
                 department = request.user.department.name
                 project = request.user.project
 
-                # 發送郵件
-                send_email(subject,
-                           request.POST.get('key_content'),
-                           settings.DEFAULT_FROM_EMAIL,
-                           emails)
-                # 發送短信
-                send_message(mobiles,
-                             [project+"專案"+department+"部門"+name, year, month, day, hour, minute, subject],
-                             '6311', '7')
+                # # 發送郵件
+                # send_email(subject,
+                #            request.POST.get('key_content'),
+                #            settings.DEFAULT_FROM_EMAIL,
+                #            emails)
+                # # 發送短信
+                # send_message(mobiles,
+                #              [project+"專案"+department+"部門"+name, year, month, day, hour, minute, subject],
+                #              '6311', '7')
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
