@@ -35,7 +35,7 @@ class UnitTypeView(LoginRequiredMixin, View):
 
 class UnitTypeListView(LoginRequiredMixin, View):
     """
-    段别详情
+    机种详情
     """
     def get(self, request):
 

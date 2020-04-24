@@ -4,6 +4,7 @@ from django.urls import path
 from app_process.views import OrderView
 import app_process.views_workflow as views_workflow
 import app_process.views_recept as views_recept
+
 # import app_process.views as views
 from system.views import SystemView
 
@@ -26,4 +27,6 @@ urlpatterns = [
     url(r'^order/receive/list/$', views_recept.ReceptListView.as_view(), name='order-receive-list'),
     url(r'^order/receive/accept/$', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept'),
     url(r'^order/receive/detail$', views_recept.ReceptDetailView.as_view(), name='order-receive-detail'),
+
+
 ]
