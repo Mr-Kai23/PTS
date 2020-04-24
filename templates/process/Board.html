@@ -96,9 +96,9 @@
             <th>發佈部門</th>
             <th>發佈DRI</th>
             <th>發佈時間</th>
-            <th>主旨</th>
+            <th style="width:300px">主旨</th>
             <th>工單</th>
-            <th>重點注意內容</th>
+            <th style="width:300px">重點注意內容</th>
             <th>段別</th>
             <th>接收DRI</th>
             <th>接收狀態</th>
@@ -151,7 +151,8 @@
                             tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#9BBB59; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
                             tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#FF0000; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        }else {
+                        }
+                        else {
                             tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
