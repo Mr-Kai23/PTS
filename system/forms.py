@@ -7,8 +7,8 @@ User = get_user_model()
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(required=True, error_messages={"requeired": "请填写用户名"})
-    password = forms.CharField(required=True, error_messages={"requeired": "请填写密码"})
+    username = forms.CharField(required=True, error_messages={"requeired": "請填寫用戶名"})
+    password = forms.CharField(required=True, error_messages={"requeired": "請填寫密碼"})
 
 
 class StructureForm(forms.ModelForm):
@@ -23,8 +23,8 @@ class UserCreateForm(forms.ModelForm):
         min_length=6,
         max_length=20,
         error_messages={
-            "required": "密码不能为空",
-            "min_length": "密码长度最少6位数",
+            "required": "密碼不能為空",
+            "min_length": "密碼長度至少6位數",
         }
     )
 
@@ -46,36 +46,40 @@ class UserCreateForm(forms.ModelForm):
         ]
 
         error_messages = {
-            "name": {"required": "姓名不能为空"},
-            "username": {"required": "用户名不能为空"},
-            "email": {"required": "邮箱不能为空"},
+            "name": {"required": "姓名不能為空"},
+            "username": {"required": "用戶名不能為空"},
+            "email": {"required": "郵箱不能為空"},
             "mobile": {
-                "required": "手机号码不能为空",
-                "max_length": "输入有效的手机号码",
-                "min_length": "输入有效的手机号码"
+                "required": "手機號碼不能為空",
+                "max_length": "輸入有效的手機號碼",
+                "min_length": "輸入有效的手機號碼"
             }
          }
 
     def clean(self):
         cleaned_data = super(UserCreateForm, self).clean()
         username = cleaned_data.get("username")
+        work_num = cleaned_data.get('work_num')
         mobile = cleaned_data.get("mobile", "")
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
 
         if User.objects.filter(username=username).count():
-            raise forms.ValidationError('用户名：{}已存在'.format(username))
+            raise forms.ValidationError('用戶名：{}已存在'.format(username))
+
+        if User.objects.filter(work_num=work_num).count():
+            raise forms.ValidationError('工號：{}已存在'.format(work_num))
 
         if password != confirm_password:
-            raise forms.ValidationError("两次密码输入不一致")
+            raise forms.ValidationError("兩次密碼輸入不一致")
 
         if User.objects.filter(mobile=mobile).count():
-            raise forms.ValidationError('手机号码：{}已存在'.format(mobile))
+            raise forms.ValidationError('手機號碼：{}已存在'.format(mobile))
 
         REGEX_MOBILE = "^1[3578]\d{9}$|^147\d{8}$|^176\d{8}$"
         if not re.match(REGEX_MOBILE, mobile):
-            raise forms.ValidationError("手机号码非法")
+            raise forms.ValidationError("請輸入正確的手機號碼")
 
         # if User.objects.filter(email=email).count():
         #     raise forms.ValidationError('邮箱：{}已存在'.format(email))
@@ -97,7 +101,7 @@ class PasswordChangeForm(forms.Form):
         min_length=6,
         max_length=20,
         error_messages={
-            "required": u"密码不能为空"
+            "required": u"密碼不能為空"
         })
 
     confirm_password = forms.CharField(
@@ -105,7 +109,7 @@ class PasswordChangeForm(forms.Form):
         min_length=6,
         max_length=20,
         error_messages={
-            "required": u"确认密码不能为空"
+            "required": u"確認密碼不能為空"
         })
 
     def clean(self):
@@ -113,7 +117,7 @@ class PasswordChangeForm(forms.Form):
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
         if password != confirm_password:
-            raise forms.ValidationError("两次密码输入不一致")
+            raise forms.ValidationError("兩次密碼輸入不一致")
 
 
 class MenuForm(forms.ModelForm):

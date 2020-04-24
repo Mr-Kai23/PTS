@@ -57,12 +57,20 @@ class LoginView(View):
             user_name = request.POST['username']
             pass_word = request.POST['password']
             user = authenticate(username=user_name, password=pass_word)
+            user1 = User.objects.filter(username=user_name, password=pass_word)
             if user is not None:
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(redirect_to)
                 else:
                     ret['msg'] = '用户未激活！'
+            elif user1 is not None:
+                if user1[0].is_active:
+                    login(request, user1[0])
+                    return HttpResponseRedirect(redirect_to)
+                else:
+                    ret['msg'] = '用户未激活！'
+
             else:
                 ret['msg'] = '用户名或密码错误！'
         else:

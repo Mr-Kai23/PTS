@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from app_process.forms import WorkflowForm, RecipientForm
-from app_process.models import Segment, OrderInfo
+from app_process.models import Segment, OrderInfo, Project, UnitType
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
@@ -18,6 +18,10 @@ class ReceptView(LoginRequiredMixin, View):
     def get(self, request):
         res = dict()
 
+        # 專案
+        res['projects'] = Project.objects.all()
+        # 機種
+        res['unit_types'] = UnitType.objects.all()
         # 段别
         segments = Segment.objects.all()
         res['segments'] = segments

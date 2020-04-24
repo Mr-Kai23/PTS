@@ -53,12 +53,12 @@
                                     <td class="warning"></td>
                                     <td class="warning"></td>
                                 </tr>
-                                <tr>
-                                    <td class="warning"><strong> 階段 </strong></td>
-                                    <td class="warning">{{ workflow.build }}</td>
-                                    <td class="warning"></td>
-                                    <td class="warning"></td>
-                                </tr>
+{#                                <tr>#}
+{#                                    <td class="warning"><strong> 階段 </strong></td>#}
+{#                                    <td class="warning">{{ workflow.build }}</td>#}
+{#                                    <td class="warning"></td>#}
+{#                                    <td class="warning"></td>#}
+{#                                </tr>#}
 
                                 <tr>
                                     <td class="success"><strong> 發佈部門 </strong></td>
@@ -81,7 +81,7 @@
                                 </tr>
                                 <tr>
                                     <td class="info"><strong> 接收時間 </strong></td>
-                                    <td class="info">{{ workflow.withdraw_time }}</td>
+                                    <td class="info">{% if workflow.withdraw_time %}{{ workflow.withdraw_time }}{% else %}未接收{% endif %}</td>
                                     <td class="info"></td>
                                     <td class="info"></td>
                                 </tr>

@@ -19,7 +19,8 @@ from django.urls import include
 
 from app_process.views import BoardView, BoardListView
 from system.views_user import IndexView, LoginView, LogoutView
-
+from django.conf.urls.static import static
+from PMS.settings import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +37,6 @@ urlpatterns = [
     path('system/', include('system.urls', namespace='system')),
 
     # process
-    path('process/', include('app_process.urls', namespace='process')),
+    path('process/', include('app_process.urls', namespace='process')),]
 
-]
+# ] + static(STATIC_URL, document_root=STATIC_ROOT)
