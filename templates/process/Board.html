@@ -158,9 +158,30 @@
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
 
+    function getValue(){
+            var unit_type = $("#unit_type option:selected").val();
+            var segment = $("#segment option:selected").val();
+            var status = $("#status option:selected").val();
+            var receive_status = $("#restatus option:selected").val();
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+            console.log(unit_type)
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'board-list' %}",
+            data:JSON.stringify({"unit_type":unit_type,"segment":segment,"status":status,"receive_status":receive_status,"start_time":start_time,"end_time":end_time}),
+            success:function(msg){
+                if(msg){
+                    alert(msg);
+                }
+            }
+        });
+    }
+
     //查询
     $("#btnSearch").click(function () {
-        creatTable()
+        getValue()
     });
 
     $(function () {
@@ -173,30 +194,15 @@
         }, 1000)
     });
 
+    {#creatTable();#}
     var interval3 = setInterval(function () {
         {#creatTable()#}
         window.location.reload();
     }, 60000);
 
     function creatTable() {
-        /* var unit_type = $("#unit_type option:selected").val();
-        var segment = $("#segment option:selected").val();
-        var status = $("#status option:selected").val();
-        var receive_status = $("#restatus option:selected").val();
-        var start_time = $("#start_time").val();
-        var end_time = $("#end_time").val();
-        console.log(unit_type) */
-
         $.ajax({
             url: "{% url 'board-list' %}",
-            data: function (d) {
-                                d.unit_type = $("#unit_type").val();
-                                d.segment = $("#segment").val();
-                                d.status = $("#status").val();
-                                d.receive_status = $("#restatus").val();
-                                d.start_time = $("#start_time").val();
-                                d.end_time = $("#end_time").val();
-                            },
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
