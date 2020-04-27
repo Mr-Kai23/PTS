@@ -4,7 +4,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 
-from app_process.models import OrderInfo, Segment
+from app_process.models import OrderInfo, Segment, UnitType
 from system.mixin import LoginRequiredMixin
 import json
 from django.core.serializers.json import DjangoJSONEncoder
@@ -34,6 +34,9 @@ class BoardView(View):
 
         orders = OrderInfo.objects.all()
 
+        # 獲取所有機種
+        unit_types = UnitType.objects.all()
+
         # 获取所有段别下的工单数量
         segments = Segment.objects.all().order_by('id')
 
@@ -56,6 +59,7 @@ class BoardView(View):
             'ongoing': orders.filter(status=1).count(),   # 进行中
             'closed': orders.filter(status=2).count(),   # 已完成
             'segments': segments,
+            'unit_types': unit_types,
             'segment_orders': segment_orders,
             'un_accept_list': un_accept_list,
             'un_product_list': un_product_list,
