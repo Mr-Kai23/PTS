@@ -66,7 +66,6 @@ class BoardView(View):
             'Ongoing_list': Ongoing_list,
             'Closed_list': Closed_list,
         }
-
         return render(request, 'process/Board.html', res)
 
 

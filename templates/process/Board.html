@@ -9,7 +9,7 @@
             padding: 0;
             font-family: "Calibri", "Arial Black", arial-black;
             text-align: center;
-            font-size: 17px;
+
         }
 
         ul {
@@ -35,7 +35,7 @@
         .clearfix:after {
             clear: both;
             content: "";
-            display: block;
+            display:
         }
 
         .s9 {
@@ -53,44 +53,84 @@
         }
 
         li {
-            font-size: 18px;
+            font-size: 20px;
         }
 
         .tabel-list {
             background-color: #255e95;
-            {#background-color: #061436;#}
+
             border-spacing: 0;
-            width: 70%;
+            width: 75%;
             height: 20px;
         }
 
         .tabel-list th {
             text-align: center;
-            border-right: 1px solid white;
+
             border-bottom: 1px solid white;
             color: white;
             width: auto;
             height: 40px;
             white-space: nowrap;
+
         }
     </style>
 </head>
 <body style="background: #061436;">
-<div>
-    <div class="nav">
-        <div class="s9 clearfix">
-            <div class="nav-left">
-                <ul>
-                    <li>生產流程管理實時看板</li>
-                </ul>
-            </div>
-            <div class="nav-right">
-                <a href="{% url 'login' %}" >Login</a>
-            </div>
-        </div>
+<div style="margin-left:3%; margin-right:3%">
+
+    <div style="display: block; margin-top:30px;margin-bottom:35px">
+        <span style="color:#FFFFFF;font-size:40px;">生產流程管理實時看板系统</span>
+        <a href="{% url 'login' %}" style="font-size:20px; float:right;margin-top:20px;margin-right:20px;">Login</a>
     </div>
 
-    <table class="tabel-list" style="table-layout:fixed;float: left; ">
+    <div class="select_box" style="margin-bottom:80px" align="center">
+        <span>
+            <label style="color:white;font-size:x-large;float:left;margin-right:10px;">機種 :</label>
+            <select class="form-control inputText select2" name="unit_type" id="unit_type" style="float:left;width:100px;height:32px;background-color:#5F6769">
+                <option></option>
+                {% for unit_type in unit_types %}
+                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                {% endfor %}
+            </select>
+
+             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">段别 :</label>
+            <select class="form-control inputText select2" name="segment" id="segment" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                  <option></option>
+                    {% for segment in segments %}
+                        <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                    {% endfor %}
+            </select>
+
+              <label style="color:white;font-size:x-large; float:left;margin-right:10px;margin-left:20px;">执行状况 :</label>
+                <select class="form-control inputText select2" name="status" id="status"style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                  <option></option>
+                    <option value="0">未投產</option>
+                    <option value="1">Ongoing</option>
+                    <option value="2">Closed</option>
+                </select>
+
+              <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">接收状态 :</label>
+             <select class="form-control inputText select2" name="restatus" id="restatus" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                <option></option>
+                    <option value="0">未接收</option>
+                    <option value="1">已接收</option>
+            </select>
+
+            <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">起始时间 :</label>
+                <input type="date" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+
+            <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
+              <input type="date" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+            
+            <button type="button" id="btnSearch" class="btn btn-default" style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
+                <i class="glyphicon glyphicon-search"></i>查询
+            </button>
+        </span>
+    </div>
+
+
+    <table class="tabel-list" style="table-layout:fixed;float: left;margin-top:25px">
         <thead class="tabel_head">
         <tr>
             <th>發佈部門</th>
@@ -98,7 +138,7 @@
             <th>發佈時間</th>
             <th style="width:10%">主旨</th>
             <th>工單</th>
-            <th style="width:15%">重點注意內容</th>
+            <th style="width:20%">重點注意內容</th>
             <th>段別</th>
             <th>接收DRI</th>
             <th>接收狀態</th>
@@ -109,14 +149,41 @@
         </tbody>
     </table>
 
-    <div id="status_echarts" style="height: 310%; width:30%; float: left; margin-top: 1%"></div>
-    <div id="segment_echarts" style="height: 310%; width:30%; float: right; margin-top: 1%"></div>
-    <div id="segment_status_echarts" style="height: 310%; width:30%; float: right;margin-top: 1%;margin-left: 70%;"></div>
+    <div id="status_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
+    <div id="segment_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
+    <div id="segment_status_echarts" style="height: 310%; width:25%; float: right;margin-top: 1%;margin-left: 70%;"></div>
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
+
+    function getValue(){
+            var project = $("#project option:selected").val();
+            var build = $("#build option:selected").val();
+            var unit_type = $("#unit_type option:selected").val();
+            var segment = $("#segment option:selected").val();
+            var status = $("#status option:selected").val();
+            var receive_status = $("#restatus option:selected").val();
+
+        $.ajax({
+            type: "get",
+            url: "{% url 'board-list' %}",
+            data:JSON.stringify({'project':project,"build":build,"unit_type":unit_type,"segment":segment,"status":status,"receive_status":receive_status}),
+            success:function(msg){
+                if(msg){
+                    alert(msg);
+                }
+            }
+        });
+    }
+
+    //查询
+    $("#btnSearch").click(function () {
+        getValue()
+
+    });
+
     $(function () {
         setTimeout(function () {
             $('td').click(function () {
@@ -144,16 +211,16 @@
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未投產") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#F79646; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white; color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#FBFB00; color:gray; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white; color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Closed") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#9BBB59; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#FF0000; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                         else {
-                            tableData += "<td style='font-weight: 900;border-right:0.5px solid white; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 900; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
@@ -202,7 +269,7 @@
             {
                 name: '访问来源',
                 type: 'pie',
-                radius: ['50%', '70%'],
+                radius: ['40%', '60%'],
                 avoidLabelOverlap: false,
                 label: {
                     show: false,
@@ -270,7 +337,7 @@
             {
                 name: '访问来源',
                 type: 'pie',
-                radius: ['58%', '75%'],
+                radius: ['48%', '65%'],
                 avoidLabelOverlap: false,
                 label: {
                     show: false,
