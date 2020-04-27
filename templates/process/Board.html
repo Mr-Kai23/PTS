@@ -90,7 +90,7 @@
             <select class="form-control inputText select2" name="unit_type" id="unit_type" style="float:left;width:100px;height:32px;background-color:#5F6769">
                 <option></option>
                 {% for unit_type in unit_types %}
-                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                    <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
                 {% endfor %}
             </select>
 
@@ -98,7 +98,7 @@
             <select class="form-control inputText select2" name="segment" id="segment" style="float:left;width: 100px;height:32px;background-color:#5F6769">
                   <option></option>
                     {% for segment in segments %}
-                        <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                        <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                     {% endfor %}
             </select>
 
@@ -118,13 +118,13 @@
             </select>
 
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">起始时间 :</label>
-                <input type="date" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                <input type="date" id="start_time" style="float:left;width: 100px;height:32px;background-color:#5F6769">
 
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
-              <input type="date" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+              <input type="date" id="end_time" style="float:left;width: 100px;height:32px;background-color:#5F6769">
             
             <button type="button" id="btnSearch" class="btn btn-default" style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
-                <i class="glyphicon glyphicon-search"></i>查询
+                <i class="glyphicon glyphicon-search" style="color:black;font-size:23px">查询</i>
             </button>
         </span>
     </div>
@@ -158,30 +158,9 @@
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
 
-    function getValue(){
-            var project = $("#project option:selected").val();
-            var build = $("#build option:selected").val();
-            var unit_type = $("#unit_type option:selected").val();
-            var segment = $("#segment option:selected").val();
-            var status = $("#status option:selected").val();
-            var receive_status = $("#restatus option:selected").val();
-
-        $.ajax({
-            type: "get",
-            url: "{% url 'board-list' %}",
-            data:JSON.stringify({'project':project,"build":build,"unit_type":unit_type,"segment":segment,"status":status,"receive_status":receive_status}),
-            success:function(msg){
-                if(msg){
-                    alert(msg);
-                }
-            }
-        });
-    }
-
     //查询
     $("#btnSearch").click(function () {
-        getValue()
-
+        creatTable()
     });
 
     $(function () {
@@ -194,15 +173,30 @@
         }, 1000)
     });
 
-    {#creatTable();#}
     var interval3 = setInterval(function () {
         {#creatTable()#}
         window.location.reload();
     }, 60000);
 
     function creatTable() {
+        /* var unit_type = $("#unit_type option:selected").val();
+        var segment = $("#segment option:selected").val();
+        var status = $("#status option:selected").val();
+        var receive_status = $("#restatus option:selected").val();
+        var start_time = $("#start_time").val();
+        var end_time = $("#end_time").val();
+        console.log(unit_type) */
+
         $.ajax({
             url: "{% url 'board-list' %}",
+            data: function (d) {
+                                d.unit_type = $("#unit_type").val();
+                                d.segment = $("#segment").val();
+                                d.status = $("#status").val();
+                                d.receive_status = $("#restatus").val();
+                                d.start_time = $("#start_time").val();
+                                d.end_time = $("#end_time").val();
+                            },
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
