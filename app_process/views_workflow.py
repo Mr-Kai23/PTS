@@ -23,8 +23,6 @@ class WorkFlowView(LoginRequiredMixin, View):
 
         # 專案
         res['projects'] = Project.objects.all()
-        # 機種
-        res['unit_types'] = UnitType.objects.all()
         # 段别
         segments = Segment.objects.all()
         res['segments'] = segments

@@ -95,16 +95,6 @@
 {#                        </div>#}
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>機種：</label>
-                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
-                                <option></option>
-                                {% for unit_type in unit_types %}
-                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>段別：</label>
                             <select class="form-control inputText select2" name="segment" id="segment">
                                 <option></option>
