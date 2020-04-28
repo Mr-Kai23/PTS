@@ -86,11 +86,12 @@ class BoardListView(View):
         search_fields = ['unit_type', 'segment', 'receive_status', 'status']
         filters = {i + '__contains': json.loads(list(dict(request.GET).keys())[0])[i] for i in search_fields if json.loads(list(dict(request.GET).keys())[0])[i]}
 
-        if request.GET.get('start_time') and request.GET.get('end_time'):
-            filters['publish_time__gte'] = request.GET.get('start_time')
-            filters['publish_time__lte'] = request.GET.get('end_time')
+        # 开始、结束时间搜索
+        if json.loads(list(dict(request.GET).keys())[0])['start_time'] and json.loads(list(dict(request.GET).keys())[0])['end_time']:
+            filters['publish_time__gte'] = json.loads(list(dict(request.GET).keys())[0])['start_time']
+            filters['publish_time__lte'] = json.loads(list(dict(request.GET).keys())[0])['end_time']
 
-        # 切片去50条数据
+        # 切片取50条数据
         # sli = slice(0, 50)
         workflows = OrderInfo.objects.filter(**filters).values(*fields).order_by('-id')
 

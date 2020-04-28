@@ -126,8 +126,8 @@
                        style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
 
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
-              <input type="date" id="end_time"
-                     style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
+                <input type="date" id="end_time"
+                       style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
             
             <button type="button" id="btnSearch" class="btn btn-default"
                     style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
@@ -177,10 +177,10 @@
     });
 
     creatTable();
-    var interval3 = setInterval(function () {
-        creatTable()
-        window.location.reload();
-     }, 60000);
+    {#var interval3 = setInterval(function () {#}
+    {#    creatTable()#}
+    {#    window.location.reload();#}
+    {# }, 60000);#}
 
     function creatTable() {
         var unit_type = $("#unit_type option:selected").val();
