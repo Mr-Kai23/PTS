@@ -87,7 +87,8 @@
     <div class="select_box" style="margin-bottom:80px" align="center">
         <span>
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;">機種 :</label>
-            <select class="form-control inputText select2" name="unit_type" id="unit_type" style="float:left;width:100px;height:32px;background-color:#5F6769">
+            <select class="form-control inputText select2" name="unit_type" id="unit_type"
+                    style="float:left;width:100px;height:32px;background-color:#5F6769;font-size: large;">
                 <option></option>
                 {% for unit_type in unit_types %}
                     <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
@@ -95,15 +96,17 @@
             </select>
 
              <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">段别 :</label>
-            <select class="form-control inputText select2" name="segment" id="segment" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+            <select class="form-control inputText select2" name="segment" id="segment"
+                    style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                   <option></option>
-                    {% for segment in segments %}
-                        <option value="{{ segment.segment }}">{{ segment.segment }}</option>
-                    {% endfor %}
+                {% for segment in segments %}
+                    <option value="{{ segment.segment }}">{{ segment.segment }}</option>
+                {% endfor %}
             </select>
 
               <label style="color:white;font-size:x-large; float:left;margin-right:10px;margin-left:20px;">执行状况 :</label>
-                <select class="form-control inputText select2" name="status" id="status"style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                <select class="form-control inputText select2" name="status" id="status"
+                        style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                   <option></option>
                     <option value="0">未投產</option>
                     <option value="1">Ongoing</option>
@@ -111,19 +114,23 @@
                 </select>
 
               <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">接收状态 :</label>
-             <select class="form-control inputText select2" name="restatus" id="restatus" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+             <select class="form-control inputText select2" name="restatus" id="restatus"
+                     style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                 <option></option>
                     <option value="0">未接收</option>
                     <option value="1">已接收</option>
             </select>
 
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">起始时间 :</label>
-                <input type="date" id="start_time" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+                <input type="date" id="start_time"
+                       style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
 
             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
-              <input type="date" id="end_time" style="float:left;width: 100px;height:32px;background-color:#5F6769">
+              <input type="date" id="end_time"
+                     style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
             
-            <button type="button" id="btnSearch" class="btn btn-default" style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
+            <button type="button" id="btnSearch" class="btn btn-default"
+                    style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
                 <i class="glyphicon glyphicon-search" style="color:black;font-size:23px">查询</i>
             </button>
         </span>
@@ -151,38 +158,13 @@
 
     <div id="status_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
     <div id="segment_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
-    <div id="segment_status_echarts" style="height: 310%; width:25%; float: right;margin-top: 1%;margin-left: 70%;"></div>
+    <div id="segment_status_echarts"
+         style="height: 310%; width:25%; float: right;margin-top: 1%;margin-left: 70%;"></div>
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 <script type="text/javascript">
-
-    function getValue(){
-            var unit_type = $("#unit_type option:selected").val();
-            var segment = $("#segment option:selected").val();
-            var status = $("#status option:selected").val();
-            var receive_status = $("#restatus option:selected").val();
-            var start_time = $("#start_time").val();
-            var end_time = $("#end_time").val();
-            console.log(unit_type)
-
-        $.ajax({
-            type:"get",
-            url: "{% url 'board-list' %}",
-            data:JSON.stringify({"unit_type":unit_type,"segment":segment,"status":status,"receive_status":receive_status,"start_time":start_time,"end_time":end_time}),
-            success:function(msg){
-                if(msg){
-                    alert(msg);
-                }
-            }
-        });
-    }
-
-    //查询
-    $("#btnSearch").click(function () {
-        getValue()
-    });
 
     $(function () {
         setTimeout(function () {
@@ -194,15 +176,31 @@
         }, 1000)
     });
 
-    {#creatTable();#}
+    creatTable();
     var interval3 = setInterval(function () {
-        {#creatTable()#}
+        creatTable()
         window.location.reload();
-    }, 60000);
+     }, 60000);
 
     function creatTable() {
+        var unit_type = $("#unit_type option:selected").val();
+        var segment = $("#segment option:selected").val();
+        var status = $("#status option:selected").val();
+        var receive_status = $("#restatus option:selected").val();
+        var start_time = $("#start_time").val();
+        var end_time = $("#end_time").val();
+
         $.ajax({
+            type: "get",
             url: "{% url 'board-list' %}",
+            data: JSON.stringify({
+                "unit_type": unit_type,
+                "segment": segment,
+                "status": status,
+                "receive_status": receive_status,
+                "start_time": start_time,
+                "end_time": end_time
+            }),
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
@@ -218,8 +216,7 @@
                             tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
                             tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        }
-                        else {
+                        } else {
                             tableData += "<td style='font-weight: 900; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
@@ -231,6 +228,11 @@
     }
 
     window.onload = creatTable();
+
+    //查询
+    $("#btnSearch").click(function () {
+        creatTable();
+    });
 
 
     // QN P1生產流程執行狀況環形圖
@@ -246,7 +248,7 @@
             text: 'QN P1生產流程執行狀況',
             x: 'center',
             y: 'top',
-            textStyle:{
+            textStyle: {
                 color: 'white'//字体颜色
             },
         },
@@ -259,7 +261,7 @@
         legend: {
             orient: 'vertical',
             left: 10,
-            textStyle:{
+            textStyle: {
                 color: 'white'//字体颜色
             },
 
@@ -312,7 +314,7 @@
         // 图表标题
         title: {
             text: 'QN P1生產流程格段分佈狀況',
-            textStyle:{
+            textStyle: {
                 color: 'white'//字体颜色
             },
             x: 'center',
@@ -327,8 +329,8 @@
         legend: {
             orient: 'vertical',
             left: 10,
-            textStyle:{
-                    color: 'white'//字体颜色
+            textStyle: {
+                color: 'white'//字体颜色
             },
             {#data: [{% for segment_order in segment_orders %}'{{ segment_order.0.segment }}',{% endfor %}]#}
             data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]
@@ -376,12 +378,12 @@
         // 图表标题
         title: {
             text: 'QN P1生產流程各段執行分佈狀況',
-            textStyle:{
+            textStyle: {
                 color: 'white'//字体颜色
             },
             x: 'center',
             y: 'bottom'
-         },
+        },
 
         tooltip: {
             trigger: 'axis',
@@ -390,7 +392,7 @@
             }
         },
         legend: {
-            textStyle:{
+            textStyle: {
                 color: 'white'//字体颜色
             },
             data: ['未接收', '未投產', '進行中', '已完成'],
@@ -405,11 +407,11 @@
         xAxis: {
             type: 'value',
             max: 20,
-            axisLine:{
-                lineStyle:{
+            axisLine: {
+                lineStyle: {
                     color: 'white'
                 }
-             }
+            }
 
         },
         yAxis: {
@@ -417,11 +419,11 @@
 
             {#data: [{% for segment_order in segment_orders %} '{{ segment_order.0.segment }}', {% endfor %}]#}
             data: [{% for segment in segments %} '{{ segment }}', {% endfor %}],
-            axisLine:{
-                lineStyle:{
+            axisLine: {
+                lineStyle: {
                     color: 'white'
                 }
-             }
+            }
 
         },
         series: [
