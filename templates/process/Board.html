@@ -56,23 +56,30 @@
             font-size: 20px;
         }
 
+        .tabel_all{
+            height:100%;
+            width:75%;
+        }
         .tabel-list {
             background-color: #255e95;
-
             border-spacing: 0;
-            width: 75%;
+            width: 100%;
             height: 20px;
         }
 
         .tabel-list th {
             text-align: center;
-
             border-bottom: 1px solid white;
             color: white;
             width: auto;
             height: 40px;
             white-space: nowrap;
-
+        }
+        .chart{
+            float:right;
+            height:100%;
+            width:25%;
+            margin-top:1%;
         }
     </style>
 </head>
@@ -81,65 +88,62 @@
 
     <div style="display: block; margin-top:30px;margin-bottom:35px">
         <span style="color:#FFFFFF;font-size:40px;">生產流程管理實時看板系统</span>
-        <a href="{% url 'login' %}" style="font-size:20px; float:right;margin-top:20px;margin-right:20px;">Login</a>
+        <a href="{% url 'login' %}" style="font-size:25px; float:right;margin-top:20px;margin-right:20px;">Login</a>
     </div>
 
     <div class="select_box" style="margin-bottom:80px" align="center">
         <span>
-            <label style="color:white;font-size:x-large;float:left;margin-right:10px;">機種 :</label>
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;">機種 :</label>
             <select class="form-control inputText select2" name="unit_type" id="unit_type"
-                    style="float:left;width:100px;height:32px;background-color:#5F6769;font-size: large;">
+                    style="font-size:18px;color:#B3F2FC;float:left;width:100px;height:32px;background-color:#5F6769;font-size: large;">
                 <option></option>
                 {% for unit_type in unit_types %}
                     <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
                 {% endfor %}
             </select>
 
-             <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">段别 :</label>
+             <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">段别 :</label>
             <select class="form-control inputText select2" name="segment" id="segment"
-                    style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
+                    style="font-size:18px;color:#B3F2FC;float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                   <option></option>
                 {% for segment in segments %}
                     <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                 {% endfor %}
             </select>
 
-              <label style="color:white;font-size:x-large; float:left;margin-right:10px;margin-left:20px;">执行状况 :</label>
+              <label style="color:#AAC2EA;font-size:x-large; float:left;margin-right:10px;margin-left:20px;">执行状况 :</label>
                 <select class="form-control inputText select2" name="status" id="status"
-                        style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
+                        style="font-size:18px;color:#B3F2FC;float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                   <option></option>
                     <option value="0">未投產</option>
                     <option value="1">Ongoing</option>
                     <option value="2">Closed</option>
                 </select>
 
-              <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">接收状态 :</label>
+              <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">接收状态 :</label>
              <select class="form-control inputText select2" name="restatus" id="restatus"
-                     style="float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
+                     style="font-size:18px;color:#B3F2FC;float:left;width: 100px;height:32px;background-color:#5F6769;font-size: large;">
                 <option></option>
                     <option value="0">未接收</option>
                     <option value="1">已接收</option>
             </select>
 
-            <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">起始时间 :</label>
-                <input type="date" id="start_time"
-                       style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">起始时间 :</label>
+                <input type="date" id="start_time" style="font-size:12px;color:#B3F2FC;float:left;width: 150px;height:32px;background-color:#5F6769;font-size:large;">
 
-            <label style="color:white;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
-                <input type="date" id="end_time"
-                       style="float:left;width: 150px;height:32px;background-color:#5F6769;font-size: large;">
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;margin-left:20px;">结束时间 :</label>
+              <input type="date" id="end_time" style="font-size:12px;color:#B3F2FC;float:left;width: 150px;height:32px;background-color:#5F6769;font-size:large;">
             
-            <button type="button" id="btnSearch" class="btn btn-default"
-                    style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
+            <button type="button" id="btnSearch" class="btn btn-default" style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
                 <i class="glyphicon glyphicon-search" style="color:black;font-size:23px">查询</i>
             </button>
         </span>
     </div>
 
-
-    <table class="tabel-list" style="table-layout:fixed;float: left;margin-top:25px">
-        <thead class="tabel_head">
-        <tr>
+    <div class="tabel_all">
+         <table class="tabel-list" style="table-layout:fixed;float: left;margin-top:25px">
+         <thead class="tabel_head">
+         <tr>
             <th>發佈部門</th>
             <th>發佈DRI</th>
             <th>發佈時間</th>
@@ -150,16 +154,20 @@
             <th>接收DRI</th>
             <th>接收狀態</th>
             <th>執行狀況</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        </tbody>
-    </table>
+         </tr>
+         </thead>
+         <tbody id="tbody">
+         </tbody>
+         </table>
+    </div>
 
-    <div id="status_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
-    <div id="segment_echarts" style="height: 310%; width:25%; float: right; margin-top: 1%;"></div>
-    <div id="segment_status_echarts"
-         style="height: 310%; width:25%; float: right;margin-top: 1%;margin-left: 70%;"></div>
+
+    <div class="chart">
+         <div id="status_echarts" style="height: 310%; width:100%; float:right; margin-top: 1%; "></div>
+         <div id="segment_echarts" style="height: 310%; width:100%; float:right; margin-top: 1%;"></div>
+         <div id="segment_status_echarts" style="height: 310%; width:100%; float:right; margin-top: 1%;margin-left: 70%;"></div>
+    </div>
+
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
@@ -177,10 +185,10 @@
     });
 
     creatTable();
-    {#var interval3 = setInterval(function () {#}
-    {#    creatTable()#}
-    {#    window.location.reload();#}
-    {# }, 60000);#}
+    var interval3 = setInterval(function () {
+        creatTable()
+        window.location.reload();
+     }, 60000);
 
     function creatTable() {
         var unit_type = $("#unit_type option:selected").val();
@@ -208,16 +216,17 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                        if (data[i][arr[j]] == "未投產") {
-                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white; color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                       if (data[i][arr[j]] == "未投產") {
+                            tableData += "<td style='font-weight: 400; font-size:20px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
-                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white; color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 400; font-size:20px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Closed") {
-                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 400; font-size:20px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td style='font-weight: 900;  background-color:#061436;height:30px; border-bottom:0.5px solid white;  color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
-                        } else {
-                            tableData += "<td style='font-weight: 900; height:30px; border-bottom:0.5px solid white; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 400; font-size:20px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                        }
+                        else {
+                            tableData += "<td style='font-weight: 300;font-size:20px; height:30px; border-bottom:0.5px solid #999B9F; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
