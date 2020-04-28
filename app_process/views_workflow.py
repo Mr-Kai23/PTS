@@ -138,7 +138,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 所有接收者DRI
                 users = UserInfo.objects.filter(name__in=receiver_list)
                 # 获取接收DRI姓名和段别
-                receivers = list(users.values_list('name', 'segment'))
+                receivers = list(users.values_list('name', 'project', 'segment'))
 
                 # 获取出所有接收的DRI
                 for user in users:
@@ -157,7 +157,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 获取所有接收者信息
                 users = UserInfo.objects.filter(account_type=1).all()
                 # 获取所有接收DRI姓名和段别
-                receivers = list(users.filter(is_admin=True).values_list('name', 'segment'))
+                receivers = list(users.filter(is_admin=True).values_list('name', 'project', 'segment'))
 
                 # 获取所有用户的邮箱和电话
                 for email, mobile in tuple(users.values_list('email', 'mobile')):
@@ -165,7 +165,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                     mobiles.append(mobile)
 
             # 为每个接收者创建工单数据
-            for receiver, segment in receivers:
+            for receiver, project, segment in receivers:
                 # 实例一个新工单
                 workflow = OrderInfo()
                 workflow_form = WorkflowForm(request.POST, instance=workflow)
@@ -173,6 +173,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 if workflow_form.is_valid():
                     # 工單接收者和段别
                     workflow.receiver = receiver
+                    workflow.project = project
                     workflow.segment = segment
                     workflow.save()
                     res['result'] = True

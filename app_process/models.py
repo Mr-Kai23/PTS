@@ -89,7 +89,7 @@ class OrderInfo(models.Model):
     publish_time = models.DateTimeField(null=True, blank=True, default=None, verbose_name='发布时间')
     subject = models.CharField(max_length=64, null=True, blank=True, default='', verbose_name='主旨')
     order = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='工单')
-    key_content = models.CharField(max_length=128, null=True, blank=True, default='', verbose_name='重点注意流程内容')
+    key_content = models.CharField(max_length=256, null=True, blank=True, default='', verbose_name='重点注意流程内容')
     unit_type = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='机种')
     segment = models.CharField(max_length=32, null=True, blank=True, default='', verbose_name='接收段别')
     receiver = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='接收人')
