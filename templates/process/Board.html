@@ -58,7 +58,7 @@
 
         .tabel_all{
             height:100%;
-            width:75%;
+            width:73%;
         }
         .tabel-list {
             background-color: #255e95;
@@ -69,7 +69,6 @@
 
         .tabel-list th {
             text-align: center;
-
             border-bottom: 1px solid white;
             color: white;
             width: auto;
@@ -81,11 +80,12 @@
             height:100%;
             width:25%;
             margin-top:1%;
+            margin-left:1%;
         }
     </style>
 </head>
 <body style="background: #061436;">
-<div style="margin-left:3%; margin-right:3%">
+<div style="margin-left:2%; margin-right:20px;">
 
     <div style="display: block; margin-top:30px;margin-bottom:35px">
         <span style="color:#FFFFFF;font-size:40px;">生產流程管理實時看板系统</span>
@@ -142,26 +142,25 @@
     </div>
 
     <div class="tabel_all">
-         <table class="tabel-list" style="table-layout:fixed;float: left;margin-top:25px">
-         <thead class="tabel_head">
-         <tr>
-            <th>發佈部門</th>
-            <th>發佈DRI</th>
-            <th>發佈時間</th>
-            <th style="width:10%">主旨</th>
-            <th>工單</th>
-            <th style="width:20%">重點注意內容</th>
-            <th>段別</th>
-            <th>接收DRI</th>
-            <th>接收狀態</th>
-            <th>執行狀況</th>
-         </tr>
-         </thead>
-         <tbody id="tbody">
-         </tbody>
+         <table class="tabel-list" style="table-layout:fixed;float: left;margin-top:25px;table-layout:fixed;word-wrap:break-word;word-break;break-all;">
+             <thead class="tabel_head">
+                     <tr>
+                        <th>發佈部門</th>
+                        <th>發佈DRI</th>
+                        <th>發佈時間</th>
+                        <th style="width:10%">主旨</th>
+                        <th>工單</th>
+                        <th style="width:20%">重點注意內容</th>
+                        <th>段別</th>
+                        <th>接收DRI</th>
+                        <th>接收狀態</th>
+                        <th>執行狀況</th>
+                     </tr>
+             </thead>
+             <tbody id="tbody">
+             </tbody>
          </table>
     </div>
-
 
     <div class="chart">
          <div id="status_echarts" style="height: 310%; width:100%; float:right; margin-top: 1%; "></div>
@@ -186,10 +185,10 @@
     });
 
     creatTable();
-    var interval3 = setInterval(function () {
-        creatTable()
-        window.location.reload();
-     }, 60000);
+<!--    var interval3 = setInterval(function () {-->
+<!--        creatTable()-->
+<!--        window.location.reload();-->
+<!--     }, 60000);-->
 
     function creatTable() {
         var unit_type = $("#unit_type option:selected").val();
@@ -218,21 +217,33 @@
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
                        if (data[i][arr[j]] == "未投產") {
-                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#F79646; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
-                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#FBFB00; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Closed") {
-                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#9BBB59; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#FF0000; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; font-size:18px; background-color:#061436;height:30px; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
+
                         else {
-                            tableData += "<td style='font-weight: 300;font-size:18px; height:30px; border-bottom:0.5px solid #999B9F; background-color:#061436; color:white; overflow:hidden;'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300;font-size:18px; height:30px; border-bottom:0.5px solid #999B9F; background-color:#061436; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
                 }
                 $("#tbody").html(tableData)
+                //console.log($('table tbody tr td:nth-child(6)'))
+                $('table tbody tr td:nth-child(6)').each(function(index,item){
+                console.log($(item)[0].innerText)
+
+                if($(item)[0].innerText.length>20){
+                $(item).wrap(document.createElement("div"))
+                $(item).parent().css({'height':'44.5px','overflow-y':'auto','border-bottom':'0.5px solid #999B9F'})
+                }
+                })
+
+
             }
         })
     }
