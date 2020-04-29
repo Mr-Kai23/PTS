@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('app_process', '0001_initial'),
+
     ]
 
     operations = [
