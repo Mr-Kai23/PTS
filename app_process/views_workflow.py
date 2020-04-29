@@ -1,3 +1,10 @@
+
+# ======================================================
+# @Author  :   Daniel                 
+# @Time    :   2020-03
+# @Desc    :   工單處理視圖
+# ======================================================
+
 import json, time, datetime
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
@@ -109,6 +116,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 res['msg'] = '工單未接收！！'
             else:
                 order.status = int(request.POST['data'])
+                order.save()
                 res['result'] = True
 
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')

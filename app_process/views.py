@@ -1,4 +1,9 @@
 
+# ======================================================
+# @Author  :   Daniel                 
+# @Time    :   2020-03
+# @Desc    :   看板
+# ======================================================
 from django.shortcuts import render
 
 # Create your views here.

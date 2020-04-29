@@ -1,3 +1,9 @@
+
+# ======================================================
+# @Author  :   Daniel                 
+# @Time    :   2020-02
+# @Desc    :   數據庫模型
+# ======================================================
 from django.contrib.auth.models import User
 from django.db import models
 

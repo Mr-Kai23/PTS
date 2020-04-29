@@ -243,6 +243,7 @@
                             {
                                 data: "key_content",
                                 render: function (data) {
+                                    console.log(data)
                                     if(data.length > 5){
                                         return data.substring(0, 5)+'...';
                                     }else {
@@ -275,7 +276,7 @@
                                 render: function (data, type, row, meta) {
                                     {% if request.user.account_type == 1 %}
 
-                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}') {
+                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}' && row['receiver'] == '{{ request.user.name }}' || row['receiver'] == '{{ request.user.superior.name }}') {
 
 
                                             var str1 = data == 0 ? "<option value='0' selected>未投產</option>" : "<option value='0'>未投產</option>";
@@ -286,7 +287,6 @@
                                                 "onchange='save(" + row['id'] + ")'>"
                                                 + str1 + str2 + str3;
                                             "</select>"
-
 
                                             return res;
                                         } else {
