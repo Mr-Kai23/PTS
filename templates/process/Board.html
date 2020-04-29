@@ -35,7 +35,7 @@
         .clearfix:after {
             clear: both;
             content: "";
-            {#display: ;#}
+        {#display: ;#}
         }
 
         .s9 {
@@ -53,34 +53,74 @@
         }
 
 
-        .tabel_all{
-            height:100%;
-            width:73%;
+        .tabel_all {
+            height: 100%;
+            width: 73%;
 
         }
+
         .tabel-list {
             border-spacing: 0;
             width: 100%;
-            height:100%;
+            height: 100%;
+            position: relative;
         }
 
         .tabel-list th {
             background-color: #255E95;
             text-align: center;
-            font-size:20px;
+            font-size: 20px;
             border-bottom: 1px solid white;
             color: white;
             width: auto;
             height: 40px;
             white-space: nowrap;
         }
-        .chart{
-            float:right;
-            height:100%;
-            width:26%;
-            margin-top:1.5%;
-            margin-left:1%;
-            background-color:#35314C
+
+        .chart {
+            float: right;
+            height: 100%;
+            width: 25%;
+            margin-top: 1.5%;
+            margin-left: 1%;
+            background-color: #35314C;
+            position: relative;
+        }
+
+        .table-scroll {
+            width: calc(100% - 5px);
+            overflow-x: scroll;
+            white-space: nowrap;
+        }
+
+        .table-scroll table {
+            table-layout: fixed;
+            width: calc(100% - 5px);
+            {#background-color: darkseagreen;#}
+        }
+
+        .table-scroll thead {
+            display: table-row;
+            background-color: bisque;
+        }
+
+        .table-scroll tbody {
+            overflow-y: scroll;
+            {#overflow-x: hidden;#}
+            display: block;
+            height: calc(100vh - 300px);
+        }
+
+        .table-scroll th, td {
+            width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 50px;
+            border: 1px solid #808080;
+        }
+
+        h4, h5 {
+            color: cornflowerblue;
         }
     </style>
 </head>
@@ -92,7 +132,7 @@
         <a href="{% url 'login' %}" style="font-size:25px; float:right;margin-top:1%;margin-right:2%;">Login</a>
     </div>
 
-    <div class="select_box" style="margin-bottom:80px;width:100%%;" align="center">
+    <div class="select_box" style="margin-bottom:80px;width:100%;" align="center">
         <span>
             <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;">專案 :</label>
             <select class="form-control inputText select2" name="unit_type" id="unit_type"
@@ -130,47 +170,111 @@
             </select>
 
             <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">起始时间 :</label>
-                <input type="date" id="start_time" style="font-size:12px;color:#B3F2FC;float:left;width: 150px;height:32px;background-color:#5F6769;font-size:large;">
+                <input type="date" id="start_time"
+                       style="color:#B3F2FC;float:left;width: 7.5%;height:32px;background-color:#5F6769;font-size:large;">
 
             <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">结束时间 :</label>
-              <input type="date" id="end_time" style="font-size:15px;color:white;float:left;width: 7.5%;height:32px;background-color:#5F6769;">
+              <input type="date" id="end_time"
+                     style="color:#B3F2FC;float:left;width: 7.5%;height:32px;background-color:#5F6769;font-size:large;">
             
-            <button type="button" id="btnSearch" class="btn btn-default" style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#FFCE44">
-                <i class="glyphicon glyphicon-search" style="color:black;font-size:23px">查询</i>
+            <button type="button" id="btnSearch" class="btn btn-default"
+                    style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#172336">
+                <i class="glyphicon glyphicon-search" style="color:white;font-size:23px">查询</i>
             </button>
         </span>
     </div>
 
-    <div class="tabel_all" >
-         <table class="tabel-list" style="table-layout:fixed;float:left;margin-top:25px;table-layout:fixed;word-wrap:break-word;word-break;break-all;">
-             <thead class="tabel_head">
-                     <tr>
-                        <th>發佈部門</th>
-                        <th>發佈DRI</th>
-                        <th>發佈時間</th>
-                        <th style="width:10%">主旨</th>
-                        <th>工單</th>
-                        <th style="width:20%">重點注意內容</th>
-                        <th>段別</th>
-                        <th>接收DRI</th>
-                        <th>接收狀態</th>
-                        <th>執行狀況</th>
-                     </tr>
-             </thead>
-             <tbody id="tbody" >
-             </tbody>
-         </table>
+    <div class="tabel_all">
+        <div class="table-scroll">
+            <table class="tabel-list"
+                   style="table-layout:fixed;float:left;margin-top:25px;table-layout:fixed;word-wrap:break-word;word-break;break-all;">
+                <thead class="tabel_head">
+                <tr>
+                    <th>發佈部門</th>
+                    <th>發佈DRI</th>
+                    <th>發佈時間</th>
+                    <th style="width:10%">主旨</th>
+                    <th>工單</th>
+                    <th style="width:20%">重點注意內容</th>
+                    <th>段別</th>
+                    <th>接收DRI</th>
+                    <th>接收狀態</th>
+                    <th>執行狀況</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="chart">
-         <div id="status_echarts" style="height: 300%; width:100%; float:right; margin-top: 1%; "></div>
-         <div id="segment_echarts" style="height: 300%; width:100%; float:right; margin-top: 1%;"></div>
-         <div id="segment_status_echarts" style="height: 310%; width:100%; float:right; margin-top: 1%;margin-left: 70%;"></div>
+        <div id="status_echarts" style="height: 300%; width:100%; float:right; margin-top: 1%; "></div>
+        <div id="segment_echarts" style="height: 300%; width:100%; float:right; margin-top: 1%;"></div>
+        <div id="segment_status_echarts"
+             style="height: 310%; width:100%; float:right; margin-top: 1%;"></div>
     </div>
 
 </div>
 <script type="text/javascript" src="/static/js/jquery.min.js "></script>
 <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
+<script>
+    // 滚动条
+    $(function () {
+        $('.table-scroll').scroll(function () {
+            $('.table-scroll table').width($('.table-scroll').width()
+                + $('.table-scroll').scrollLeft());
+        });
+
+        var tableTdWidths = new Array();
+        var tableWidth = 0;
+        var tableTr0Width = 0;
+        var tableThNum = 0;
+        var tableTr1Width = 0;
+
+        tableWidth = $('.table-scroll table').css('width').replace('px', '');
+        tableThNum = $('.table-scroll tr:eq(0)').children('th').length;
+
+        if ($('.table-scroll tr').length == 1) { // header only
+            if (tableWidth > tableTr0Width) {
+                $('.table-scroll tr:eq(0)').children('th').each(function (i) {
+                    $(this).width(parseInt(($(this).css('width').replace('px', ''))
+                        + parseInt(Math.floor((tableWidth - tableTr0Width) / tableThNum))) + 'px');
+                });
+            }
+        } else { // header and body
+            tableTr1Width = $('.table-scroll tr:eq(1)').css('width').replace('px', '');
+            $('.table-scroll tr:eq(1)').children('td').each(function (i) {
+                tableTdWidths[i] = $(this).css('width').replace('px', '');
+            });
+            $('.table-scroll tr:eq(0)').children('th').each(function (i) {
+                if (parseInt($(this).css('width').replace('px', '')) >
+                    parseInt(tableTdWidths[i])) {
+                    tableTdWidths[i] = $(this).css('width').replace('px', '');
+                }
+            });
+
+            if (tableWidth > tableTr1Width) {
+                //set all th td width
+                $('.table-scroll tr').each(function (i) {
+                    $(this).children().each(function (j) {
+                        $(this).css('min-width', (parseInt(tableTdWidths[j])
+                            + parseInt(Math.floor((tableWidth - tableTr1Width) /
+                                tableThNum))) + 'px');
+                    });
+                });
+            } else {
+                //method 1 : set all th td width
+                $('.table-scroll tr').each(function (i) {
+                    $(this).children().each(function (j) {
+                        $(this).css('min-width', tableTdWidths[j] + 'px');
+                    });
+                });
+            }
+        }
+    });
+</script>
+
 <script type="text/javascript">
 
     $(function () {
@@ -184,10 +288,10 @@
     });
 
     creatTable();
-<!--    var interval3 = setInterval(function () {-->
-<!--        creatTable()-->
-<!--        window.location.reload();-->
-<!--     }, 60000);-->
+    <!--    var interval3 = setInterval(function () {-->
+    <!--        creatTable()-->
+    <!--        window.location.reload();-->
+    <!--     }, 60000);-->
 
     function creatTable() {
         var unit_type = $("#unit_type option:selected").val();
@@ -215,7 +319,7 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                       if (data[i][arr[j]] == "未投產") {
+                        if (data[i][arr[j]] == "未投產") {
                             tableData += "<td><div style='font-weight: 300; height:49.1px; font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</div></td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
                             tableData += "<td><div style='font-weight: 300; height:49.1px;font-size:18px; background-color:#2B2B2B;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</div></td>";
@@ -223,9 +327,7 @@
                             tableData += "<td><div style='font-weight: 300; height:49.1px; text-align: center;font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</div></td>";
                         } else if (data[i][arr[j]] == "未接收") {
                             tableData += "<td><div style='font-weight: 300; height:49.1px; font-size:18px;background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</div></td>";
-                        }
-
-                        else {
+                        } else {
                             tableData += "<td><div style='font-weight: 300; height:49.1px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#2B2B2B; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</div></td>";
                         }
                     }
@@ -233,12 +335,16 @@
                 }
                 $("#tbody").html(tableData)
                 //console.log($('table tbody tr td:nth-child(6)'))
-                $('table tbody tr td:nth-child(6)').each(function(index,item){
-                console.log($(item)[0].innerText)
-                if($(item)[0].innerText.length>20){
-                $(item).wrap(document.createElement("div"))
-                $(item).parent().css({'height':'49px','overflow-y':'auto','border-bottom':'0.5px solid #999B9F'})
-                }
+                $('table tbody tr td:nth-child(6)').each(function (index, item) {
+                    console.log($(item)[0].innerText)
+                    if ($(item)[0].innerText.length > 20) {
+                        $(item).wrap(document.createElement("div"))
+                        $(item).parent().css({
+                            'height': '49px',
+                            'overflow-y': 'auto',
+                            'border-bottom': '0.5px solid #999B9F'
+                        })
+                    }
                 })
             }
         })
@@ -327,7 +433,7 @@
                         b: {
                             fontSize: 15,
                             lineHeight: 15,
-                            align:'center',
+                            align: 'center',
                         },
                         per: {
                             color: 'white',
@@ -382,7 +488,7 @@
             textStyle: {
                 color: 'white'//字体颜色
             },
-            data: [{% for segment_order in segment_orders %}{% if segment_order|length > 0 %}'{{ segment_order.0.segment }}'{% endif %},{% endfor %}]
+            data: [{% for segment_order in segment_orders %}{% if segment_order|length > 0 %}'{{ segment_order.0.segment }}'{% endif %}, {% endfor %}]
             {#data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]#}
         },
         series: [
@@ -429,7 +535,7 @@
                         b: {
                             fontSize: 15,
                             lineHeight: 10,
-                            align:'center',
+                            align: 'center',
                         },
                         per: {
                             color: '#eee',
