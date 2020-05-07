@@ -51,7 +51,7 @@
                                 <a class="btn btn-primary btn-sm " onclick="$('#lefile').click();">Browse</a>
                             </div>
                             <div class="col-md-10 col-md-offset-1" style="margin-top: 12px;">
-                                <button type="submit" class="btn btn-primary btn-sm ">提交</button>
+                                <button type="submit" id='submit' class="btn btn-primary btn-sm ">提交</button>
                             </div>
                         </div>
 
@@ -295,11 +295,11 @@
                     cache: false,
                     success: function (msg) {
                         if (msg.result) {
-                            layer.alert("操作成功");
+                            layer.alert('删除成功!', {icon: 1});
                             oDataTable.ajax.reload();
                         } else {
                             //alert(msg.message);
-                            layer.alert("操作失败");
+                            layer.alert('删除失败!', {icon: 5});
                         }
                         return;
                     }
@@ -428,21 +428,42 @@
         layer.open({
             type: 1,
             title: "批量导入",
-            closeBtn: 1,
+            {#closeBtn: 1,#}
             shadeClose: false,
             area: ['600px', '200px'],
             content: $("#upload"),
             {#content: "{% url 'sycstem:basic-user' %}",#}
+            {#btn: ['上傳', '取消'],#}
+            {#yes: function(){#}
+            {#    $('#submit').click()#}
+                {#file = $('form').serialize();#}
+            {#    $.ajax({#}
+            {#        type: "POST",#}
+            {#        url: "{% url 'system:basic-user' %}",#}
+                    {#data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403#}
+            {#        cache: false,#}
+            {#        success: function (msg) {#}
+            {#            if (msg.result) {#}
+            {#                layer.alert(res.msg, {icon: 1});#}
+            {#                oDataTable.ajax.reload();#}
+            {#            } else {#}
+            {#                //alert(msg.message);#}
+            {#                layer.alert(res.msg, {icon: 5});#}
+            {#            }#}
+            {#            return;#}
+            {#        }#}
+            {#    });#}
+            {# }#}
             end: function (res) {
                 if(res.result) {
-                    layer.alert(res.msg, {icon: 1});
+                    {#layer.alert(res.msg, {icon: 1});#}
                     oDataTable.ajax.reload();
                 }else {
-                    layer.alert(res.msg, {icon: 5});
+                    {#layer.alert(res.msg, {icon: 5});#}
                     oDataTable.ajax.reload();
                 }
 
-            }
+             }
         });
      });
 

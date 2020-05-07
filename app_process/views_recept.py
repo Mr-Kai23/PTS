@@ -49,10 +49,10 @@ class ReceptListView(LoginRequiredMixin, View):
 
         # 获取接收者是用户或者用户DRI的未接收工单
         if request.user.superior:
-            workflows = list(OrderInfo.objects.filter(receiver=request.user.superior.name, receive_status=0, **filters).values(*fields).order_by('-id'))
+            workflows = list(OrderInfo.objects.filter(receive_status=0, **filters).values(*fields).order_by('-id'))
         else:
             workflows = list(
-                OrderInfo.objects.filter(receiver=request.user.name, receive_status=0, **filters).values(
+                OrderInfo.objects.filter(receive_status=0, **filters).values(
                     *fields).order_by('-id'))
 
         for workflow in workflows:

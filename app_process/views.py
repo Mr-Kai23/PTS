@@ -71,6 +71,7 @@ class BoardView(View):
             'Ongoing_list': Ongoing_list,
             'Closed_list': Closed_list,
         }
+
         return render(request, 'process/Board.html', res)
 
 
@@ -86,9 +87,9 @@ class BoardListView(View):
         """
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'withdraw_time', 'unit_type']
+                  'status', 'withdraw_time']
 
-        search_fields = ['unit_type', 'segment', 'receive_status', 'status']
+        search_fields = ['project', 'segment', 'receive_status', 'status']
         filters = {i + '__contains': json.loads(list(dict(request.GET).keys())[0])[i] for i in search_fields if json.loads(list(dict(request.GET).keys())[0])[i]}
 
         # 开始、结束时间搜索

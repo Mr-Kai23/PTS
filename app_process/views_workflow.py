@@ -5,7 +5,7 @@
 # @Desc    :   工單處理視圖
 # ======================================================
 
-import json, time, datetime
+import json, time, datetime, re
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -192,12 +192,12 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 邮件和短息发送
                 # 工单信息
                 subject = request.POST['subject']
-                date = request.POST['publish_time'].split('-')
+                date = re.split(r'[-, :, \s]\s*', request.POST['publish_time'])
                 year = date[0]
                 month = date[1]
-                day = date[-1].split()[0]
-                hour = date[-1].split()[-1].split(':')[0]
-                minute = date[-1].split()[-1].split(':')[1]
+                day = date[2]
+                hour = date[3]
+                minute = date[4]
 
                 # 发布者信息
                 name = request.user.name

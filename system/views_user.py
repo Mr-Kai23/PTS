@@ -237,7 +237,7 @@ class UserDetailView(LoginRequiredMixin, View):
     def get(self, request):
         user = get_object_or_404(User, pk=int(request.GET['id']))
         users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
-        superiors = User.objects.exclude(superior=user.superior).filter(is_admin=True).values()
+        superiors = User.objects.filter(is_admin=True).values()
         structures = Structure.objects.exclude(name=user.department.name).values()
         segments = Segment.objects.exclude(segment=user.segment).values()
         projects = Project.objects.exclude(project=user.project).values()

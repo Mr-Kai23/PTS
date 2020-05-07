@@ -266,8 +266,11 @@
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
                                     {% if request.user.account_type == 1 %}
-                                        ret = ret + "<button title='接收' onclick='doReceive("
+                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}'){
+                                            ret = ret + "<button title='接收' onclick='doReceive("
                                             + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
+                                        }
+
                                     {% endif %}
 
                                     return ret;
