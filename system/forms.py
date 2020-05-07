@@ -60,7 +60,7 @@ class UserCreateForm(forms.ModelForm):
         cleaned_data = super(UserCreateForm, self).clean()
         username = cleaned_data.get("username")
         work_num = cleaned_data.get('work_num')
-        mobile = cleaned_data.get("mobile", "")
+        # mobile = cleaned_data.get("mobile", "")
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
@@ -74,12 +74,12 @@ class UserCreateForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("兩次密碼輸入不一致")
 
-        if User.objects.filter(mobile=mobile).count():
-            raise forms.ValidationError('手機號碼：{}已存在'.format(mobile))
+        # if User.objects.filter(mobile=mobile).count():
+        #     raise forms.ValidationError('手機號碼：{}已存在'.format(mobile))
 
-        REGEX_MOBILE = "^1[3578]\d{9}$|^147\d{8}$|^176\d{8}$"
-        if not re.match(REGEX_MOBILE, mobile):
-            raise forms.ValidationError("請輸入正確的手機號碼")
+        # REGEX_MOBILE = "^1[3578]\d{9}$|^147\d{8}$|^176\d{8}$"
+        # if not re.match(REGEX_MOBILE, mobile):
+        #     raise forms.ValidationError("請輸入正確的手機號碼")
 
         # if User.objects.filter(email=email).count():
         #     raise forms.ValidationError('邮箱：{}已存在'.format(email))

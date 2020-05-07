@@ -94,7 +94,7 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
         file = request.FILES['file']
 
         # 獲取所有部門、專案和段別
-        projects = list(Project.objects.values_list('project', flat=True))
+        projects = set(Project.objects.values_list('project', flat=True))
         departments = list(Structure.objects.values_list('name', flat=True))
         segments = list(Segment.objects.values_list('segment', flat=True))
 
@@ -106,66 +106,58 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                 # 循環df讀取數據
                 for i in range(len(df)):
 
-                    # 如果存在部門和專案
-                    if str(df.loc[i, '部門']) in departments:
-                        if str(df.loc[i, '專案']) in projects:
-                            if str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all':
-                                try:
-                                    # defaults = {
-                                    #     'name': str(df.loc[i, '姓名']), 'mobile': str(df.loc[i, '手機']),
-                                    #     'email': str(df.loc[i, '郵箱']), 'username': str(df.loc[i, '工號']),
-                                    #     'password': 123456, 'remark': str(df.loc[i, '備註']),
-                                    #     'department': Structure.objects.get(name=str(df.loc[i, '部門'])),
-                                    #     'project': str(df.loc[i, '專案']), 'segment': str(df.loc[i, '段別']),
-                                    #     'account_type': 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0,
-                                    #     'superior_id': '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])),
-                                    #     'is_admin': True if str(df.loc[i, 'DRI']) == '是' else False,
-                                    #     'roles': Role.objects.get(name=str(df.loc[i, '所屬角色组']))
-                                    # }
-                                    #
-                                    # User.objects.update_or_create(work_num=str(df.loc[i, '工號']), defaults=defaults)
+                    try:
+                        # 如果存在部門和專案
+                        assert str(df.loc[i, '部門']) in departments, '第' + str(i+1) + '行 部門 信息不存在！！'
+                        assert set(str(df.loc[i, '專案']).split('/')).issubset(projects), '第' + str(i+1) + '行 專案 信息不存在！！'
+                        assert not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all', '第' + str(i+1) + '行 段別 信息不存在！！'
 
-                                    # 判断是否存在该用户
-                                    if User.objects.filter(work_num=str(df.loc[i, '工號'])):
-                                        user = get_object_or_404(User, work_num=str(df.loc[i, '工號']))
-                                    else:
-                                        user = User()
+                        # defaults = {
+                        #     'name': str(df.loc[i, '姓名']), 'mobile': str(df.loc[i, '手機']),
+                        #     'email': str(df.loc[i, '郵箱']), 'username': str(df.loc[i, '工號']),
+                        #     'password': 123456, 'remark': str(df.loc[i, '備註']),
+                        #     'department': Structure.objects.get(name=str(df.loc[i, '部門'])),
+                        #     'project': str(df.loc[i, '專案']), 'segment': str(df.loc[i, '段別']),
+                        #     'account_type': 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0,
+                        #     'superior_id': '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])),
+                        #     'is_admin': True if str(df.loc[i, 'DRI']) == '是' else False,
+                        #     'roles': Role.objects.get(name=str(df.loc[i, '所屬角色组']))
+                        # }
+                        #
+                        # User.objects.update_or_create(work_num=str(df.loc[i, '工號']), defaults=defaults)
 
-                                    user.name = str(df.loc[i, '姓名'])
-                                    user.username = str(df.loc[i, '工號'])
-                                    user.work_num = str(df.loc[i, '工號'])
-                                    user.mobile = str(df.loc[i, '手機'])
-                                    user.email = str(df.loc[i, '郵箱'])
-                                    user.project = str(df.loc[i, '專案'])
-                                    user.segment = str(df.loc[i, '段別'])
-                                    user.password = 123456
-                                    user.remark = str(df.loc[i, '備註'])
-                                    user.department = Structure.objects.get(name=str(df.loc[i, '部門']))
-                                    user.account_type = 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0
-                                    user.superior_id = '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])).id
-                                    user.is_admin = True if str(df.loc[i, 'DRI']) == '是' else False
-                                    user.save()
-
-                                    user.roles.add(Role.objects.get(name=str(df.loc[i, '所屬角色组'])))
-
-                                    res = {
-                                        'msg': '上傳成功！！',
-                                        'result': True
-                                    }
-
-                                except Exception as e:
-                                    res['msg'] = 'Line' + str(i) + str(e)
-                                    raise
-
-                            else:
-                                res['msg'] = '第' + str(i+1) + '行 段別 信息不存在！！'
-                                break
+                        # 判断是否存在该用户
+                        if User.objects.filter(work_num=str(df.loc[i, '工號'])):
+                            user = get_object_or_404(User, work_num=str(df.loc[i, '工號']))
                         else:
-                            res['msg'] = '第' + str(i+1) + '行 專案 信息不存在！！'
-                            break
-                    else:
-                        res['msg'] = '第' + str(i+1) + '行 部門 信息不存在！！'
-                        break
+                            user = User()
+
+                        user.name = str(df.loc[i, '姓名'])
+                        user.username = str(df.loc[i, '工號'])
+                        user.work_num = str(df.loc[i, '工號'])
+                        user.mobile = str(df.loc[i, '手機'])
+                        user.email = str(df.loc[i, '郵箱'])
+                        user.project = str(df.loc[i, '專案'])
+                        user.segment = str(df.loc[i, '段別'])
+                        user.password = 123456
+                        user.remark = str(df.loc[i, '備註'])
+                        user.department = Structure.objects.get(name=str(df.loc[i, '部門']))
+                        user.account_type = 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0
+                        user.superior_id = '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])).id
+                        user.is_admin = True if str(df.loc[i, 'DRI']) == '是' else False
+                        user.save()
+
+                        user.roles.add(Role.objects.get(name=str(df.loc[i, '所屬角色组'])))
+
+                    except Exception as e:
+                        res['msg'] = str(e)
+                        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
+                res = {
+                    'msg': '上傳成功！！',
+                    'result': True
+                }
+
         else:
             res['msg'] = '請選擇正確的文件！！'
 
