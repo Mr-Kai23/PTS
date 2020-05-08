@@ -318,42 +318,10 @@
                 shadeClose: false,
                 area: ['600px', '200px'],
                 content: $("#upload"),
-                {#content: "{% url 'sycstem:basic-user' %}",#}
-                btn: ['上傳', '取消'],
-                yes: function (index) {
-                    $('#submit').click(function (res) {
-                        $.ajax({
-                        type: "POST",
-                        url: "",
-                        {#data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403#}
-                        cache: false,
-                        success: function (msg) {
-                            if (msg.result) {
-                                layer.alert('删除成功!', {icon: 1});
-                                oDataTable.ajax.reload();
-                            } else {
-                                //alert(msg.message);
-                                layer.alert('删除失败!', {icon: 5});
-                            }
-                            return;
-                        }
-                        });
-                    });
+                end: function () {
+                    oDataTable.ajax.reload();
                 }
-
             });
-            {#end: function () {#}
-            {##}
-            {#    if(res.result) {#}
-            {#        layer.alert(res.msg, {icon: 1});#}
-            {#        oDataTable.ajax.reload();#}
-            {#     }else {#}
-            {#        layer.alert(res.msg, {icon: 5});#}
-            {#        oDataTable.ajax.reload();#}
-            {#     }#}
-            {##}
-            {# }#}
-
         });
 
 

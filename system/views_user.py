@@ -89,7 +89,12 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
     template_name = 'system/users/user.html'
 
     def post(self, request):
-        res = dict(msg='', result=False)
+        msg = ''
+
+        correct_user = []  # 上傳成功的用戶
+        error_department = []  # 部門錯誤的用戶
+        error_project = []  # 專案錯誤的用戶
+        error_segment = []  # 段別錯誤的用戶
 
         file = request.FILES['file']
 
@@ -106,11 +111,11 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                 # 循環df讀取數據
                 for i in range(len(df)):
 
-                    try:
+                    # try:
                         # 如果存在部門和專案
-                        assert str(df.loc[i, '部門']) in departments, '第' + str(i+1) + '行 部門 信息不存在！！'
-                        assert set(str(df.loc[i, '專案']).split('/')).issubset(projects), '第' + str(i+1) + '行 專案 信息不存在！！'
-                        assert not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all', '第' + str(i+1) + '行 段別 信息不存在！！'
+                        # assert str(df.loc[i, '部門']) in departments, '第' + str(i+1) + '行 部門 信息不存在！！'
+                        # assert set(str(df.loc[i, '專案']).split('/')).issubset(projects), '第' + str(i+1) + '行'+str(df.loc[i, '專案'])+'專案 信息不存在！！'
+                        # assert not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all', '第' + str(i+1) + '行 段別 信息不存在！！'
 
                         # defaults = {
                         #     'name': str(df.loc[i, '姓名']), 'mobile': str(df.loc[i, '手機']),
@@ -126,42 +131,61 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                         #
                         # User.objects.update_or_create(work_num=str(df.loc[i, '工號']), defaults=defaults)
 
-                        # 判断是否存在该用户
-                        if User.objects.filter(work_num=str(df.loc[i, '工號'])):
-                            user = get_object_or_404(User, work_num=str(df.loc[i, '工號']))
+                    if str(df.loc[i, '部門']) in departments:
+                        if set(str(df.loc[i, '專案']).split('/')).issubset(projects):
+                            if not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all':
+
+                                # 判断是否存在该用户
+                                if User.objects.filter(work_num=str(df.loc[i, '工號'])):
+                                    user = get_object_or_404(User, work_num=str(df.loc[i, '工號']))
+                                else:
+                                    user = User()
+
+                                user.name = str(df.loc[i, '姓名'])
+                                user.username = str(df.loc[i, '工號'])
+                                user.work_num = str(df.loc[i, '工號'])
+                                user.mobile = str(df.loc[i, '手機'])
+                                user.email = str(df.loc[i, '郵箱'])
+                                user.project = str(df.loc[i, '專案'])
+                                user.segment = str(df.loc[i, '段別'])
+                                user.password = 123456
+                                user.remark = str(df.loc[i, '備註'])
+                                user.department = Structure.objects.get(name=str(df.loc[i, '部門']))
+                                user.account_type = 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0
+                                user.superior_id = '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])).id
+                                user.is_admin = True if str(df.loc[i, 'DRI']) == '是' else False
+                                user.save()
+                                # 多對多字段添加關聯
+                                user.roles.add(Role.objects.get(name=str(df.loc[i, '所屬角色组'])))
+
+                                correct_user.append(df.loc[i].tolist())
+
+
+                            else:
+                                msg = '用戶信息有誤！！'
+                                error_department.append(df.loc[i].tolist())
+                                break
                         else:
-                            user = User()
+                            msg = '用戶信息有誤！！'
+                            error_project.append(df.loc[i].tolist())
+                            break
 
-                        user.name = str(df.loc[i, '姓名'])
-                        user.username = str(df.loc[i, '工號'])
-                        user.work_num = str(df.loc[i, '工號'])
-                        user.mobile = str(df.loc[i, '手機'])
-                        user.email = str(df.loc[i, '郵箱'])
-                        user.project = str(df.loc[i, '專案'])
-                        user.segment = str(df.loc[i, '段別'])
-                        user.password = 123456
-                        user.remark = str(df.loc[i, '備註'])
-                        user.department = Structure.objects.get(name=str(df.loc[i, '部門']))
-                        user.account_type = 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0
-                        user.superior_id = '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])).id
-                        user.is_admin = True if str(df.loc[i, 'DRI']) == '是' else False
-                        user.save()
+                # except Exception as e:
+                #     msg = str(e)
+                #     return render(request, 'system/users/User_upload_info.html', {'msg': msg})
+                    else:
+                        msg = '用戶信息有誤！！'
+                        error_segment.append(df.loc[i].tolist())
+                        break
 
-                        user.roles.add(Role.objects.get(name=str(df.loc[i, '所屬角色组'])))
-
-                    except Exception as e:
-                        res['msg'] = str(e)
-                        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
-
-                res = {
-                    'msg': '上傳成功！！',
-                    'result': True
-                }
+            if not error_department and not error_project and not error_segment:
+                msg = '上傳成功！！'
 
         else:
-            res['msg'] = '請選擇正確的文件！！'
+            msg = '請選擇正確的文件！！'
 
-        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+        return render(request, 'system/users/User_upload_info.html',
+                      {"msg": msg, "correct_user": correct_user, "error_department": error_department, "error_project": error_project, "error_segment": error_segment})
 
 
 class UserListView(LoginRequiredMixin, View):

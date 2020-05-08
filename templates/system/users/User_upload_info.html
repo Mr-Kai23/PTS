@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传信息</title>
+</head>
+<body>
+
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+
+{% if msg == "上傳成功" %}
+<div class="alert alert-success">
+    <strong>{{ msg }}</strong>
+</div>
+
+{% else %}
+
+<div class="alert alert-danger">
+    <strong>{{ msg }}</strong>
+</div>
+
+{% endif %}
+
+{% if correct_user %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">上傳成功用戶</div>
+
+    <table class="table">
+      <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>工號</th>
+          <th>用戶名</th>
+          <th>郵箱</th>
+          <th>手機</th>
+          <th>部門</th>
+          <th>上級DRI</th>
+          <th>專案</th>
+          <th>段別</th>
+          <th>備註</th>
+          <th>賬號類型</th>
+          <th>DRI</th>
+          <th>所屬角色組</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in correct_user %}
+        <tr>
+            {% for info in user %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_department %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">用戶部門錯誤</div>
+
+    <table class="table">
+      <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>工號</th>
+          <th>用戶名</th>
+          <th>郵箱</th>
+          <th>手機</th>
+          <th>部門</th>
+          <th>上級DRI</th>
+          <th>專案</th>
+          <th>段別</th>
+          <th>備註</th>
+          <th>賬號類型</th>
+          <th>DRI</th>
+          <th>所屬角色組</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in error_department %}
+        <tr>
+            {% for info in user %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_project %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">用戶專案錯誤</div>
+
+    <table class="table">
+      <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>工號</th>
+          <th>用戶名</th>
+          <th>郵箱</th>
+          <th>手機</th>
+          <th>部門</th>
+          <th>上級DRI</th>
+          <th>專案</th>
+          <th>段別</th>
+          <th>備註</th>
+          <th>賬號類型</th>
+          <th>DRI</th>
+          <th>所屬角色組</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in error_project %}
+        <tr>
+            {% for info in user %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_segment %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">用戶段別錯誤</div>
+
+    <table class="table">
+      <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>工號</th>
+          <th>用戶名</th>
+          <th>郵箱</th>
+          <th>手機</th>
+          <th>部門</th>
+          <th>上級DRI</th>
+          <th>專案</th>
+          <th>段別</th>
+          <th>備註</th>
+          <th>賬號類型</th>
+          <th>DRI</th>
+          <th>所屬角色組</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for user in error_segment %}
+        <tr>
+            {% for info in user %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+<button type="button" style="margin-left: 10px;" class="btn btn-primary" onclick="window.location.href='/system/basic/user/'">返回</button>
+
+</body>
+</html>
