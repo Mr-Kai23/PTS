@@ -103,6 +103,16 @@
             position: relative;
         }
 
+        @keyframes blink{
+          0%{opacity: 1;}
+          100%{opacity: 0;}
+        }
+        .blink{
+            color: #dd4814;
+            background-color:yellow;
+            animation: blink 1s linear infinite;
+        }
+
 </style>
 </head>
 <body style="background:linear-gradient(to top,#fff,#000D22)">
@@ -209,10 +219,10 @@
     });
 
     creatTable();
-    <!--    var interval3 = setInterval(function () {-->
-    <!--        creatTable()-->
-    <!--        window.location.reload();-->
-    <!--     }, 60000);-->
+        var interval3 = setInterval(function () {
+            creatTable()
+            window.location.reload();
+         }, 60000);
 
     function creatTable() {
         var project = $("#project option:selected").val();
@@ -247,7 +257,7 @@
                         } else if (data[i][arr[j]] == "Closed") {
                             tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td style='font-weight: 300; height:48px; font-size:18px;background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else {
                             tableData += "<td style='font-weight: 300; min-height:48px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#2B2B2B; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
@@ -262,7 +272,6 @@
                         $(item).wrap(document.createElement("div"))
                         $(item).parent().css({
                             'height': '49px',
-
                             'overflow-y': 'auto',
                             'border-bottom': '0.5px solid #999B9F'
                         })
