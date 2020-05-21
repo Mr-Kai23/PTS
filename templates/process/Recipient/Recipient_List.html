@@ -53,15 +53,15 @@
                 <div class="box-header">
                     <form class="form-inline" id="queryForm">
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>專案：</label>
-                            <select class="form-control inputText select2" name="project" id="project">
-                                <option></option>
-                                {% for project in projects %}
-                                    <option value="{{ project.id }}">{{ project.project }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+{#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
+{#                            <label>專案：</label>#}
+{#                            <select class="form-control inputText select2" name="project" id="project">#}
+{#                                <option></option>#}
+{#                                {% for project in projects %}#}
+{#                                    <option value="{{ project.id }}">{{ project.project }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+{#                        </div>#}
 
 {#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
 {#                            <label>階段：</label>#}
@@ -72,16 +72,6 @@
 {#                                {% endfor %}#}
 {#                            </select>#}
 {#                        </div>#}
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>機種：</label>
-                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
-                                <option></option>
-                                {% for unit_type in unit_types %}
-                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>段別：</label>
@@ -123,7 +113,7 @@
                         <thead>
                         <tr valign="middle">
                             <th><input type="checkbox" id="checkAll"></th>
-                            <th>ID</th>
+{#                            <th>ID</th>#}
                             <th>發佈部門</th>
                             <th>發佈DRI</th>
                             <th>發佈時間</th>
@@ -199,7 +189,7 @@
 
                     {
                         ajax: {
-                            "url": "{% url 'process:order-receive-list' %}",
+                            "url": "{% url 'process:order-receive-list' %}?receive_id={{ receive_id }}",
                             "data": function (d) {
 
                                 d.project = $("#project").val();
@@ -213,10 +203,10 @@
 
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
-                            {
-                                data: "id",
-                                width: "5%",
-                            },
+                            {#{#}
+                            {#    data: "id",#}
+                            {#    width: "5%",#}
+                            {# },#}
                             {
                                 data: "publish_dept",
                             },
@@ -239,8 +229,8 @@
                             {
                                 data: "key_content",
                                 render: function (data) {
-                                    if (data.length > 5) {
-                                        return data.substring(0, 5) + '...';
+                                    if (data.length > 10) {
+                                        return data.substring(0, 10) + '...';
                                     } else {
                                         return data;
                                     }

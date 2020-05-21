@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>工單上傳信息</title>
+</head>
+<body>
+
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+
+{% if msg == "上傳成功" %}
+<div class="alert alert-success">
+    <strong>{{ msg }}</strong>
+</div>
+
+{% else %}
+
+<div class="alert alert-danger">
+    <strong>{{ msg }}</strong>
+</div>
+
+{% endif %}
+
+{% if correct_workflow %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">上傳成功工單</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工單種類</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+          <th style="width: 10%">接收線長</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in correct_workflow %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_project %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">工單專案錯誤</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工單種類</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+          <th style="width: 10%">接收線長</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in error_project %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_department %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">工單發佈部門錯誤</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工單種類</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+          <th style="width: 10%">接收線長</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in error_department %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_publisher %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">工單發佈者錯誤</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工單種類</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+          <th style="width: 10%">接收線長</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in error_publisher %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+<button type="button" style="margin-left: 10px;" class="btn btn-danger" onclick="window.location.href='/process/order/workflow/'">返回</button>
+{% if correct_workflow %}<button type="button" id="btnPublish" style="margin-left: 10px;" class="btn btn-primary" >發佈</button> {% endif %}
+
+{% block javascripts %}
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
+    <script type="text/javascript">
+
+        $("#btnPublish").click(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'process:order-workflow-create' %}",
+                data: {publish:1, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                cache: false,
+                success: function (msg) {
+                    if (msg.result) {
+                        layer.alert('工單發佈成功！', {icon: 1}, function (index) {
+                            window.location.href='/process/order/workflow/'
+                        });
+                    } else {
+                        layer.alert(msg.msg, {icon: 5});
+
+                    }
+
+                }
+            });
+        });
+
+
+    </script>
+
+{% endblock %}
+
+</body>
+</html>

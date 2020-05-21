@@ -180,13 +180,13 @@
                 <thead class="tabel_head">
                 <tr style="width:100%;display:table;min-height:48px">
                     <th>發佈部門</th>
-                    <th>發佈DRI</th>
+                    <th>發佈者</th>
                     <th>發佈時間</th>
                     <th >主旨</th>
                     <th>工單</th>
                     <th>重點注意內容</th>
                     <th>段別</th>
-                    <th>接收DRI</th>
+                    <th>接收者</th>
                     <th>接收狀態</th>
                     <th>執行狀況</th>
                 </tr>
@@ -272,6 +272,7 @@
                         $(item).wrap(document.createElement("div"))
                         $(item).parent().css({
                             'height': '49px',
+
                             'overflow-y': 'auto',
                             'border-bottom': '0.5px solid #999B9F'
                         })

@@ -94,11 +94,33 @@ WSGI_APPLICATION = 'PMS.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'PMS',
+#         'HOST': '10.134.82.244',
+#         'PORT': '3306',
+#         'USER': 'F7690014',
+#         'PASSWORD': 'BIGDATA123.',
+#     }
+# }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'PMS',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#         'USER': 'root',
+#         'PASSWORD': '123456',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'PMS',
-        'HOST': '127.0.0.1',
+        'NAME': 'PTS',
+        'HOST': '10.141.7.36',
         'PORT': '3306',
         'USER': 'root',
         'PASSWORD': 'xiayanxia12',
@@ -124,23 +146,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# 缓存配置
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/0',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'PASSWORD': 'password'
-        }
-    }
-}
-
-# 后面这三句可以不需要
-# 设置缓存过期时间
-REDIS_TIMEOUT = 7*24*60*60
-CUBES_REDIS_TIMEOUT = 60*60
-NEVER_REDIS_TIMEOUT = 365*24*60*60
+# # 缓存配置
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/0',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#             'PASSWORD': 'password'
+#         }
+#     }
+# }
+#
+# # 后面这三句可以不需要
+# # 设置缓存过期时间
+# REDIS_TIMEOUT = 7*24*60*60
+# CUBES_REDIS_TIMEOUT = 60*60
+# NEVER_REDIS_TIMEOUT = 365*24*60*60
 
 
 # Internationalization

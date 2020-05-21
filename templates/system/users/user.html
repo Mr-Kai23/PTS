@@ -13,6 +13,7 @@
 
         <div id="devlist">
             <div class="box box-primary" id="liebiao">
+
                 <div class="box-header">
                     <div class="btn-group pull-left">
                         <button type="button" id="btnRefresh" class="btn btn-info">
@@ -58,6 +59,20 @@
                         </form>
 
                     </div>
+                </div>
+
+                <div class="box-header">
+                    <form class="form-inline" id="queryForm">
+
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>姓名：</label>
+                            <input type="text" name="name" class="form-control inputText" id="name">
+                        </div>
+
+                        <button type="button" id="btnSearch" class="btn btn-default">
+                            <i class="glyphicon glyphicon-search"></i>查询
+                        </button>
+                    </form>
                 </div>
 
                 <div class="box-body">
@@ -116,7 +131,7 @@
                         ajax: {
                             "url": "{% url 'system:basic-user-list' %}",
                             "data": function (d) {
-                                d.select = $("#select").val();
+                                d.name = $("#name").val();
                             }
                         },
                         columns: [
@@ -176,6 +191,11 @@
                     }));
                 return oTable;
             }
+        });
+
+        //查询
+        $("#btnSearch").click(function () {
+            oDataTable.ajax.reload();
         });
 
         $("#btnCreate").click(function () {
@@ -324,11 +344,6 @@
             });
         });
 
-
-        $("#select").change(function () {
-            //alert($("#select").val())
-            oDataTable.ajax.reload();
-        });
 
     </script>
     <script>

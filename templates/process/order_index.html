@@ -1,7 +1,7 @@
 {% extends "base-left.html" %}
 {% load staticfiles %}
 
-{% block title %}PMS{% endblock %}
+{% block title %}PTS{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
@@ -59,7 +59,7 @@
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->
 
-                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'process:order-receive' %}">
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="{% url 'process:order-receive' 1 %}">
                             <div class="info-box">
                                 <span class="info-box-icon bg-green"><i class="fa fa-hourglass-2"></i></span>
                                 <div class="info-box-content">

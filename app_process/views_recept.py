@@ -15,7 +15,7 @@ class ReceptView(LoginRequiredMixin, View):
     """
     接收工单视图
     """
-    def get(self, request):
+    def get(self, request, receive_id):
         res = dict()
 
         # 專案
@@ -25,6 +25,8 @@ class ReceptView(LoginRequiredMixin, View):
         # 段别
         segments = Segment.objects.all()
         res['segments'] = segments
+
+        res['receive_id'] = receive_id
 
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
@@ -39,6 +41,10 @@ class ReceptListView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
+        # 用戶專案
+        project = request.user.project
+        segment = request.user.segment
+
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
                   'withdraw_time', 'unit_type']
@@ -47,13 +53,13 @@ class ReceptListView(LoginRequiredMixin, View):
 
         filters = {i + '__contains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
-        # 获取接收者是用户或者用户DRI的未接收工单
-        if request.user.superior:
-            workflows = list(OrderInfo.objects.filter(receive_status=0, **filters).values(*fields).order_by('-id'))
-        else:
-            workflows = list(
-                OrderInfo.objects.filter(receive_status=0, **filters).values(
-                    *fields).order_by('-id'))
+        # 所有未接收工單
+        if request.GET['receive_id'] == '1':
+            workflows = list(OrderInfo.objects.filter(project=project, receive_status=0, **filters).values(*fields).order_by('-id'))
+
+        # 我的待辦工單
+        elif request.GET['receive_id'] == '2':
+            workflows = list(OrderInfo.objects.filter(project=project, segment=segment, receive_status=0, **filters).values(*fields).order_by('-id'))
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

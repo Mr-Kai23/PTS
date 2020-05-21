@@ -24,13 +24,14 @@
                         </div>
                         <label class="col-sm-2 control-label">工號</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" name="work_num"  value="{{ user.work_num }}" />
+                            <input type="text" class="form-control" name="work_num" value="{{ user.work_num }}"/>
                         </div>
                     </div>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">用戶名</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="username" type="text" value="{{ user.username }}" readonly="readonly"/>
+                            <input class="form-control" name="username" type="text" value="{{ user.username }}"
+                                   readonly="readonly"/>
                         </div>
                     </div>
 
@@ -64,7 +65,7 @@
                             </select>
                         </div>
 
-                        <label class="col-sm-2 control-label">上級DRI</label>
+                        <label class="col-sm-2 control-label">上級</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="superior">
                                 <option value="{{ user.superior.id }}">{{ user.superior|default:"--上級DRI--" }}</option>
@@ -85,6 +86,7 @@
                             </select>
                         </div>
 
+                        <div id="segment" {% if user.account_type == 0 %} hidden="true" {% endif %}>
                         <label class="col-sm-2 control-label">段別</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="segment">
@@ -93,6 +95,7 @@
                                     <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                                 {% endfor %}
                             </select>
+                        </div>
                         </div>
                     </div>
 
@@ -103,7 +106,8 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">備註</label>
                         <div class="col-sm-3">
-                            <input class="form-control" name="remark" type="text" {% if user.remark %}value="{{ user.remark }}"{% else %}value=""{% endif %}/>
+                            <input class="form-control" name="remark" type="text"
+                                   {% if user.remark %}value="{{ user.remark }}"{% else %}value=""{% endif %}/>
                         </div>
                     </div>
 
@@ -113,42 +117,22 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">賬號類型</label>
                         <div class="col-sm-6">
-{#                            <label class="control-label">#}
-                                <input type="radio" class="minimal" name="account_type" value="0"
-                                {% if user.account_type == 0 %}checked{% endif %}>發佈者
-{#                            </label>#}
-{#                            <label class="control-label">#}
-                                <input type="radio" class="minimal" name="account_type" value="1"
-                                {% if user.account_type == 1 %}checked{% endif %}>接收者
-{#                            </label>#}
+                            <input type="radio" class="minimal" name="account_type" value="0"
+                                   {% if user.account_type == 0 %}checked{% endif %}>發佈者
+                            <input type="radio" class="minimal" name="account_type" value="1"
+                                   {% if user.account_type == 1 %}checked{% endif %}>接收者
                         </div>
                     </div>
 
-{#                    <div class="form-group has-feedback">#}
-{#                        <label class="col-sm-2 control-label">啟用狀態</label>#}
-{#                        <div class="col-sm-6">#}
-{#                            <label class="control-label">#}
-{#                                <input type="radio" class="minimal" name="is_active" value="True"#}
-{#                                {% ifequal user.is_active True %}checked{% endifequal %}>啟用#}
-{#                            </label>#}
-{#                            <label class="control-label">#}
-{#                                <input type="radio" class="minimal" name="is_active" value="False"#}
-{#                                {% ifequal user.is_active False %}checked{% endifequal %}>禁用#}
-{#                            </label>#}
-{#                        </div>#}
-{#                    </div>#}
-
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">DRI</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_admin" value="True"
-                                {% ifequal user.is_admin True %}checked{% endifequal %}>是
-                            </label>
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_admin" value="False"
-                                {% ifequal user.is_admin False %}checked{% endifequal %}>否
-                            </label>
+                    <div class="form-group has-feedback" {% if user.account_type == 0 %} hidden="true" {% endif %} id="user_type">
+                        <label class="col-sm-2 control-label">用戶類型</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="user_type">
+                                <option value="">--用戶類型--</option>
+                                <option value="0" {% if user.user_type == 0 %} selected {% endif %}>副線長</option>
+                                <option value="1" {% if user.user_type == 1 %} selected {% endif %}>線長</option>
+                                <option value="2" {% if user.user_type == 2 %} selected {% endif %}>專案主管</option>
+                            </select>
                         </div>
                     </div>
 
@@ -229,6 +213,18 @@
                     return;
                 }
             });
-            });
+        });
+
+        // radio點擊出現用戶類型框
+        $(":radio[name='account_type']").click(function () {
+            if ($(this).val() == 1) {
+                $('#user_type').removeAttr('hidden');
+                $('#segment').removeAttr('hidden');
+            } else {
+                $('#user_type').attr('hidden', 'true');
+                $('#segment').attr('hidden', 'true');
+            }
+
+        });
     </script>
 {% endblock %}

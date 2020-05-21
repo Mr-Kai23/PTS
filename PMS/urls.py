@@ -37,6 +37,8 @@ urlpatterns = [
     path('system/', include('system.urls', namespace='system')),
 
     # process
-    path('process/', include('app_process.urls', namespace='process')),]
+    path('process/', include('app_process.urls', namespace='process')),
+
+]
 
 # ] + static(STATIC_URL, document_root=STATIC_ROOT)

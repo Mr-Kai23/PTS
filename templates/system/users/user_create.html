@@ -25,7 +25,7 @@
                         </div>
                         <label class="col-sm-2 control-label">工號</label>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control" name="work_num"  value="" />
+                            <input type="text" class="form-control" name="work_num" value=""/>
                         </div>
                     </div>
 
@@ -81,10 +81,10 @@
                             </select>
                         </div>
 
-                        <label class="col-sm-2 control-label">上級DRI</label>
+                        <label class="col-sm-2 control-label">上級</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="superior">
-                                <option value="">--上級DRI--</option>
+                                <option value="">--上級--</option>
                                 {% for superior in superiors %}
                                     <option value="{{ superior.id }}">{{ superior.name }}</option>
                                 {% endfor %}
@@ -135,41 +135,22 @@
                         <div class="col-sm-6">
                             <label class="control-label">
                                 <input type="radio" class="minimal" name="account_type" value="0">發佈者
-{#                                {% ifequal user.account_type 0 %}checked{% endifequal %}>#}
                             </label>
                             <label class="control-label">
                                 <input type="radio" class="minimal" name="account_type" value="1">接收者
-{#                                {% ifequal user.account_type 1 %}checked{% endifequal %}>#}
                             </label>
                         </div>
                     </div>
 
-{#                    <div class="form-group has-feedback">#}
-{#                        <label class="col-sm-2 control-label">啟用狀態</label>#}
-{#                        <div class="col-sm-6">#}
-{#                            <label class="control-label">#}
-{#                                <input type="radio" class="minimal" name="is_active" value="True"#}
-{#                                {% ifequal user.is_active True %}checked{% endifequal %}>啟用#}
-{#                            </label>#}
-{#                            <label class="control-label">#}
-{#                                <input type="radio" class="minimal" name="is_active" value="False"#}
-{#                                {% ifequal user.is_active False %}checked{% endifequal %}>禁用#}
-{#                            </label>#}
-{#                        </div>#}
-{#                    </div>#}
-
-
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">DRI</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_admin" value="True">是
-{#                                {% ifequal user.is_admin True %}checked{% endifequal %}>是#}
-                            </label>
-                            <label class="control-label">
-                                <input type="radio" class="minimal" name="is_admin" value="False">否
-{#                                {% ifequal user.is_admin False %}checked{% endifequal %}>否#}
-                            </label>
+                    <div class="form-group has-feedback" hidden="true" id="user_type">
+                        <label class="col-sm-2 control-label">用戶類型</label>
+                        <div class="col-sm-3">
+                            <select class="form-control select2" style="width:100%;" name="user_type">
+                                <option value="">--用戶類型--</option>
+                                <option value="0">副線長</option>
+                                <option value="1">線長</option>
+                                <option value="2">專案主管</option>
+                            </select>
                         </div>
                     </div>
 
@@ -205,6 +186,7 @@
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
     <script type="text/javascript">
 
+
         $("#btnSave").click(function () {
             var data = $("#addForm").serialize();
             $.ajax({
@@ -226,12 +208,22 @@
             });
         });
 
+        // radio點擊出現用戶類型框
+        $(":radio[name='account_type']").click(function () {
+            if ($(this).val() == 1) {
+                $('#user_type').removeAttr('hidden');
+            } else {
+                $('#user_type').attr('hidden', 'true');
+            }
+
+        });
+
 
         /*点取消刷新新页面*/
-        $("#btnCancel").click(function () {
+        $("#btnCancel").change(function () {
             window.location.reload();
 
-        })
+        });
 
         /*input 时间输入选择*/
         $(".form_datetime").datetimepicker({
@@ -253,6 +245,7 @@
             //Initialize Select2 Elements
             $(".select2").select2();
         });
+
 
     </script>
 

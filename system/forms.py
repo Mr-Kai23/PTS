@@ -42,7 +42,7 @@ class UserCreateForm(forms.ModelForm):
         model = User
         fields = [
             'name', 'work_num', 'username', 'department', 'superior', 'project', 'mobile', 'email',
-            'segment', 'account_type', 'is_admin', 'roles', 'password', 'remark'
+            'segment', 'account_type', 'user_type', 'is_admin', 'roles', 'password', 'remark'
         ]
 
         error_messages = {
@@ -90,7 +90,7 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = [
             'name', 'work_num', 'username', 'department', 'project', 'superior', 'mobile', 'email',
-            'segment', 'account_type', 'is_admin', 'roles', 'remark'
+            'segment', 'account_type', 'user_type', 'is_admin', 'roles', 'remark'
         ]
 
 

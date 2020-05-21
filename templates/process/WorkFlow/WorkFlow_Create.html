@@ -73,24 +73,13 @@
                         </div>
                     </div>
                     <div class="form-group has-feedback">
-						<label class="col-sm-2 control-label">接受DRI</label>
+						<label class="col-sm-2 control-label">接收段別</label>
 						<div class="col-sm-3">
-                            {%  if workflow.receiver == 'All' %}
-                                <input type="checkbox" name="receiver" value="All" checked="True"/>
-                                <label >All</label>
-                            {% else %}
-                                <input type="checkbox" name="receiver" value="All"/>
-                                <label >All</label>
-                            {% endif %}
-
-                            {% for dri in dris %}
-                                {% if dri.name in receivers %}
-							        <input type="checkbox" name="receiver" value="{{ dri.name }}" checked="True"/>
-                                    <label >{{ dri.name }}</label>
-                                {% else %}
-                                    <input type="checkbox" name="receiver" value="{{ dri.name }}"/>
-                                    <label >{{ dri.name }}</label>
-                                {% endif %}
+                            <input type="checkbox" name="segment" value="All" />
+                            <label >All</label>
+                            {% for segment in segments %}
+                                <input type="checkbox" name="segment" value="{{ segment.segment }}" {% if segment.segment == workflow.segment %} checked="True" {% endif %}/>
+                                <label >{{ segment.segment }}</label>
                             {% endfor %}
 
 						</div>
@@ -98,7 +87,7 @@
                     <div class="box-footer ">
                         <div class="row span7 text-center ">
                             <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
-                            <button type="button" id="btnSave" class="btn btn-info margin-right ">發佈</button>
+                            <button type="button" id="btnSave" class="btn btn-info margin-right ">確認</button>
                         </div>
                     </div>
                 </fieldset>

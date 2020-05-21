@@ -20,10 +20,9 @@ urlpatterns = [
     url(r'^order/workflow/create$', views_workflow.WorkFlowCreateView.as_view(), name='order-workflow-create'),
     url(r'^order/workflow/delete$', views_workflow.WorkFlowDeleteView.as_view(), name='order-workflow-delete'),
     url(r'^order/workflow/detail$', views_workflow.WorkFlowDetailView.as_view(), name='order-workflow-detail'),
-    # url(r'^order/workflow/hello$', views_workflow.HelloView.as_view(), name='hello-detail'),
 
     # 待接收工單路由
-    url(r'^order/receive/$', views_recept.ReceptView.as_view(), name='order-receive'),
+    url(r'^order/receive/(?P<receive_id>[0-9]{1})/$', views_recept.ReceptView.as_view(), name='order-receive'),
     url(r'^order/receive/list/$', views_recept.ReceptListView.as_view(), name='order-receive-list'),
     url(r'^order/receive/accept/$', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept'),
     url(r'^order/receive/detail$', views_recept.ReceptDetailView.as_view(), name='order-receive-detail'),

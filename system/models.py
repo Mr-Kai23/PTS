@@ -68,6 +68,12 @@ class UserInfo(AbstractUser):
         (1, '接收者'),
     )
 
+    user_type_choice = (
+        (0, '副線長'),
+        (1, '線長'),
+        (2, '專案主管')
+    )
+
     name = models.CharField(max_length=20, default="", verbose_name="姓名")
     birthday = models.DateField(null=True, blank=True, verbose_name="出生日期")
     gender = models.CharField(max_length=10, choices=(("male", "男"), ("female", "女")), default="male",
@@ -85,6 +91,7 @@ class UserInfo(AbstractUser):
     segment = models.CharField(max_length=20, null=True, blank=True, default="", verbose_name='段别')
     account_type = models.SmallIntegerField(choices=account_type_choice, default=0, verbose_name='账号类别')
     is_admin = models.BooleanField(default=False)
+    user_type = models.SmallIntegerField(choices=user_type_choice, null=True, default=0, verbose_name='用户类型')
     remark = models.CharField(max_length=64, null=True, blank=True, default="", verbose_name='备注')
 
     def __str__(self):

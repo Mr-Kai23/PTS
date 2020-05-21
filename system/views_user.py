@@ -31,6 +31,11 @@ User = get_user_model()
 class IndexView(LoginRequiredMixin, View):
 
     def get(self, request):
+        """
+        流程主頁面數據展示
+        :param request:
+        :return: 渲染主頁面
+        """
 
         res = {
             'created': OrderInfo.objects.all().count(),
@@ -89,6 +94,11 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
     template_name = 'system/users/user.html'
 
     def post(self, request):
+        """
+        用户批量上传
+        :param request:
+        :return: 返回渲染上传信息页面
+        """
         msg = ''
 
         correct_user = []  # 上傳成功的用戶
@@ -106,31 +116,16 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
         if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
             df = pd.read_excel(file, keep_default_na=False)
 
-            column_list = ['姓名', '工號', '用戶名', '郵箱', '手機', '部門', '上級DRI', '專案', '段別', '備註', '賬號類型', 'DRI', '所屬角色组']
+            column_list = ['姓名', '工號', '用戶名', '郵箱', '手機', '部門', '上級', '專案', '段別', '備註', '賬號類型',
+                           '用戶類型', '所屬角色组']
             if list(df.columns) == column_list:
                 # 循環df讀取數據
                 for i in range(len(df)):
-
-                    # try:
-                        # 如果存在部門和專案
-                        # assert str(df.loc[i, '部門']) in departments, '第' + str(i+1) + '行 部門 信息不存在！！'
-                        # assert set(str(df.loc[i, '專案']).split('/')).issubset(projects), '第' + str(i+1) + '行'+str(df.loc[i, '專案'])+'專案 信息不存在！！'
-                        # assert not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all', '第' + str(i+1) + '行 段別 信息不存在！！'
-
-                        # defaults = {
-                        #     'name': str(df.loc[i, '姓名']), 'mobile': str(df.loc[i, '手機']),
-                        #     'email': str(df.loc[i, '郵箱']), 'username': str(df.loc[i, '工號']),
-                        #     'password': 123456, 'remark': str(df.loc[i, '備註']),
-                        #     'department': Structure.objects.get(name=str(df.loc[i, '部門'])),
-                        #     'project': str(df.loc[i, '專案']), 'segment': str(df.loc[i, '段別']),
-                        #     'account_type': 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0,
-                        #     'superior_id': '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])),
-                        #     'is_admin': True if str(df.loc[i, 'DRI']) == '是' else False,
-                        #     'roles': Role.objects.get(name=str(df.loc[i, '所屬角色组']))
-                        # }
-                        #
-                        # User.objects.update_or_create(work_num=str(df.loc[i, '工號']), defaults=defaults)
-
+                    """
+                    @Author  :   Daniel                
+                    @Time    :   2020-5-15 Update
+                    @Desc    :   用户上传信息核验，部门、专案和段别是否有效
+                    """
                     if str(df.loc[i, '部門']) in departments:
                         if set(str(df.loc[i, '專案']).split('/')).issubset(projects):
                             if not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all':
@@ -140,26 +135,43 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                                     user = get_object_or_404(User, work_num=str(df.loc[i, '工號']))
                                 else:
                                     user = User()
+                                    user.password = 123456
 
-                                user.name = str(df.loc[i, '姓名'])
-                                user.username = str(df.loc[i, '工號'])
-                                user.work_num = str(df.loc[i, '工號'])
+                                    user.name = str(df.loc[i, '姓名'])
+                                    user.username = str(df.loc[i, '工號'])
+                                    user.work_num = str(df.loc[i, '工號'])
+
                                 user.mobile = str(df.loc[i, '手機'])
                                 user.email = str(df.loc[i, '郵箱'])
                                 user.project = str(df.loc[i, '專案'])
-                                user.segment = str(df.loc[i, '段別'])
-                                user.password = 123456
+                                user.segment = None if pd.isnull(str(df.loc[i, '段別'])) or str(df.loc[i, '段別']) == 'All' else str(df.loc[i, '段別'])
                                 user.remark = str(df.loc[i, '備註'])
                                 user.department = Structure.objects.get(name=str(df.loc[i, '部門']))
                                 user.account_type = 1 if str(df.loc[i, '賬號類型']) == '接收者' else 0
-                                user.superior_id = '' if str(df.loc[i, '上級DRI']) == '' else User.objects.get(name=str(df.loc[i, '上級DRI'])).id
-                                user.is_admin = True if str(df.loc[i, 'DRI']) == '是' else False
+
+                                # 如果用户没有上级，则为空
+                                user.superior_id = None if str(df.loc[i, '上級']) == '' else User.objects.get(name=str(df.loc[i, '上級'])).id
+
+                                # 用戶類型
+                                if str(df.loc[i, '用戶類型']) == '副線長':
+                                    user.user_type = 0
+                                elif str(df.loc[i, '用戶類型']) == '線長':
+                                    user.user_type = 1
+                                elif str(df.loc[i, '用戶類型']) == '專案主管':
+                                    user.user_type = 2
+                                else:
+                                    user.user_type = None
+
+                                # 如果用戶是發佈者，沒有上級時為 admin；用戶為接收者，線長和專案主管為 admin
+                                if (str(df.loc[i, '賬號類型']) == '發佈者' and pd.isnull(str(df.loc[i, '上級']))) \
+                                        or (str(df.loc[i, '賬號類型']) == '接收者' and (str(df.loc[i, '用戶類型']) == '線長' or str(df.loc[i, '用戶類型']) == '專案主管')):
+                                    user.is_admin = True
+
                                 user.save()
-                                # 多對多字段添加關聯
+                                # 多對多字段添加關聯，用户权限添加
                                 user.roles.add(Role.objects.get(name=str(df.loc[i, '所屬角色组'])))
 
                                 correct_user.append(df.loc[i].tolist())
-
 
                             else:
                                 msg = '用戶信息有誤！！'
@@ -170,9 +182,6 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                             error_project.append(df.loc[i].tolist())
                             break
 
-                # except Exception as e:
-                #     msg = str(e)
-                #     return render(request, 'system/users/User_upload_info.html', {'msg': msg})
                     else:
                         msg = '用戶信息有誤！！'
                         error_segment.append(df.loc[i].tolist())
@@ -193,10 +202,13 @@ class UserListView(LoginRequiredMixin, View):
         fields = ['id', 'work_num', 'name', 'mobile', 'email', 'department__name', 'project', 'segment', 'account_type',
                   'is_admin', 'remark']
         filters = dict()
-        if 'select' in request.GET and request.GET['select']:
-            filters['is_active'] = request.GET['select']
+        if 'name' in request.GET and request.GET['name']:
+            filters['name__icontains'] = request.GET['name']
 
-        users = User.objects.filter(**filters).values(*fields).order_by('id')
+        # 用户部门
+        department = request.user.department
+
+        users = User.objects.filter(**filters, department=department).values(*fields).order_by('id')
 
         # 更新前端显示为choice文字显示
         for user in users:
@@ -212,15 +224,14 @@ class UserCreateView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
-        users = User.objects.exclude(username='admin')
-        superiors = User.objects.filter(is_admin=True).values()
+        # 获取本部门的所有 admin 用户
+        superiors = User.objects.filter(department=request.user.department, is_admin=True).values()
         structures = Structure.objects.values()
         projects = Project.objects.values()
         segments = Segment.objects.values()
         roles = Role.objects.values()
 
         ret = {
-            'users': users,
             'superiors': superiors,
             'structures': structures,
             'projects': projects,
@@ -234,6 +245,9 @@ class UserCreateView(LoginRequiredMixin, View):
         if user_create_form.is_valid():
             new_user = user_create_form.save(commit=False)
             new_user.password = make_password(user_create_form.cleaned_data['password'])
+            # 如果用户为专案主管或线长，则 is_admin True
+            if user_create_form.cleaned_data['user_type'] == 1 or user_create_form.cleaned_data['user_type'] == 2:
+                new_user.is_admin = True
             new_user.save()
             user_create_form.save_m2m()
             ret = {'status': 'success'}
@@ -252,11 +266,13 @@ class UserDetailView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = get_object_or_404(User, pk=int(request.GET['id']))
-        users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
-        superiors = User.objects.filter(is_admin=True).values()
-        structures = Structure.objects.exclude(name=user.department.name).values()
-        segments = Segment.objects.exclude(segment=user.segment).values()
-        projects = Project.objects.exclude(project=user.project).values()
+        # users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
+        # 获取被修改用户部门的 admin 用户
+        superiors = User.objects.filter(department=user.department, account_type=user.account_type,
+                                        is_admin=True).values()
+        structures = Structure.objects.values()
+        segments = Segment.objects.values()
+        projects = Project.objects.values()
         roles = Role.objects.values()
         user_roles = user.roles.values()
         ret = {
@@ -265,7 +281,7 @@ class UserDetailView(LoginRequiredMixin, View):
             'structures': structures,
             'projects': projects,
             'segments': segments,
-            'users': users,
+            # 'users': users,
             'roles': roles,
             'user_roles': user_roles
         }
@@ -365,6 +381,11 @@ class UserUpdateView(LoginRequiredMixin, View):
             user = get_object_or_404(User, pk=int(request.user.id))
         user_update_form = UserUpdateForm(request.POST, instance=user)
         if user_update_form.is_valid():
+            # 当用户为接收者时，用户 段别、类型 为空
+            if user_update_form.cleaned_data['account_type'] == 0:
+                user.segment = ''
+                user.user_type = None
+                user_update_form.cleaned_data['user_type'] = ''
             user_update_form.save()
             ret = {"status": "success"}
         else:
