@@ -17,6 +17,8 @@ from django.views.decorators.cache import cache_page
 
 from message import send_email, send_message
 from django.conf import settings
+import xlsxwriter
+from io import BytesIO
 
 from django.http import HttpResponse
 
@@ -135,10 +137,9 @@ class OrderView(LoginRequiredMixin, View):
         return render(request, 'process/order_index.html', res)
 
 
-def create_workflow(project, fields={}, segment_list=None):
+def create_workflow(fields={}, segment_list=None):
     """
     用於創建工單
-    :param project: 工单专案
     :param fields: 工单属性字典
     :param segment_list: 創建工單時選中的 段別
     :return: 返回接收工單用戶的電話和郵箱列表
@@ -149,10 +150,10 @@ def create_workflow(project, fields={}, segment_list=None):
 
     if segment_list:
         # 所有段別下的接收者
-        users = UserInfo.objects.filter(project=project, account_type=1, segment__in=segment_list)
+        users = UserInfo.objects.filter(project=fields['project'], account_type=1, segment__in=segment_list)
     else:
         # 所有段別下的接收者
-        users = UserInfo.objects.filter(project=project, account_type=1)
+        users = UserInfo.objects.filter(project=fields['project'], account_type=1)
 
     # 對應段別下 為 副線長（is_admin=False） 的接收者 的 部門、姓名、段別
     receivers = list(users.filter(is_admin=False).values_list('department__name', 'name', 'segment'))
@@ -180,7 +181,7 @@ def send_email_message(info_dict, mobiles, emails):
     :return:
     """
     project = info_dict['project']  # 專案
-    department = info_dict['department']  # 用戶部門
+    department = info_dict['publish_dept']  # 用戶部門
     publisher = info_dict['publisher']  # 發佈者
     publish_time = info_dict['publish_time']  # 發佈時間
     subject = info_dict['subject']  # 工單主旨
@@ -201,8 +202,73 @@ def send_email_message(info_dict, mobiles, emails):
                list(emails))
     # 發送短信
     send_message(list(mobiles),
-                 [project+"專案"+department+"部門"+publisher, year, month, day, hour, minute, subject],
+                 [project + "專案" + department + "部門" + publisher, year, month, day, hour, minute, subject],
                  '6311', '7')
+
+
+def get_upload_module(request, download_id):
+    """
+    模板下载函数
+    :param request: 请求对象
+    :param download_id: 下載模板的ID
+    :return:
+    """
+    excel = BytesIO()
+    workbook = xlsxwriter.Workbook(excel, {'encoding': 'utf-8'})
+    sheet = workbook.add_worksheet(request.GET['data'])
+
+    # 表頭樣式
+    title_format = workbook.add_format({
+        # 单元格样式
+        'bold': True,  # 字体
+        'font_color': 'black',  # 颜色
+        'bg_color': '#FFF2CC',
+        'border': 1,  # 单元格边框宽度
+        'align': 'center',  # 水平对齐方式
+        'valign': 'vcenter',  # 垂直对齐方式
+        'text_wrap': True,  # 是否自动换行
+        'font_name': '华文楷体',
+        'font_size': 14,
+    })
+
+    # 字段樣式
+    field_format = workbook.add_format({
+        # 单元格样式
+        'bold': True,  # 字体
+        'font_color': 'black',  # 颜色
+        'border': 1,  # 单元格边框宽度
+        'align': 'center',  # 水平对齐方式
+        'valign': 'vcenter',  # 垂直对齐方式
+        'text_wrap': True,  # 是否自动换行
+        'font_name': '华文楷体',
+        'font_size': 14,
+    })
+
+    if download_id == '0':
+        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工單種類', '工站', '流程內容', '接收段別', '接收線長']
+
+    else:
+        title = ['姓名', '工號', '用戶名', '郵箱', '手機', '部門', '上級', '專案', '段別', '備註', '賬號類型', '用戶類型',
+                 '所屬角色组']
+        sheet.data_validation('K2', {'validate': 'list', 'source': ['發佈者', '接收者']})
+        sheet.data_validation('L2', {'validate': 'list', 'source': ['副線長', '線長', '專案主管']})
+        sheet.data_validation('M2', {'validate': 'list', 'source': ['系統管理', '流程管理']})
+
+    # 設置第一行為空值
+    sheet.write_row('A1', title, title_format)
+    # 給一行空值
+    sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+
+    workbook.close()
+    excel.seek(0)
+
+    # 将表中数据字节形式写入响应并返回
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment;filename=' + request.GET['data'] + ".xlsx"
+    response.write(excel.getvalue())
+
+    return response
+
 
 # @cache_page(15*60)
 # def OrderView(request):

@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
 
-{% if msg == "上傳成功" %}
+{% if msg == "工單上傳！！" %}
 <div class="alert alert-success">
     <strong>{{ msg }}</strong>
 </div>
@@ -25,7 +25,7 @@
 {% if correct_workflow %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">上傳成功工單</div>
+  <div class="panel-heading">工單信息校對</div>
 
     <table class="table">
       <thead>

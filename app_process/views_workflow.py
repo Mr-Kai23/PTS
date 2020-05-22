@@ -103,7 +103,7 @@ class WorkFlowView(LoginRequiredMixin, View):
                         break
 
                 if not error_project and not error_department:
-                    msg = '工單上傳成功！！'
+                    msg = '工單上傳！！'
 
             else:
                 msg = '請選擇正確的文件！！'
@@ -259,17 +259,17 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
                     # 工单属性
                     fields = {
-                        'publish_dept': department, 'publisher': publisher,
-                        'publish_time': publish_time, 'subject': subject,
-                        'order': order, 'key_content': key_content, 'project': project
+                        'project': project, 'publish_dept': department, 'publisher': publisher,
+                        'publish_time': publish_time, 'subject': subject, 'order': order, 'key_content': key_content,
                     }
 
                     segment_list = pattern.split(segments)
 
-                    # mobiles, emails = create_workflow(project, fields, segment_list)
+                    mobiles, emails = create_workflow(fields, segment_list)
 
                     # 郵件和信息發送
                     # send_email_message(fields, mobiles, emails)
+
                 res['result'] = True
 
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
@@ -299,7 +299,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             # 工单属性
             fields = {
-                'publish_dept': request.POST['publish_dept'], 'publisher': publisher,
+                'project': project, 'publish_dept': request.POST['publish_dept'], 'publisher': publisher,
                 'publish_time': publish_time, 'subject': subject, 'order': request.POST['order'],
                 'key_content': request.POST['key_content']
             }
@@ -310,21 +310,16 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 segment_list = request.POST.getlist('segment')
 
                 # 創建工單
-                mobiles, emails = create_workflow(project, fields, segment_list)
+                mobiles, emails = create_workflow(fields, segment_list)
 
             else:
                 # 創建工單,
-                mobiles, emails = create_workflow(project, fields)
+                mobiles, emails = create_workflow(fields)
 
             res['result'] = True
 
             # 郵件和信息發送需要的數據
-            info_dict = {
-                'project': project, 'department': request.user.department.name, 'publisher': publisher,
-                'publish_time': publish_time, 'subject': subject, 'key_content': request.POST['key_content']
-            }
-
-            send_email_message(info_dict, mobiles, emails)
+            send_email_message(fields, mobiles, emails)
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import path
 
-from app_process.views import OrderView
+from app_process.views import OrderView, get_upload_module
 import app_process.views_workflow as views_workflow
 import app_process.views_recept as views_recept
 
@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^order/receive/list/$', views_recept.ReceptListView.as_view(), name='order-receive-list'),
     url(r'^order/receive/accept/$', views_recept.WorkFlowReceiveView.as_view(), name='order-receive-accept'),
     url(r'^order/receive/detail$', views_recept.ReceptDetailView.as_view(), name='order-receive-detail'),
+
+    # 上传模板下载
+    url(r'^download/(?P<download_id>[0-9]{1})/$', get_upload_module, name='download')
 
 
 ]
