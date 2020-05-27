@@ -28,10 +28,10 @@ def send_email(subject, message, from_email, receivers):
         return HttpResponse('請確認所有信息是否無誤！！')
 
 
-def send_message(moblie_list, message, FormatID='6311', SpaceNum='7'):
+def send_message(mobile_list, message, FormatID='6311', SpaceNum='7'):
     """
     发送短信
-    :param moblie_list: 号码列表
+    :param mobile_list: 号码列表
     :param message: 短信内容
     :param FormatID: 短信模板ID
     :param SpaceNum: 短信模板填充栏数量
@@ -53,7 +53,7 @@ def send_message(moblie_list, message, FormatID='6311', SpaceNum='7'):
     #         return HttpResponse('信息有誤！！')
     #
     #     return '短信已发送！！'
-    pass
+
 
 
 # if __name__ == '__main__':

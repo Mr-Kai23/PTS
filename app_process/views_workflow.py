@@ -12,7 +12,7 @@ from django.views import View
 from django.views.decorators.cache import cache_page
 
 from app_process.forms import WorkflowForm
-from app_process.models import Segment, OrderInfo, Project, UnitType
+from app_process.models import Segment, OrderInfo, Project, UnitType, Stations, Subject
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
@@ -34,6 +34,12 @@ class WorkFlowView(LoginRequiredMixin, View):
         # 段别
         segments = Segment.objects.all()
         res['segments'] = segments
+        # 機種
+        res['unit_types'] = UnitType.objects.filter(project=request.user.project)
+        # 工站
+        res['stations'] = Stations.objects.all()
+        # 所有主旨
+        res['subjects'] = Subject.objects.all()
 
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
@@ -66,7 +72,7 @@ class WorkFlowView(LoginRequiredMixin, View):
         if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
             df = pd.read_excel(file, keep_default_na=False)
 
-            column_list = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工單種類', '工站', '流程內容', '接收段別', '接收線長']
+            column_list = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別']
 
             if list(df.columns) == column_list:
 
@@ -127,18 +133,19 @@ class WorkFlowListView(LoginRequiredMixin, View):
         # 前端要显示的属性
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'withdraw_time', 'unit_type']
+                  'status', 'withdraw_time', 'unit_type', 'station']
 
-        searchfields = ['project', 'segment', 'status', 'receive_status']
+        searchfields = ['subject', 'segment', 'status', 'receive_status', 'station', 'order']
 
-        filters = {i + '__contains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
+        filters = {i + '__icontains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 接收者工單顯示
         if request.user.account_type == 1:
 
             if request.user.user_type == 0:
-                # 接收者只能看接收人是自己的工單
+                # 接收者只能看接收人是自己的子工單
                 workflows = OrderInfo.objects.filter(project=project, receive_dept=department, receiver=name,
+                                                     deleted=False, is_parent=False,
                                                      **filters).values(*fields).order_by('-id')
 
             else:
@@ -149,8 +156,8 @@ class WorkFlowListView(LoginRequiredMixin, View):
                 # 线长
                 if request.user.user_type == 1:
                     # 下级 副线长
-                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department,
-                                                         receiver__in=juniors_name,
+                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department, is_parent=False,
+                                                         deleted=False, receiver__in=juniors_name,
                                                          **filters).values(*fields).order_by('-id')
                 # 专案主管
                 elif request.user.user_type == 2:
@@ -161,14 +168,15 @@ class WorkFlowListView(LoginRequiredMixin, View):
                         for lower_junior in junior.userinfo_set.all():
                             lower_juniors.append(lower_junior.name)
 
-                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department,
-                                                         receiver__in=lower_juniors,
+                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department, is_parent=False,
+                                                         receiver__in=lower_juniors, deleted=False,
                                                          **filters).values(*fields).order_by('-id')
 
         else:
             # 發佈者工單
-            # 發佈者只能看自己發佈的工單
+            # 發佈者只能看自己發佈的工單，所有父工單
             workflows = OrderInfo.objects.filter(project=project, publish_dept=department, publisher=name,
+                                                 is_parent=True, deleted=False,
                                                  **filters).values(*fields).order_by('-id')
 
         for workflow in workflows:
@@ -209,13 +217,13 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         # 获取段别
         segments = Segment.objects.all()
         res['segments'] = segments
+        # 获取主旨
+        res['subjects'] = Subject.objects.all()
 
         return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
 
     def post(self, request):
         res = dict(result=False)
-        email = False
-        message = False
 
         # 手选编辑工单状态保存
         if 'ids' in request.POST and request.POST['ids']:
@@ -241,7 +249,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             if workflows:
                 # 发布时间
                 publish_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-                pattern = re.compile(r'[/|.]\s*')
+                pattern = re.compile(r'[/|;|\n]\s*')
 
                 for workflow in workflows:
                     project = workflow[0]  # 专案
@@ -265,7 +273,12 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
                     segment_list = pattern.split(segments)
 
-                    mobiles, emails = create_workflow(fields, segment_list)
+                    # 父工單中段別將所有段別合併顯示
+                    segment = '/'.join(segment_list)
+                    # 創建父工單
+                    father_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segment)
+
+                    mobiles, emails = create_workflow(father_order, fields, segment_list)
 
                     # 郵件和信息發送
                     # send_email_message(fields, mobiles, emails)
@@ -285,6 +298,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 判断表单是否有效
             if workflow_form.is_valid():
                 workflow.save()
+                OrderInfo.objects.filter(parent=workflow).update(subject=workflow.subject, order=workflow.order,
+                                                                 key_content=workflow.key_content)
                 res['result'] = True
 
         # 發佈新工單
@@ -309,17 +324,24 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 获取接收前端选中的接收者
                 segment_list = request.POST.getlist('segment')
 
+                # 父工單中段別將所有段別合併顯示
+                segment = '/'.join(segment_list)
+                # 創建父工單
+                parent_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segment)
+
                 # 創建工單
-                mobiles, emails = create_workflow(fields, segment_list)
+                mobiles, emails = create_workflow(parent_order, fields, segment_list)
 
             else:
+                # 創建父工單，發佈者顯示父工單
+                parent_order = OrderInfo.objects.create(**fields, is_parent=True, segment='All')
                 # 創建工單,
-                mobiles, emails = create_workflow(fields)
+                mobiles, emails = create_workflow(parent_order, fields)
 
             res['result'] = True
 
             # 郵件和信息發送需要的數據
-            send_email_message(fields, mobiles, emails)
+            # send_email_message(fields, mobiles, emails)
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
@@ -336,7 +358,7 @@ class WorkFlowDeleteView(LoginRequiredMixin, View):
         if 'id' in request.POST and request.POST.get('id'):
             ids = map(int, request.POST.get('id').split(','))
 
-            OrderInfo.objects.filter(id__in=ids).delete()
+            OrderInfo.objects.filter(id__in=ids).update(deleted=True)
 
             res['result'] = True
 

@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 
 from app_process.forms import WorkflowForm, RecipientForm
-from app_process.models import Segment, OrderInfo, Project, UnitType
+from app_process.models import Segment, OrderInfo, Project, UnitType, Stations, Subject
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
@@ -20,8 +20,12 @@ class ReceptView(LoginRequiredMixin, View):
 
         # 專案
         res['projects'] = Project.objects.all()
+        # 所有主旨
+        res['subjects'] = Subject.objects.all()
         # 機種
-        res['unit_types'] = UnitType.objects.all()
+        res['unit_types'] = UnitType.objects.filter(project=request.user.project)
+        # 工站
+        res['stations'] = Stations.objects.all()
         # 段别
         segments = Segment.objects.all()
         res['segments'] = segments
@@ -47,19 +51,21 @@ class ReceptListView(LoginRequiredMixin, View):
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
-                  'withdraw_time', 'unit_type']
+                  'withdraw_time', 'unit_type', 'station']
 
-        searchfields = ['segment', 'status', 'receive_status', 'unit_type']
+        searchfields = ['segment', 'status', 'receive_status', 'unit_type', 'station', 'order']
 
-        filters = {i + '__contains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
+        filters = {i + '__icontains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 所有未接收工單
         if request.GET['receive_id'] == '1':
-            workflows = list(OrderInfo.objects.filter(project=project, receive_status=0, **filters).values(*fields).order_by('-id'))
+            workflows = list(OrderInfo.objects.filter(project=project, receive_status=0, is_parent=False,
+                                                      **filters).values(*fields).order_by('-id'))
 
         # 我的待辦工單
         elif request.GET['receive_id'] == '2':
-            workflows = list(OrderInfo.objects.filter(project=project, segment=segment, receive_status=0, **filters).values(*fields).order_by('-id'))
+            workflows = list(OrderInfo.objects.filter(project=project, segment=segment, receive_status=0,
+                                                      is_parent=False, **filters).values(*fields).order_by('-id'))
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

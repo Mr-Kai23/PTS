@@ -53,25 +53,30 @@
                 <div class="box-header">
                     <form class="form-inline" id="queryForm">
 
-{#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
-{#                            <label>專案：</label>#}
-{#                            <select class="form-control inputText select2" name="project" id="project">#}
-{#                                <option></option>#}
-{#                                {% for project in projects %}#}
-{#                                    <option value="{{ project.id }}">{{ project.project }}</option>#}
-{#                                {% endfor %}#}
-{#                            </select>#}
-{#                        </div>#}
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>機種：</label>
+                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
+                                <option></option>
+                                {% for unit_type in unit_types %}
+                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-{#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
-{#                            <label>階段：</label>#}
-{#                            <select class="form-control inputText select2" name="build" id="build">#}
-{#                                <option></option>#}
-{#                                {% for build in builds %}#}
-{#                                    <option value="{{ build.id }}">{{ build.sname }}</option>#}
-{#                                {% endfor %}#}
-{#                            </select>#}
-{#                        </div>#}
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>主旨：</label>
+                            <select class="form-control inputText select2" name="subject" id="subject">
+                                <option></option>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>工單：</label>
+                            <input type="text" name="order" class="form-control inputText" id="order">
+                        </div>
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>段別：</label>
@@ -79,6 +84,16 @@
                                 <option></option>
                                 {% for segment in segments %}
                                     <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>工站：</label>
+                            <select class="form-control inputText select2" name="station" id="station">
+                                <option></option>
+                                {% for station in stations %}
+                                    <option value="{{ station.id }}">{{ station.station }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -192,9 +207,10 @@
                             "url": "{% url 'process:order-receive-list' %}?receive_id={{ receive_id }}",
                             "data": function (d) {
 
-                                d.project = $("#project").val();
-                                d.build = $("#build").val();
                                 d.unit_type = $("#unit_type").val();
+                                d.subject = $("#subject").val();
+                                d.order = $("#order").val();
+                                d.station = $("#station").val();
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
                                 d.receive_status = $("#restatus").val();

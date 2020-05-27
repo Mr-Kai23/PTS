@@ -1,0 +1,635 @@
+{% extends "base-left.html" %}
+{% load staticfiles %}
+
+{% block title %}PTS{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/datatables/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: "Calibri", "Arial Black", arial-black;
+            text-align: center;
+
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        {#.nav-left li {#}
+        {#    float: left;#}
+        {#    padding-right: 20px;#}
+        {#    color: white;#}
+        {# }#}
+
+        .nav-right {
+            float: right;
+        }
+
+        {#.nav {#}
+        {#    background-color: #3c3c3c;#}
+        {#    padding: 12px 0;#}
+        {#    width: 100%;#}
+        {# }#}
+
+        .clearfix:after {
+            clear: both;
+            content: "";
+        {#display: ;#}
+        }
+
+        .s9 {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        a:hover {
+            background-color: lightslategrey;
+        }
+
+
+        .tabel_all {
+            height: 900px;
+            width: 73%;
+            margin-top: 1.4%;
+            position: relative;
+            float: left;
+
+        }
+
+        .tabel-list {
+            border-spacing: 0;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-collapse: collapse;
+        }
+
+        .tabel-list tbody {
+            display: block;
+            overflow: auto;
+            height: 818px;
+        }
+
+        .tabel-list thead {
+            display: block;
+            width: 100%;
+        }
+
+        .tabel-list td, .tabel-list th {
+            width: 10%
+        }
+
+        .tabel-list th {
+            background-color: #255E95;
+            text-align: center;
+            font-size: 20px;
+            border-bottom: 1px solid white;
+            color: white;
+            height: 40px;
+            white-space: nowrap;
+        }
+
+        .chart {
+            float: right;
+            height: 100%;
+            width: 26%;
+            margin-top: 1.4%;
+            margin-left: 0.5%;
+            background-color: #35314C;
+            position: relative;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .blink {
+            color: #dd4814;
+            background-color: yellow;
+            animation: blink 1s linear infinite;
+        }
+
+    </style>
+
+    <!-- iCheck for checkboxes and radio inputs -->
+{% endblock %}
+{% block content %}
+<div style="background:linear-gradient(to top,#fff,#000D22)">
+    <div style="margin-left:1.5%; margin-right:1.5%;">
+
+{#        <div style="display: block; margin-top:1%;margin-bottom:1%">#}
+{#            <span style="color:#FFFFFF;font-size:40px;">生產流程管理實時看板系统</span>#}
+{#            <a href="{% url 'login' %}" style="font-size:25px; float:right;margin-top:1%;margin-right:2%;">Login</a>#}
+{#        </div>#}
+
+        <div class="select_box" style="width:100%;" align="center">
+        <span>
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;">專案 :</label>
+            <select class="form-control inputText select2" name="project" id="project"
+                    style="float:left;width:6.5%;height:32px;background-color:#5F6769;font-size: large;color:white;">
+                <option></option>
+                {% for project in projects %}
+                    <option value="{{ project.project }}">{{ project.project }}</option>
+                {% endfor %}
+            </select>
+
+             <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:10px;margin-left:1.5%;">段别 :</label>
+            <select class="form-control inputText select2" name="segment" id="segment"
+                    style="float:left;width:6.5%;height:32px;background-color:#5F6769;font-size: large;color:white;">
+                  <option></option>
+                {% for segment in segments %}
+                    <option value="{{ segment.segment }}">{{ segment.segment }}</option>
+                {% endfor %}
+            </select>
+
+              <label style="color:#AAC2EA;font-size:x-large; float:left;margin-right:0.5%;margin-left:1.5%;">执行状况 :</label>
+                <select class="form-control inputText select2" name="status" id="status"
+                        style="float:left;width:6.5%;height:32px;background-color:#5F6769;font-size: large;color:white;">
+                  <option></option>
+                    <option value="0">未投產</option>
+                    <option value="1">Ongoing</option>
+                    <option value="2">Closed</option>
+                </select>
+
+              <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">接收状态 :</label>
+             <select class="form-control inputText select2" name="restatus" id="restatus"
+                     style="float:left;width:6.5%;height:32px;background-color:#5F6769;font-size: large;color:white;">
+                <option></option>
+                    <option value="0">未接收</option>
+                    <option value="1">已接收</option>
+            </select>
+
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">起始时间 :</label>
+                <input type="date" id="start_time"
+                       style="font-size:12px;color:#B3F2FC;float:left;width: 7%;height:32px;background-color:#5F6769;">
+
+            <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">结束时间 :</label>
+              <input type="date" id="end_time"
+                     style="font-size:12px;color:#B3F2FC;float:left;width: 7%;height:32px;background-color:#5F6769;">
+
+            <button type="button" id="btnSearch" class="btn btn-default"
+                    style="margin-left:52px;float:left;width: 80px;height:35px;background-color:#172336">
+                <i class="glyphicon glyphicon-search" style="color:white;font-size:23px">查询</i>
+            </button>
+        </span>
+        </div>
+
+        <div class="tabel_all">
+            <table class="tabel-list"
+                   style="table-layout:fixed;float:left;table-layout:fixed;word-wrap:break-word;word-break;break-all;">
+                <thead class="tabel_head">
+                <tr style="width:100%;display:table;min-height:48px">
+                    <th>發佈部門</th>
+                    <th>發佈者</th>
+                    <th>發佈時間</th>
+                    <th>主旨</th>
+                    <th>工單</th>
+                    <th>重點注意內容</th>
+                    <th>段別</th>
+                    <th>接收者</th>
+                    <th>接收狀態</th>
+                    <th>執行狀況</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="chart">
+            <div id="status_echarts" style="height: 285%; width:100%; float:right; margin-top: 1%; "></div>
+            <div id="segment_echarts" style="height: 285%; width:100%; float:right; margin-top: 1%;"></div>
+            <div id="segment_status_echarts" style="height: 285%;; width:100%; float:right; margin-top: 1%;"></div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="/static/js/jquery.min.js "></script>
+    <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            setTimeout(function () {
+
+                $('td').click(function () {
+                    if ($(this).children().length == 0) {
+                        alert($(this).context.innerText)
+                    }
+                })
+            }, 1000)
+        });
+
+        creatTable();
+        var interval3 = setInterval(function () {
+            creatTable()
+            window.location.reload();
+        }, 60000);
+
+        function creatTable() {
+            var project = $("#project option:selected").val();
+            var segment = $("#segment option:selected").val();
+            var status = $("#status option:selected").val();
+            var receive_status = $("#restatus option:selected").val();
+            var start_time = $("#start_time").val();
+            var end_time = $("#end_time").val();
+
+            $.ajax({
+                type: "get",
+                url: "{% url 'board-list' %}",
+                data: JSON.stringify({
+                    "project": project,
+                    "segment": segment,
+                    "status": status,
+                    "receive_status": receive_status,
+                    "start_time": start_time,
+                    "end_time": end_time
+                }),
+                success: function (e) {
+                    var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
+                    var data = e.data;
+
+                    var tableData = "<tr>";
+                    for (var i = 0; i < data.length; i++) {
+                        for (var j = 0; j < arr.length; j++) {
+                            if (data[i][arr[j]] == "未投產") {
+                                tableData += "<td style='font-weight: 300; height:48px; font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            } else if (data[i][arr[j]] == "Ongoing") {
+                                tableData += "<td style='font-weight: 300; height:48px;font-size:18px; background-color:#2B2B2B;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            } else if (data[i][arr[j]] == "Closed") {
+                                tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            } else if (data[i][arr[j]] == "未接收") {
+                                tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            } else {
+                                tableData += "<td style='font-weight: 300; min-height:48px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#2B2B2B; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            }
+                        }
+                        tableData += "</tr>";
+                    }
+                    $("#tbody").html(tableData)
+                    //console.log($('table tbody tr td:nth-child(6)'))
+                    $('table tbody tr td:nth-child(6)').each(function (index, item) {
+                        console.log($(item)[0].innerText)
+                        if ($(item)[0].innerText.length > 20) {
+                            $(item).wrap(document.createElement("div"))
+                            $(item).parent().css({
+                                'height': '49px',
+
+                                'overflow-y': 'auto',
+                                'border-bottom': '0.5px solid #999B9F'
+                            })
+                        }
+                    })
+                }
+            })
+        }
+
+        window.onload = creatTable();
+
+        //查询
+        $("#btnSearch").click(function () {
+            creatTable();
+        });
+
+
+        // QN P1生產流程執行狀況環形圖
+        var myChart1 = echarts.init(document.getElementById("status_echarts"));
+
+        option = null;
+        option = {
+            // 默认色板
+            color: ['#FF0000', '#F79646', '#FBFB00', '#9BBB59'],
+
+            // 图表标题
+            title: {
+                text: 'QN P1生產流程執行狀況',
+                x: 'center',
+                y: 'top',
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+            },
+
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} ({d}%)'
+            },
+
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+                data: ['未接收', '未投產', '進行中', '已完成']
+            },
+            series: [
+                {
+                    name: '',
+                    type: 'pie',
+                    radius: ['38%', '55%'],
+                    avoidLabelOverlap: true,
+                    center: ['50%', '60%'],
+                    {#label: {#}
+                    {#    show: false,#}
+                    {#    position: 'center'#}
+                    {# },#}
+                    {#emphasis: {#}
+                    {#    label: {#}
+                    {#        show: true,#}
+                    {#        fontSize: '30',#}
+                    {#        fontWeight: 'bold'#}
+                    {#    }#}
+                    {# },#}
+                    {#labelLine: {#}
+                    {#    show: false#}
+                    {# },#}
+                    label: {
+                        formatter: '{b|{b}：}{c}  {per|{d}%}',
+                        backgroundColor: '#061436',
+                        borderColor: 'white',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        height: 17,
+
+                        rich: {
+                            {#a: {#}
+                            {#    color: 'white',#}
+                            {#    lineHeight: 5,#}
+                            {#    align: 'center'#}
+                            {# },#}
+                            hr: {
+                                borderColor: 'white',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 1,
+                            },
+                            b: {
+                                fontSize: 15,
+                                lineHeight: 15,
+                                align: 'center',
+                            },
+                            per: {
+                                color: 'white',
+                                backgroundColor: '#061436',
+                                padding: [2, 4],
+                                borderRadius: 1
+                            }
+                        }
+                    },
+                    data: [
+                        {value: {{ un_receive }}, name: '未接收'},
+                        {value: {{ un_product }}, name: '未投產'},
+                        {value: {{ ongoing }}, name: '進行中'},
+                        {value: {{ closed }}, name: '已完成'},
+                    ],
+
+                }
+
+            ]
+        };
+
+        //使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(option);
+
+
+        // QN P1生產流程執行狀況環形圖
+        var myChart2 = echarts.init(document.getElementById("segment_echarts"));
+
+        option = null;
+        option = {
+            // 默认色板
+            color: ['#F79646', '#4F81BD', '#C0504D', '#9BBB59', '#8064A2', '#4BACC6'],
+
+            // 图表标题
+            title: {
+                text: 'QN P1生產流程格段分佈狀況',
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+                x: 'center',
+                y: 'top',
+            },
+
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} ({d}%)'
+            },
+
+            legend: {
+                orient: 'vertical',
+                left: 10,
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+                data: [{% for segment_order in segment_orders %}{% if segment_order|length > 0 %}'{{ segment_order.0.segment }}'{% endif %}, {% endfor %}]
+                {#data: [{% for segment in segments %} '{{ segment }}', {% endfor %}]#}
+            },
+            series: [
+                {
+                    name: '',
+                    type: 'pie',
+                    radius: ['45%', '60%'],
+                    center: ['52%', '50%'],
+                    avoidLabelOverlap: true,
+                    {#label: {#}
+                    {#    show: false,#}
+                    {#    position: 'center'#}
+                    {# },#}
+                    {#emphasis: {#}
+                    {#    label: {#}
+                    {#        show: true,#}
+                    {#        fontSize: '30',#}
+                    {#        fontWeight: 'bold'#}
+                    {#    }#}
+                    {# },#}
+                    {#labelLine: {#}
+                    {#    show: false#}
+                    {# },#}
+                    label: {
+                        formatter: '{b|{b}：}{c}  {per|{d}%}  ',
+                        backgroundColor: '#061436',
+                        borderColor: 'white',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        height: 17,
+
+                        rich: {
+                            {#a: {#}
+                            {#    color: 'white',#}
+                            {#    lineHeight: 5,#}
+                            {#    align: 'center'#}
+                            {# },#}
+                            hr: {
+                                borderColor: 'white',
+                                width: '100%',
+                                borderWidth: 0.5,
+                                height: 1
+                            },
+                            b: {
+                                fontSize: 15,
+                                lineHeight: 10,
+                                align: 'center',
+                            },
+                            per: {
+                                color: '#eee',
+                                backgroundColor: '#334455',
+                                padding: [1, 2],
+                                borderRadius: 2
+                            }
+                        }
+                    },
+                    data: [
+                        {% for segment_order in segment_orders %}
+                            {% if segment_order|length > 0 %}
+                                {value: {{ segment_order|length }}, name: '{{ segment_order.0.segment }}'},
+                            {% endif %}
+                        {% endfor %}
+                    ]
+                }
+            ]
+        };
+
+        //使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option);
+
+
+        // QN P1生產流程段别執行狀況圖
+        var myChart3 = echarts.init(document.getElementById('segment_status_echarts'));
+        option = {
+
+            // 默认色板
+            color: ['#FF0000', '#F79646', '#FBFB00', '#9BBB59'],
+
+            // 图表标题
+            title: {
+                {#text: 'QN P1生產流程各段執行分佈狀況',#}
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+                x: 'center',
+                y: 'bottom'
+            },
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                textStyle: {
+                    color: 'white'//字体颜色
+                },
+                data: ['未接收', '未投產', '進行中', '已完成'],
+
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                max: 20,
+                axisLine: {
+                    lineStyle: {
+                        color: 'white'
+                    }
+                }
+
+            },
+            yAxis: {
+                type: 'category',
+
+                {#data: [{% for segment_order in segment_orders %} '{{ segment_order.0.segment }}', {% endfor %}]#}
+                data: [{% for segment in segments %} '{{ segment }}', {% endfor %}],
+                axisLine: {
+                    lineStyle: {
+                        color: 'white'
+                    }
+                }
+
+            },
+            series: [
+                {
+                    name: '未接收',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [{% for accpet in un_accept_list %} '{{ accpet }}', {% endfor %}]
+                    {#data: [2, 1, 1, 2, 2, 1]#}
+                },
+
+                {
+                    name: '未投產',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [{% for product in un_product_list %} '{{ product }}', {% endfor %}]
+                    {#data: [1, 2, 2, 1, 2, 1]#}
+                },
+                {
+                    name: '進行中',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [{% for Ongoing in Ongoing_list %} '{{ Ongoing }}', {% endfor %}]
+                    {#data: [1, 2, 2, 1, 1, 1]#}
+                },
+                {
+                    name: '已完成',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: [{% for Close in Closed_list %} '{{ Close }}', {% endfor %}]
+                    {#data: [2, 1, 1, 2, 1, 2]#}
+                },
+
+            ]
+        };
+
+        //使用刚指定的配置项和数据显示图表。
+        myChart3.setOption(option);
+
+        //图表窗体自适应
+        $(window).resize(function () {
+            myChart1.resize();
+            myChart2.resize();
+            myChart3.resize();
+        });
+
+
+    </script>
+{% endblock %}

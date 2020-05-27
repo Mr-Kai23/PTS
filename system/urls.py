@@ -9,6 +9,7 @@ import system.views_project as views_project
 import system.views_build as views_build
 import system.views_segment as views_segment
 import system.views_unit_type as views_unit_type
+import system.views_stations as views_stations
 
 app_name = 'system'
 
@@ -49,28 +50,34 @@ urlpatterns = [
 
     # 专案
     url(r'^basic/project/$', views_project.ProjectView.as_view(), name='basic-project'),
-    url(r'^basic/project/list$', views_project.ProjectListView.as_view(), name='basic-project-list'),
-    url(r'^basic/project/update$', views_project.ProjectUpdateView.as_view(), name='basic-project-update'),
-    url(r'^basic/project/delete$', views_project.ProjectDeleteView.as_view(), name='basic-project-delete'),
+    url(r'^basic/project/list/$', views_project.ProjectListView.as_view(), name='basic-project-list'),
+    url(r'^basic/project/update/$', views_project.ProjectUpdateView.as_view(), name='basic-project-update'),
+    url(r'^basic/project/delete/$', views_project.ProjectDeleteView.as_view(), name='basic-project-delete'),
 
     # 阶段
     url(r'^basic/build/$', views_build.BuildView.as_view(), name='basic-build'),
-    url(r'^basic/build/list$', views_build.BuildListView.as_view(), name='basic-build-list'),
-    url(r'^basic/build/update$', views_build.BuildUpdateView.as_view(), name='basic-build-update'),
-    url(r'^basic/build/delete$', views_build.BuildDeleteView.as_view(), name='basic-build-delete'),
+    url(r'^basic/build/list/$', views_build.BuildListView.as_view(), name='basic-build-list'),
+    url(r'^basic/build/update/$', views_build.BuildUpdateView.as_view(), name='basic-build-update'),
+    url(r'^basic/build/delete/$', views_build.BuildDeleteView.as_view(), name='basic-build-delete'),
 
     # 专案 和 阶段 联动
     url(r'^basic/project/build$', views_build.ProjectAndBuildLinkageView.as_view(), name='basic-project-build'),
 
     # 阶段
     url(r'^basic/segment/$', views_segment.SegmentView.as_view(), name='basic-segment'),
-    url(r'^basic/segment/list$', views_segment.SegmentListView.as_view(), name='basic-segment-list'),
-    url(r'^basic/segment/update$', views_segment.SegmentUpdateView.as_view(), name='basic-segment-update'),
-    url(r'^basic/segment/delete$', views_segment.SegmentDeleteView.as_view(), name='basic-segment-delete'),
+    url(r'^basic/segment/list/$', views_segment.SegmentListView.as_view(), name='basic-segment-list'),
+    url(r'^basic/segment/update/$', views_segment.SegmentUpdateView.as_view(), name='basic-segment-update'),
+    url(r'^basic/segment/delete/$', views_segment.SegmentDeleteView.as_view(), name='basic-segment-delete'),
 
     # 机种
     url(r'^basic/unit_type/$', views_unit_type.UnitTypeView.as_view(), name='basic-unit_type'),
-    url(r'^basic/unit_type/list$', views_unit_type.UnitTypeListView.as_view(), name='basic-unit_type-list'),
-    url(r'^basic/unit_type/update$', views_unit_type.UnitTypeUpdateView.as_view(), name='basic-unit_type-update'),
-    url(r'^basic/unit_type/delete$', views_unit_type.UnitTypeDeleteView.as_view(), name='basic-unit_type-delete'),
+    url(r'^basic/unit_type/list/$', views_unit_type.UnitTypeListView.as_view(), name='basic-unit_type-list'),
+    url(r'^basic/unit_type/update/$', views_unit_type.UnitTypeUpdateView.as_view(), name='basic-unit_type-update'),
+    url(r'^basic/unit_type/delete/$', views_unit_type.UnitTypeDeleteView.as_view(), name='basic-unit_type-delete'),
+
+    # 工站
+    url(r'^basic/station/$', views_stations.StationView.as_view(), name='basic-station'),
+    url(r'^basic/station/list/$', views_stations.StationListView.as_view(), name='basic-station-list'),
+    url(r'^basic/station/update/$', views_stations.StationUpdateView.as_view(), name='basic-station-update'),
+    url(r'^basic/station/delete/$', views_stations.StationDeleteView.as_view(), name='basic-station-delete'),
 ]

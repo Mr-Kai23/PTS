@@ -8,7 +8,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 
-from app_process.models import OrderInfo, Segment, Project
+from app_process.models import OrderInfo, Segment, Project, Subject
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 import json, re
@@ -127,20 +127,64 @@ class OrderView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        # orders = OrderInfo.objects.all()
+        # res = {
+        #     'created': orders.count(),
+        #     'receive': orders.filter(receive_status=0).count(),
+        #     'finished': orders.filter(receive_status=1, status=1).count()
+        # }
+
+        # 用于存放每个段别下的工单
+        segment_orders = []
+        # 用存放每个段别下每种执行状态下的工单
+        un_accept_list = []
+        un_product_list = []
+        Ongoing_list = []
+        Closed_list = []
+
         orders = OrderInfo.objects.all()
+
+        # 獲取所有专案
+        projects = Project.objects.all()
+
+        # 获取所有段别下的工单数量
+        segments = Segment.objects.exclude(segment__icontains='all').order_by('id')
+
+        for segment in segments:
+            # 获取每个段别下的工单
+            segment_orders.append(orders.filter(segment=segment).all())
+            # 获取每个段别下的未接收的工单
+            un_accept_list.append(orders.filter(receive_status=0, segment=segment).count())
+            # 获取每个段别下的未投产的工单
+            un_product_list.append(orders.filter(status=0, segment=segment).count())
+            # 获取每个段别下的Ongoing的工单
+            Ongoing_list.append(orders.filter(status=1, segment=segment).count())
+            # 获取每个段别下的Closed的工单
+            Closed_list.append(orders.filter(status=2, segment=segment).count())
+
+        # 用于echarts显示
         res = {
-            'created': orders.count(),
-            'receive': orders.filter(receive_status=0).count(),
-            'finished': orders.filter(receive_status=1, status=1).count()
+            'un_receive': orders.filter(receive_status=0).count(),  # 待接收工单数量
+            'un_product': orders.filter(status=0).count(),  # 未投产工单数量
+            'ongoing': orders.filter(status=1).count(),  # 进行中
+            'closed': orders.filter(status=2).count(),  # 已完成
+            'segments': segments,
+            'projects': projects,
+            'segment_orders': segment_orders,
+            'un_accept_list': un_accept_list,
+            'un_product_list': un_product_list,
+            'Ongoing_list': Ongoing_list,
+            'Closed_list': Closed_list,
         }
 
-        return render(request, 'process/order_index.html', res)
+        return render(request, 'process/Index.html', res)
 
 
-def create_workflow(fields={}, segment_list=None):
+def create_workflow(parent_order, fields={}, segment_list=None):
     """
     用於創建工單
     :param fields: 工单属性字典
+    :param parent_order: 當前創建所有工單的父工單
     :param segment_list: 創建工單時選中的 段別
     :return: 返回接收工單用戶的電話和郵箱列表
     """
@@ -164,7 +208,7 @@ def create_workflow(fields={}, segment_list=None):
         mobiles.add(mobile)
 
     # 根據不同的接收人，创建對應的多條工单
-    workflow_list = [OrderInfo(**fields, receive_dept=receive_dept, receiver=receiver, segment=segment) for
+    workflow_list = [OrderInfo(**fields, parent=parent_order, receive_dept=receive_dept, receiver=receiver, segment=segment) for
                      receive_dept, receiver, segment in receivers]
 
     OrderInfo.objects.bulk_create(workflow_list)
@@ -245,11 +289,19 @@ def get_upload_module(request, download_id):
     })
 
     if download_id == '0':
-        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工單種類', '工站', '流程內容', '接收段別', '接收線長']
+        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別']
+
+        # 数据库所有主旨
+        subjects = list(Subject.objects.values_list('subject', flat=True))
+        sheet.data_validation('D2', {'validate': 'list', 'source': subjects})
 
     else:
         title = ['姓名', '工號', '用戶名', '郵箱', '手機', '部門', '上級', '專案', '段別', '備註', '賬號類型', '用戶類型',
                  '所屬角色组']
+
+        # 数据库所有段别
+        segments = list(Segment.objects.values_list('segment', flat=True))
+        sheet.data_validation('I2', {'validate': 'list', 'source': segments})
         sheet.data_validation('K2', {'validate': 'list', 'source': ['發佈者', '接收者']})
         sheet.data_validation('L2', {'validate': 'list', 'source': ['副線長', '線長', '專案主管']})
         sheet.data_validation('M2', {'validate': 'list', 'source': ['系統管理', '流程管理']})

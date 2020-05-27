@@ -82,16 +82,30 @@
             <div class="box-header">
                 <form class="form-inline" id="queryForm">
 
-                    {#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
-                    {#                            <label>專案：</label>#}
-                    {#                            <select class="form-control inputText select2" name="project" id="project">#}
-                    {#                                <option></option>#}
-                    {#                                {% for project in projects %}#}
-                    {#                                    <option value="{{ project.id }}">{{ project.project }}</option>#}
-                    {#                                {% endfor %}#}
-                    {#                            </select>#}
-                    {#                        </div>#}
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>機種：</label>
+                        <select class="form-control inputText select2" name="unit_type" id="unit_type">
+                            <option></option>
+                            {% for unit_type in unit_types %}
+                                <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>主旨：</label>
+                        <select class="form-control inputText select2" name="subject" id="subject">
+                            <option></option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>工單：</label>
+                        <input type="text" name="order" class="form-control inputText" id="order">
+                    </div>
 
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>段別：</label>
@@ -99,6 +113,16 @@
                             <option></option>
                             {% for segment in segments %}
                                 <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>工站：</label>
+                        <select class="form-control inputText select2" name="station" id="station">
+                            <option></option>
+                            {% for station in stations %}
+                                <option value="{{ station.id }}">{{ station.station }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -209,8 +233,8 @@
                             "url": "{% url 'process:order-workflow-list' %}",
                             "data": function (d) {
 
-                                d.project = $("#project").val();
-                                d.build = $("#build").val();
+                                d.subject = $("#subject").val();
+                                d.order = $("#order").val();
                                 d.unit_type = $("#unit_type").val();
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
@@ -380,7 +404,7 @@
                 title: '新增',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '65%'],
+                area: ['60%', '75%'],
                 content: "{% url 'process:order-workflow-create' %}",
                 end: function () {
                     //关闭时做的事情
@@ -438,7 +462,7 @@
                 title: '编辑',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '65%'],
+                area: ['60%', '70%'],
                 content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id,],
                 end: function () {
                     //关闭时做的事情
