@@ -13,6 +13,7 @@ from app_process.forms import StationsForm
 from app_process.models import Project, Build, Segment, UnitType, Stations
 from system.mixin import LoginRequiredMixin
 from system.models import Structure, Menu
+import pandas as pd
 
 
 class StationView(LoginRequiredMixin, View):
@@ -22,15 +23,68 @@ class StationView(LoginRequiredMixin, View):
     def get(self, request):
         res = dict()
 
-        # # 專案
-        # unit_types = UnitType.objects.all()
-        # res['unit_types'] = unit_types
-
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
 
         return render(request, 'system/Stations/Stations_List.html', res)
+
+    """
+    @Author  :   Daniel                
+    @Time    :   2020-5-28 10:35
+    @Desc    :   工站导入
+    """
+    def post(self, request):
+
+        """
+        工單導入
+        :param request:
+        :return: 返回渲染上传信息页面
+        """
+        msg = ''
+
+        correct_stations = []  # 上傳成功的工單
+        error_department = []  # 部門錯誤的工單
+
+        file = request.FILES['file']
+
+        if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
+            df = pd.read_excel(file, keep_default_na=False)
+
+            column_list = ['部門', '工站']
+
+            if list(df.columns) == column_list:
+
+                # 用户部门、專案
+                department = request.user.department.name
+                # 工站列表，存放創建的實例
+                stations = []
+
+                # 讀取工單數據
+                for i in range(len(df)):
+
+                    if department == df.loc[i, '部門']:
+
+                        stations.append(Stations(department=df.loc[i, '部門'], station=df.loc[i, '工站']))
+
+                        # 正確上傳的工站
+                        correct_stations.append(df.loc[i].tolist())
+
+                    else:
+                        msg = '請勿上傳其他部門工站！！'
+                        error_department.append(df.loc[i].tolist())
+                        break
+
+                if not error_department:
+                    # 創建工站
+                    Stations.objects.bulk_create(stations)
+                    msg = '工站上傳！！'
+
+            else:
+                msg = '請選擇正確的文件！！'
+
+        return render(request, 'system/Stations/Stations_upload_info.html',
+                      {"msg": msg, "correct_stations": correct_stations, "error_department": error_department})
 
 
 class StationListView(LoginRequiredMixin, View):

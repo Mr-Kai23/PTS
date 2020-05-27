@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            font-family: "Calibri", "Arial Black", arial-black;
-            text-align: center;
-
-        }
+        {#* {#}
+        {#    margin: 0;#}
+        {#    padding: 0;#}
+        {#    font-family: "Calibri", "Arial Black", arial-black;#}
+        {#    text-align: center;#}
+        {##}
+        {# }#}
 
         ul {
             list-style-type: none;
@@ -48,13 +48,8 @@
             margin: 0 auto;
         }
 
-        a {
-            text-decoration: none;
-            color: white;
-        }
-
-        a:hover {
-            background-color: lightslategrey;
+        footer {
+            text-align: center;
         }
 
 
@@ -64,6 +59,8 @@
             margin-top: 1.4%;
             position: relative;
             float: left;
+            font-family: "Calibri", "Arial Black", arial-black;
+            text-align: center;
 
         }
 
@@ -130,7 +127,7 @@
     <!-- iCheck for checkboxes and radio inputs -->
 {% endblock %}
 {% block content %}
-<div style="background:linear-gradient(to top,#fff,#000D22)">
+<body style="background:linear-gradient(to top,#fff,#000D22)">
     <div style="margin-left:1.5%; margin-right:1.5%;">
 
 {#        <div style="display: block; margin-top:1%;margin-bottom:1%">#}
@@ -219,11 +216,11 @@
         </div>
 
     </div>
-</div>
+</body>
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="/static/js/jquery.min.js "></script>
+{#    <script type="text/javascript" src="/static/js/jquery.min.js "></script>#}
     <script type="text/javascript" src="/static/plugins/echarts/echarts.min.js"></script>
 
     <script type="text/javascript">

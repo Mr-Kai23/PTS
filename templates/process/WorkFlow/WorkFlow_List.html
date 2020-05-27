@@ -119,12 +119,13 @@
 
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>工站：</label>
-                        <select class="form-control inputText select2" name="station" id="station">
-                            <option></option>
-                            {% for station in stations %}
-                                <option value="{{ station.id }}">{{ station.station }}</option>
-                            {% endfor %}
-                        </select>
+{#                        <select class="form-control inputText select2" name="station" id="station">#}
+{#                            <option></option>#}
+{#                            {% for station in stations %}#}
+{#                                <option value="{{ station.id }}">{{ station.station }}</option>#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+                        <input type="text" name="station" class="form-control inputText" id="station">
                     </div>
 
                     <div class="form-group searchArea margin-r-5 margin-top-5">
@@ -163,7 +164,7 @@
                         <th>發佈時間</th>
                         <th>主旨</th>
                         <th>工單</th>
-                        <th>重點注意流程內容</th>
+                        <th>流程內容</th>
                         <th>段別</th>
                         <th>接收者</th>
                         <th>接收狀態</th>
@@ -212,11 +213,11 @@
     </script>
 
     <!-- iCheck 1.0.1 -->
+
     <script type="text/javascript">
         $(function () {
-            $('#DQE-IM').addClass('active');
-            $('#DQE-IM-INVENTORY').addClass('active');
-
+            $('#PROCESS-OEDER').addClass('active');
+            $('#PROCESS-OEDER-WORKFLOW').addClass('active');
         });
     </script>
 

@@ -109,7 +109,7 @@ class WorkFlowView(LoginRequiredMixin, View):
                         break
 
                 if not error_project and not error_department:
-                    msg = '工單上傳！！'
+                    msg = '流程上傳！！'
 
             else:
                 msg = '請選擇正確的文件！！'
@@ -142,6 +142,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
         # 接收者工單顯示
         if request.user.account_type == 1:
 
+            # 如果用戶為副線長
             if request.user.user_type == 0:
                 # 接收者只能看接收人是自己的子工單
                 workflows = OrderInfo.objects.filter(project=project, receive_dept=department, receiver=name,
@@ -153,18 +154,19 @@ class WorkFlowListView(LoginRequiredMixin, View):
                 juniors = [junior for junior in request.user.userinfo_set.all()]
                 juniors_name = [junior.name for junior in juniors]
 
-                # 线长
+                # 如果用戶為线长
                 if request.user.user_type == 1:
-                    # 下级 副线长
+                    # 看下级 副线长 的所有流程
                     workflows = OrderInfo.objects.filter(project=project, receive_dept=department, is_parent=False,
                                                          deleted=False, receiver__in=juniors_name,
                                                          **filters).values(*fields).order_by('-id')
-                # 专案主管
+                # 如果用戶為专案主管
                 elif request.user.user_type == 2:
                     lower_juniors = []
                     # 下级 线长
                     for junior in juniors:
                         # 线长 下级 副线长
+                        # 看 所有下級線長 下的副線長的流程
                         for lower_junior in junior.userinfo_set.all():
                             lower_juniors.append(lower_junior.name)
 
@@ -174,9 +176,8 @@ class WorkFlowListView(LoginRequiredMixin, View):
 
         else:
             # 發佈者工單
-            # 發佈者只能看自己發佈的工單，所有父工單
-            workflows = OrderInfo.objects.filter(project=project, publish_dept=department, publisher=name,
-                                                 is_parent=True, deleted=False,
+            # 發佈者只能看自己發佈的流程，所有未被刪除的父流程
+            workflows = OrderInfo.objects.filter(project=project, publisher=name, is_parent=True, deleted=False,
                                                  **filters).values(*fields).order_by('-id')
 
         for workflow in workflows:
@@ -195,29 +196,50 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
+        """
+        創建和更新頁面渲染數據
+        :param request: 请求对象
+        :return: 渲染创建页面
+        """
         res = dict(msg='')
+
+        # 當為更新流程時
         if 'id' in request.GET and request.GET['id']:
+            # 獲取要更新的流程
             workflow = get_object_or_404(OrderInfo, pk=request.GET.get('id'))
 
-            # 用于编辑时，前端的显示
+            # 将流程对象传到前端页面
             res['workflow'] = workflow
 
-            # 获取工单发布时间
+            # 流程的发布时间
             res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M')
 
-            # # 获取工单的接收者，由于没用外键，所以以字符串形式拼接存储
-            # res['receiver_segments'] = workflow.segment.split(';')
+            # 用于将工单段别、工站分割
+            pattern = re.compile(r'[/|;|\n]\s*')
+
+            # 獲取流程的工站和段別
+            # 當為發佈者是，編輯的是父流程，有多個段別
+            if request.user.account_type == 0:
+                res['workflow_segments'] = pattern.split(workflow.segment)
+            else:
+                res['workflow_segments'] = workflow.segment
+
+            res['workflow_stations'] = pattern.split(workflow.station)
+
         else:
-            # workflow = OrderInfo.objects.all()
-            # res['workflow'] = workflow
+
             # 新建的时候，获取当前的时间为工单创建时间
             t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
             res['time'] = t
 
-        # 获取段别
+        # 获取数据库中所有段别
         segments = Segment.objects.all()
         res['segments'] = segments
-        # 获取主旨
+
+        # 数据库中该部门下所有的工站
+        res['stations'] = Stations.objects.filter(department=request.user.department.name)
+
+        # 获取数据库中所有主旨
         res['subjects'] = Subject.objects.all()
 
         return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
@@ -225,7 +247,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
     def post(self, request):
         res = dict(result=False)
 
-        # 手选编辑工单状态保存
+        # 手动更新流程状态保存
         if 'ids' in request.POST and request.POST['ids']:
             # 獲取出工單
             order = OrderInfo.objects.get(id=request.POST['ids'])
@@ -240,7 +262,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
-        # 上传信息页面，点击发布时执行
+        # 上传信息页面，点击发布流程
         if request.POST['publish']:
 
             # 从缓存中拿导入的工单数据
@@ -260,10 +282,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                     order_type = workflow[5]  # 工单类型
                     work_station = workflow[6]  # 工站
                     key_content = workflow[7]  # 工单内容
-                    segments = workflow[8]  # 接收段别
-
-                    # 工單
-                    order = pattern.split(order)
+                    segment = workflow[8]  # 接收段别
 
                     # 工单属性
                     fields = {
@@ -271,13 +290,15 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                         'publish_time': publish_time, 'subject': subject, 'order': order, 'key_content': key_content,
                     }
 
-                    segment_list = pattern.split(segments)
+                    # 段别列表
+                    segment_list = pattern.split(segment)
+                    # 父流程中段別將所有段別合併顯示
+                    segments = '/'.join(segment_list)
 
-                    # 父工單中段別將所有段別合併顯示
-                    segment = '/'.join(segment_list)
-                    # 創建父工單
-                    father_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segment)
+                    # 創建父流程
+                    father_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segments)
 
+                    # 创建子流程，传入父流程，属性字典，段别列表
                     mobiles, emails = create_workflow(father_order, fields, segment_list)
 
                     # 郵件和信息發送
@@ -288,8 +309,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
         # 工单信息发布或编辑修改
-        # 存在 ID 是为编辑已存在工单，否则为创建新的工单
-        # 更新工單
+        # 存在 ID 是为编辑已存在流程，否则为创建新的流程
+        # 编辑更新流程
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
@@ -298,11 +319,15 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 判断表单是否有效
             if workflow_form.is_valid():
                 workflow.save()
-                OrderInfo.objects.filter(parent=workflow).update(subject=workflow.subject, order=workflow.order,
-                                                                 key_content=workflow.key_content)
+
+                # 用户为发布者时才更新子流程
+                if request.user.account_type == 0:
+                    # 更新子流程
+                    OrderInfo.objects.filter(parent=workflow).update(subject=workflow.subject, station=workflow.station,
+                                                                     order=workflow.order, key_content=workflow.key_content)
                 res['result'] = True
 
-        # 發佈新工單
+        # 發佈新流程
         else:
             # 用户专案、發佈者
             project = request.user.project
@@ -324,18 +349,18 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 获取接收前端选中的接收者
                 segment_list = request.POST.getlist('segment')
 
-                # 父工單中段別將所有段別合併顯示
-                segment = '/'.join(segment_list)
-                # 創建父工單
-                parent_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segment)
+                # 父流程中段別將所有段別合併顯示
+                segments = '/'.join(segment_list)
+                # 創建父流程
+                parent_order = OrderInfo.objects.create(**fields, is_parent=True, segment=segments)
 
-                # 創建工單
+                # 創建子流程，传入父流程，流程属性字典，段别列表
                 mobiles, emails = create_workflow(parent_order, fields, segment_list)
 
             else:
                 # 創建父工單，發佈者顯示父工單
                 parent_order = OrderInfo.objects.create(**fields, is_parent=True, segment='All')
-                # 創建工單,
+                # 創建工單，传入父流程，流程属性字典
                 mobiles, emails = create_workflow(parent_order, fields)
 
             res['result'] = True
@@ -348,7 +373,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
 class WorkFlowDeleteView(LoginRequiredMixin, View):
     """
-    工單刪除視圖
+    流程刪除視圖
     """
 
     def post(self, request):
@@ -367,7 +392,7 @@ class WorkFlowDeleteView(LoginRequiredMixin, View):
 
 class WorkFlowDetailView(LoginRequiredMixin, View):
     """
-    工單详情視圖
+    流程详情視圖
     """
 
     def get(self, request):

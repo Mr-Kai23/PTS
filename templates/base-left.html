@@ -35,7 +35,7 @@
                     <ul class="treeview-menu">
                         {% for sub in  menu.sub_menu %}
                             <li id="{{ sub.code }}">
-                                <a href="{{ sub.url }}"><i class="fa fa-caret-right"></i>{{ sub.name }}</a>
+                                <a href="{{ sub.url }}"><i class="fa fa-caret-right"></i>{{ sub.name }} {% if sub.name == '我的待辦' %}<span id="message" style="color: white"></span>{% endif %}</a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -72,4 +72,8 @@
 </div>
 <!-- /.content-wrapper -->
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{% static 'js/messageNotice.js' %}"></script>
 {% endblock %}

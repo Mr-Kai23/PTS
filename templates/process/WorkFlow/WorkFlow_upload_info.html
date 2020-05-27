@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>工單上傳信息</title>
+    <title>流程上傳信息</title>
 </head>
 <body>
 
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
 
-{% if msg == "工單上傳！！" %}
+{% if msg == "流程上傳！！" %}
 <div class="alert alert-success">
     <strong>{{ msg }}</strong>
 </div>
@@ -25,7 +25,7 @@
 {% if correct_workflow %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">工單信息校對</div>
+  <div class="panel-heading">流程信息校對</div>
 
     <table class="table">
       <thead>
@@ -58,7 +58,7 @@
 {% if error_project %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">工單專案錯誤</div>
+  <div class="panel-heading">流程專案錯誤</div>
 
     <table class="table">
       <thead>
@@ -91,7 +91,7 @@
 {% if error_department %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">工單發佈部門錯誤</div>
+  <div class="panel-heading">流程發佈部門錯誤</div>
 
     <table class="table">
       <thead>
@@ -124,7 +124,7 @@
 {% if error_publisher %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">工單發佈者錯誤</div>
+  <div class="panel-heading">流程發佈者錯誤</div>
 
     <table class="table">
       <thead>

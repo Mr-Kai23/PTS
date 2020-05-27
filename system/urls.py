@@ -10,6 +10,7 @@ import system.views_build as views_build
 import system.views_segment as views_segment
 import system.views_unit_type as views_unit_type
 import system.views_stations as views_stations
+import system.views_subject as views_subject
 
 app_name = 'system'
 
@@ -80,4 +81,10 @@ urlpatterns = [
     url(r'^basic/station/list/$', views_stations.StationListView.as_view(), name='basic-station-list'),
     url(r'^basic/station/update/$', views_stations.StationUpdateView.as_view(), name='basic-station-update'),
     url(r'^basic/station/delete/$', views_stations.StationDeleteView.as_view(), name='basic-station-delete'),
+
+    # 主旨
+    url(r'^basic/subject/$', views_subject.SubjectView.as_view(), name='basic-subject'),
+    url(r'^basic/subject/list/$', views_subject.SubjectListView.as_view(), name='basic-subject-list'),
+    url(r'^basic/subject/update/$', views_subject.SubjectUpdateView.as_view(), name='basic-subject-update'),
+    url(r'^basic/subject/delete/$', views_subject.SubjectDeleteView.as_view(), name='basic-subject-delete'),
 ]

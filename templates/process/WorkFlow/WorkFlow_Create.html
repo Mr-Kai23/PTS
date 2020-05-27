@@ -74,7 +74,7 @@
                         </div>
                     </div>
                      <div class="form-group has-feedback">
-                         <label class="col-sm-2 control-label">重點注意流程內容</label>
+                         <label class="col-sm-2 control-label">流程內容</label>
                          <div class="col-sm-3">
                             <textarea class="form-control" name="key_content" style="width:300%" value="{{ workflow.key_content}}" contenteditable="true">
                                 {{ workflow.key_content}}
@@ -88,7 +88,7 @@
                             <input type="checkbox" name="station" value="All" />
                             <label >All</label>
                             {% for station in stations %}
-                                <input type="checkbox" name="station" value="{{ station.station }}" {% if segment.station == workflow.segment %} checked="True" {% endif %}/>
+                                <input type="checkbox" name="station" value="{{ station.station }}" {% if station.station == workflow_stations %} checked="True" {% endif %}/>
                                 <label >{{ segment.segment }}</label>
                             {% endfor %}
 
@@ -101,7 +101,7 @@
                             <input type="checkbox" name="segment" value="All" />
                             <label >All</label>
                             {% for segment in segments %}
-                                <input type="checkbox" name="segment" value="{{ segment.segment }}" {% if segment.segment == workflow.segment %} checked="True" {% endif %}/>
+                                <input type="checkbox" name="segment" value="{{ segment.segment }}" {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
                                 <label >{{ segment.segment }}</label>
                             {% endfor %}
 

@@ -16,137 +16,121 @@
     <section class="content">
         <div id="devlist">
             <div class="box box-primary" id="liebiao">
+
                 <div class="box-header">
                     <div class="btn-group pull-left">
                         <button type="button" id="btnRefresh" class="btn btn-default">
                             <i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
-
                     </div>
-                    {% if request.user.account_type == 1 %}
-                        <div class="btn-group pull-left">&nbsp</div>
-                        <div class="btn-group pull-left">
-                            <button type="button" id="btnReceive" class="btn btn-default">
-                                <i class="glyphicon glyphicon-check"></i> 接收
-                            </button>
-                        </div>
-                    {% endif %}
 
-                    <div id="upload" style="display: none">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="form-group text-center margin-top-5" style="margin-top: 24px;">
-
-                                <div class="input-append">
-                                    <input id="lefile" type="file" name="file" style="display:none;">
-                                    <input id="fi" type="text" style="height:36px;width:60%;">
-                                    <a class="btn btn-primary btn-sm " onclick="$('#lefile').click();">Browse</a>
-                                </div>
-                                <div class="col-md-10 col-md-offset-1" style="margin-top: 12px;">
-                                    <button type="submit" class="btn btn-primary btn-sm ">提交</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="box-header">
-                    <form class="form-inline" id="queryForm">
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>機種：</label>
-                            <select class="form-control inputText select2" name="unit_type" id="unit_type">
-                                <option></option>
-                                {% for unit_type in unit_types %}
-                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>主旨：</label>
-                            <select class="form-control inputText select2" name="subject" id="subject">
-                                <option></option>
-                                {% for subject in subjects %}
-                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>工單：</label>
-                            <input type="text" name="order" class="form-control inputText" id="order">
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>段別：</label>
-                            <select class="form-control inputText select2" name="segment" id="segment">
-                                <option></option>
-                                {% for segment in segments %}
-                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>工站：</label>
-                            <select class="form-control inputText select2" name="station" id="station">
-                                <option></option>
-                                {% for station in stations %}
-                                    <option value="{{ station.id }}">{{ station.station }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>執行狀況:</label>
-                            <select class="form-control inputText select2" name="status" id="status">
-                                <option></option>
-                                <option value="0"></option>
-                                <option value="1">Closed</option>
-                                <option value="2">Ongoing</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>接收狀態:</label>
-                            <select class="form-control inputText select2" name="restatus" id="restatus">
-                                <option></option>
-                                <option value="0">未接收</option>
-                                <option value="1">已接收</option>
-                            </select>
-                        </div>
-
-                        <button type="button" id="btnSearch" class="btn btn-default">
-                            <i class="glyphicon glyphicon-search"></i>查询
+                    <div class="btn-group pull-left">&nbsp</div>
+                    <div class="btn-group pull-left">
+                        <button type="button" id="btnWithdraw" class="btn btn-danger">
+                            <i class="glyphicon glyphicon-repeat"></i> 撤回
                         </button>
-                    </form>
+                    </div>
+
                 </div>
 
-                <div class="box-body">
-                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
-                        <thead>
-                        <tr valign="middle">
-                            <th><input type="checkbox" id="checkAll"></th>
-{#                            <th>ID</th>#}
-                            <th>發佈部門</th>
-                            <th>發佈DRI</th>
-                            <th>發佈時間</th>
-                            <th>主旨</th>
-                            <th>工單</th>
-                            <th>流程內容</th>
-                            <th>段别</th>
-                            <th>接收狀態</th>
-                            <th>執行狀況</th>
-                            <th>操作</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                    <br> <br>
-                </div>
+                <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
+                <!--# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==-->
             </div>
+
+            <div class="box-header">
+                <form class="form-inline" id="queryForm">
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>機種：</label>
+                        <select class="form-control inputText select2" name="unit_type" id="unit_type">
+                            <option></option>
+                            {% for unit_type in unit_types %}
+                                <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>主旨：</label>
+                        <select class="form-control inputText select2" name="subject" id="subject">
+                            <option></option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>工單：</label>
+                        <input type="text" name="order" class="form-control inputText" id="order">
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>段別：</label>
+                        <select class="form-control inputText select2" name="segment" id="segment">
+                            <option></option>
+                            {% for segment in segments %}
+                                <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>工站：</label>
+                        <input type="text" name="station" class="form-control inputText" id="station">
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>執行狀況:</label>
+                        <select class="form-control inputText select2" name="status" id="status">
+                            <option></option>
+                            <option value="0">未投產</option>
+                            <option value="1">Ongoing</option>
+                            <option value="2">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>接收狀態:</label>
+                        <select class="form-control inputText select2" name="restatus" id="restatus">
+                            <option></option>
+                            <option value="0">未接收</option>
+                            <option value="1">已接收</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnSearch" class="btn btn-default">
+                        <i class="glyphicon glyphicon-search"></i>查询
+                    </button>
+                </form>
+            </div>
+
+            <div class="box-body">
+                <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
+                    <thead>
+                    <tr valign="middle">
+                        <th><input type="checkbox" id="checkAll"></th>
+                        {#                            <th>ID</th>#}
+                        <th>發佈部門</th>
+                        <th>發佈者</th>
+                        <th>發佈時間</th>
+                        <th>主旨</th>
+                        <th>工單</th>
+                        <th>流程內容</th>
+                        <th>段別</th>
+                        <th>接收者</th>
+                        <th>接收狀態</th>
+                        <th>執行狀況</th>
+                        {#                            <th>備註</th>#}
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <br> <br>
+            </div>
+        </div>
         </div>
     </section>
 
@@ -183,40 +167,33 @@
     <!-- iCheck 1.0.1 -->
     <script type="text/javascript">
         $(function () {
-            $('#PROCESS-OEDER').addClass('active');
-            $('#PROCESS-OEDER-RECEVE').addClass('active');
+            $('#PROCESS-TRASH').addClass('active');
+            $('#PROCESS-OEDER-DELETED').addClass('active');
 
         });
     </script>
 
     <script type="text/javascript">
-
-
         var oDataTable = null;
         $(function () {
-
             oDataTable = initTable();
 
             function initTable() {
                 var oTable = $('#dtbList').DataTable($.extend(true, {},
-
                     DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
-
                     {
                         ajax: {
-                            "url": "{% url 'process:order-receive-list' %}?receive_id={{ receive_id }}",
+                            "url": "{% url 'process:order-workflow-list' %}",
                             "data": function (d) {
 
-                                d.unit_type = $("#unit_type").val();
                                 d.subject = $("#subject").val();
                                 d.order = $("#order").val();
-                                d.station = $("#station").val();
+                                d.unit_type = $("#unit_type").val();
                                 d.segment = $("#segment").val();
                                 d.status = $("#status").val();
                                 d.receive_status = $("#restatus").val();
                             },
                         },
-
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
                             {#{#}
@@ -238,28 +215,34 @@
                             {
                                 data: "subject",
                             },
-
                             {
                                 data: "order",
                             },
+
                             {
                                 data: "key_content",
                                 render: function (data) {
-                                    if (data.length > 10) {
-                                        return data.substring(0, 10) + '...';
+                                    if (data.length > 5) {
+                                        return data.substring(0, 5) + '...';
                                     } else {
                                         return data;
                                     }
 
                                 }
                             },
+
                             {
                                 data: "segment",
                             },
 
                             {
+                                data: "receiver",
+                            },
+
+                            {
                                 data: "receive_status",
                             },
+
                             {
                                 data: "status",
                             },
@@ -271,13 +254,8 @@
                                 render: function (data, type, row, meta) {
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
-                                    {% if request.user.account_type == 1 %}
-                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}'){
-                                            ret = ret + "<button title='接收' onclick='doReceive("
-                                            + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
-                                        }
-
-                                    {% endif %}
+                                        ret = ret + "<button title='撤回' onclick='doWithdraw("
+                                            + data + ")'><i class='glyphicon glyphicon-repeat'></i></button>";
 
                                     return ret;
                                 }
@@ -304,6 +282,7 @@
             oDataTable.ajax.reload();
         });
 
+
         //checkbox全选
         $("#checkAll").on("click", function () {
             if ($(this).prop("checked") === true) {
@@ -321,10 +300,10 @@
         });
 
 
-        //批量接收
-        $("#btnReceive").click(function () {
+        //批量删除
+        $("#btnWithdraw").click(function () {
             if ($("input[name='checkList']:checked").length == 0) {
-                layer.msg("请选择要接收的工單！");
+                layer.msg("请选择要删除的记录");
                 return;
             }
 
@@ -336,7 +315,7 @@
 
             sId = arrId.join(',');
 
-            layer.alert('确定接收吗？', {
+            layer.alert('确定撤回吗？', {
                 title: '提示'
                 , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
                 , time: 0 //不自动关闭
@@ -345,7 +324,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-receive-accept' %}",
+                        url: "{% url 'process:order-deleted-withdraw' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -363,9 +342,9 @@
         });
 
 
-        //编辑
-        function doReceive(id) {
-            layer.alert('确定接收吗？', {
+        //删除物料
+        function doWithdraw(id) {
+            layer.alert('确定撤回吗？', {
                 title: '提示'
                 , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
                 , time: 0 //不自动关闭
@@ -374,15 +353,16 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-receive-accept' %}",
-                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        url: "{% url 'process:order-deleted-withdraw' %}",
+                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                         cache: false,
                         success: function (msg) {
                             if (msg.result) {
-                                layer.alert("操作成功！", {icon: 1});
+                                layer.alert('操作成功！', {icon: 1});
                                 oDataTable.ajax.reload();
                             } else {
-                                layer.alert("操作失败！", {icon: 2});
+                                //alert(msg.message);
+                                layer.alert('操作失败！', {icon: 2});
                             }
 
                         }
@@ -393,31 +373,10 @@
         }
 
 
-        // 導入  id="btnImport"
-        $("#btnImport").on("click", function () {
-            // alert("导入功能在此书写");
-            layer.open({
-                type: 1,
-                title: "批量导入用户信息",
-                closeBtn: 1,
-                shadeClose: false,
-                area: ['600px', '200px'],
-                content: $("#upload"),
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
-        });
-
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-
-
         //详情
         //此处inventoryId确定某一机台
         function doDetail(id) {
-            window.location.href = "{% url 'process:order-receive-detail' %}?workflowId=" + id;
+            window.location.href = "{% url 'process:order-deleted-detail' %}?workflowId=" + id;
         }
 
         /*input 时间输入选择*/
@@ -473,14 +432,5 @@
 
     </script>
 
-    <script>
-
-        //上传
-        $('#lefile').on("change", (function () {
-            //alert($(this).val());
-            $("#fi").val($(this).val());
-        }));
-
-    </script>
 
 {% endblock %}

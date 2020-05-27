@@ -43,7 +43,9 @@ class BoardView(View):
         Ongoing_list = []
         Closed_list = []
 
-        orders = OrderInfo.objects.all()
+        # 只看未被刪除的子流程
+        # 父流程只是給發佈者看，方便修改
+        orders = OrderInfo.objects.filter(is_parent=False, deleted=False)
 
         # 獲取所有专案
         projects = Project.objects.all()
@@ -142,7 +144,9 @@ class OrderView(LoginRequiredMixin, View):
         Ongoing_list = []
         Closed_list = []
 
-        orders = OrderInfo.objects.all()
+        # 只看未被刪除的子流程
+        # 父流程只是給發佈者看，方便修改
+        orders = OrderInfo.objects.filter(is_parent=False, deleted=False)
 
         # 獲取所有专案
         projects = Project.objects.all()
@@ -193,7 +197,7 @@ def create_workflow(parent_order, fields={}, segment_list=None):
     mobiles = set()  # 用于存放接受者电话
 
     if segment_list:
-        # 所有段別下的接收者
+        # 对应段別下的接收者
         users = UserInfo.objects.filter(project=fields['project'], account_type=1, segment__in=segment_list)
     else:
         # 所有段別下的接收者

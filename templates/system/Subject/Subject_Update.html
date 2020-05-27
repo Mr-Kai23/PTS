@@ -17,21 +17,13 @@
         <div class="box-body">
             <fieldset>
                 <legend>
-                    <h4>工站</h4>
+                    <h4>主旨</h4>
                 </legend>
 
                 <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">部門</label>
+                    <label class="col-sm-2 control-label">主旨</label>
                     <div class="col-sm-3">
-                       <input class="form-control" name="department" type="text" value="{{ station.department }}"/>
-                    </div>
-
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">工站</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" name="station" type="text" value="{{ station.station }}"/>
+                       <input class="form-control" name="subject" type="text" value="{{ subject.subject }}" style="width: 150%"/>
                     </div>
 
                 </div>
@@ -62,7 +54,7 @@
         var data = $("#addForm").serialize();
         $.ajax({
             type: $("#addForm").attr('method'),
-            url: "{% url 'system:basic-station-update' %}",
+            url: "{% url 'system:basic-subject-update' %}",
             data: data,
             cache: false,
             success: function (msg) {
