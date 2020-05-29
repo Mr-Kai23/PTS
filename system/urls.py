@@ -61,9 +61,6 @@ urlpatterns = [
     url(r'^basic/build/update/$', views_build.BuildUpdateView.as_view(), name='basic-build-update'),
     url(r'^basic/build/delete/$', views_build.BuildDeleteView.as_view(), name='basic-build-delete'),
 
-    # 专案 和 阶段 联动
-    url(r'^basic/project/build$', views_build.ProjectAndBuildLinkageView.as_view(), name='basic-project-build'),
-
     # 阶段
     url(r'^basic/segment/$', views_segment.SegmentView.as_view(), name='basic-segment'),
     url(r'^basic/segment/list/$', views_segment.SegmentListView.as_view(), name='basic-segment-list'),
@@ -87,4 +84,7 @@ urlpatterns = [
     url(r'^basic/subject/list/$', views_subject.SubjectListView.as_view(), name='basic-subject-list'),
     url(r'^basic/subject/update/$', views_subject.SubjectUpdateView.as_view(), name='basic-subject-update'),
     url(r'^basic/subject/delete/$', views_subject.SubjectDeleteView.as_view(), name='basic-subject-delete'),
+
+    # 专案 和 机种 联动
+    url(r'^basic/project/unit_type$', views_project.ProjectAndUnitTypeLinkView.as_view(), name='basic-project-unit_type'),
 ]

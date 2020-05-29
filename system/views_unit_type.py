@@ -39,9 +39,11 @@ class UnitTypeListView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
-        fields = ['id', 'unit_type']
-        searchFields = ['unit_type', ]  # 与数据库字段一致
-        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}  # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        fields = ['id', 'project', 'unit_type']
+        searchFields = ['project', 'unit_type', ]  # 与数据库字段一致
+
+        # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}
 
         res = dict(data=list(UnitType.objects.filter(**filters).values(*fields)))
 
@@ -61,6 +63,10 @@ class UnitTypeUpdateView(LoginRequiredMixin, View):
         else:
             unit_type = UnitType.objects.all()
             res['unit_type'] = unit_type
+
+        # 獲取所有專案
+        projects = Project.objects.all()
+        res['projects'] = projects
 
         return render(request, 'system/unit_type/unit_type_Update.html', res)
 

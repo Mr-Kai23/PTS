@@ -22,8 +22,21 @@
                 <fieldset>
 
                     <legend>
-                        <h4>信息發佈</h4>
+                        <h4>流程發佈</h4>
                     </legend>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">專案</label>
+                        <div class="col-sm-3">
+                            <select class="form-control inputText select2" name="project" id="project">
+                            <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--"  }}</option>
+                            {% for project in projects %}
+                                <option value="{{ project }}">{{ project }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈者部門</label>
                         <div class="col-sm-3">
@@ -34,12 +47,14 @@
                             {% endif %}
                         </div>
                     </div>
+
                     <div class="form-group has-feedback">
                          <label class="col-sm-2 control-label">發佈者姓名</label>
                         <div class="col-sm-3">
                             <input class="form-control" name="publisher" type="text" {% if workflow %} value="{{ workflow.publisher }}" {% else %} value="{{ request.user.name }}" {% endif %}/>
                         </div>
                     </div>
+
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">發佈時間</label>
                         <div class="col-sm-3">

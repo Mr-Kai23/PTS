@@ -99,7 +99,7 @@ class BoardListView(View):
                   'status', 'withdraw_time']
 
         search_fields = ['project', 'segment', 'receive_status', 'status']
-        filters = {i + '__contains': json.loads(list(dict(request.GET).keys())[0])[i] for i in search_fields if
+        filters = {i + '__icontains': json.loads(list(dict(request.GET).keys())[0])[i] for i in search_fields if
                    json.loads(list(dict(request.GET).keys())[0])[i]}
 
         # 开始、结束时间搜索
@@ -196,20 +196,20 @@ def create_workflow(parent_order, fields={}, segment_list=None):
     emails = set()  # 用于存放接收者邮箱
     mobiles = set()  # 用于存放接受者电话
 
-    if segment_list:
+    if segment_list and 'All' not in segment_list:
         # 对应段別下的接收者
-        users = UserInfo.objects.filter(project=fields['project'], account_type=1, segment__in=segment_list)
+        users = UserInfo.objects.filter(project__icontains=fields['project'], account_type=1, segment__in=segment_list)
     else:
         # 所有段別下的接收者
-        users = UserInfo.objects.filter(project=fields['project'], account_type=1)
+        users = UserInfo.objects.filter(project__icontains=fields['project'], account_type=1)
 
-    # 對應段別下 為 副線長（is_admin=False） 的接收者 的 部門、姓名、段別
-    receivers = list(users.filter(is_admin=False).values_list('department__name', 'name', 'segment'))
-
-    # 获取DRI下面的员工邮箱和电话
+    # 获取接收者用戶邮箱和电话
     for email, mobile in tuple(users.values_list('email', 'mobile')):
         emails.add(email)
         mobiles.add(mobile)
+
+    # 對應段別下 為 副線長（is_admin=False） 的接收者 的 部門、姓名、段別
+    receivers = list(users.filter(is_admin=False).values_list('department__name', 'name', 'segment'))
 
     # 根據不同的接收人，创建對應的多條工单
     workflow_list = [OrderInfo(**fields, parent=parent_order, receive_dept=receive_dept, receiver=receiver, segment=segment) for

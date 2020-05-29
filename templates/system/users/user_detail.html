@@ -68,7 +68,7 @@
                         <label class="col-sm-2 control-label">上級</label>
                         <div class="col-sm-3">
                             <select class="form-control select2" style="width:100%;" name="superior">
-                                <option value="{{ user.superior.id }}">{{ user.superior|default:"--上級DRI--" }}</option>
+                                <option value="{{ user.superior.id }}">{{ user.superior|default:"--上級--" }}</option>
                                 {% for superior in superiors %}
                                     <option value="{{ superior.id }}">{{ superior.name }}</option>
                                 {% endfor %}
@@ -78,12 +78,13 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">專案</label>
                         <div class="col-sm-3">
-                            <select class="form-control select2" style="width:100%;" name="project">
-                                <option value="{{ user.project }}">{{ user.project|default:"--專案--" }}</option>
-                                {% for project in projects %}
-                                    <option value="{{ project.project }}">{{ project.project }}</option>
-                                {% endfor %}
-                            </select>
+{#                            <select class="form-control select2" style="width:100%;" name="project">#}
+{#                                <option value="{{ user.project }}">{{ user.project|default:"--專案--" }}</option>#}
+{#                                {% for project in projects %}#}
+{#                                    <option value="{{ project.project }}">{{ project.project }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+                            <input class="form-control" name="project" type="text" value="{{ user.project }}"/>
                         </div>
 
                         <div id="segment" {% if user.account_type == 0 %} hidden="true" {% endif %}>

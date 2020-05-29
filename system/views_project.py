@@ -11,7 +11,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from custom import BreadcrumbMixin
 from app_process.forms import ProjectCreateForm
-from app_process.models import Project, Build
+from app_process.models import Project, UnitType
 from system.mixin import LoginRequiredMixin
 from system.models import Structure,Menu
 
@@ -86,5 +86,17 @@ class ProjectDeleteView(LoginRequiredMixin, View):
             res['result'] = True
 
         return HttpResponse(json.dumps(res), content_type='application/json')
+
+
+# 专案 和 机种 联动
+class ProjectAndUnitTypeLinkView(View):
+    def post(self, request):
+        res = dict()
+
+        if request.POST.get('project'):
+            unit_types = UnitType.objects.filter(project=request.POST.get('project')).values(*['unit_type'])
+            res['unit_types'] = list(unit_types)
+
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 

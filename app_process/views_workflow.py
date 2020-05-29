@@ -23,21 +23,23 @@ from django.core.cache import cache
 
 class WorkFlowView(LoginRequiredMixin, View):
     """
-    工单视图
+    流程视图
     """
 
     def get(self, request):
         res = dict()
 
-        # 專案
-        res['projects'] = Project.objects.all()
+        pattern = re.compile(r'[/|，|, |\n]\s*')
+
+        # 用戶專案
+        projects = pattern.split(request.user.project)
+        res['projects'] = projects
         # 段别
-        segments = Segment.objects.all()
-        res['segments'] = segments
+        res['segments'] = pattern.split(request.user.segment)
         # 機種
-        res['unit_types'] = UnitType.objects.filter(project=request.user.project)
+        res['unit_types'] = UnitType.objects.filter(project__in=projects)
         # 工站
-        res['stations'] = Stations.objects.all()
+        res['stations'] = Stations.objects.filter(department=request.user.department.name)
         # 所有主旨
         res['subjects'] = Subject.objects.all()
 
@@ -79,13 +81,14 @@ class WorkFlowView(LoginRequiredMixin, View):
                 # 用户部门、專案
                 department = request.user.department.name
                 project = request.user.project
+                projects = re.split(r'[/|，|, |\n]\s*', project)
 
                 # 工單發佈時間、發佈者
                 publisher = request.user.name
 
                 # 讀取工單數據
                 for i in range(len(df)):
-                    if project == df.loc[i, '專案']:
+                    if str(df.loc[i, '專案']) in projects:
                         if department == df.loc[i, '發佈者部門']:
                             if publisher == df.loc[i, '發佈者姓名']:
 
@@ -127,6 +130,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
     def get(self, request):
         # 用戶專案、部門
         project = request.user.project
+        projects = re.split(r'[/|，|, |\n]\s*', project)
         department = request.user.department.name
         name = request.user.name
 
@@ -145,7 +149,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
             # 如果用戶為副線長
             if request.user.user_type == 0:
                 # 接收者只能看接收人是自己的子工單
-                workflows = OrderInfo.objects.filter(project=project, receive_dept=department, receiver=name,
+                workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, receiver=name,
                                                      deleted=False, is_parent=False,
                                                      **filters).values(*fields).order_by('-id')
 
@@ -157,7 +161,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
                 # 如果用戶為线长
                 if request.user.user_type == 1:
                     # 看下级 副线长 的所有流程
-                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department, is_parent=False,
+                    workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, is_parent=False,
                                                          deleted=False, receiver__in=juniors_name,
                                                          **filters).values(*fields).order_by('-id')
                 # 如果用戶為专案主管
@@ -170,14 +174,14 @@ class WorkFlowListView(LoginRequiredMixin, View):
                         for lower_junior in junior.userinfo_set.all():
                             lower_juniors.append(lower_junior.name)
 
-                    workflows = OrderInfo.objects.filter(project=project, receive_dept=department, is_parent=False,
+                    workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, is_parent=False,
                                                          receiver__in=lower_juniors, deleted=False,
                                                          **filters).values(*fields).order_by('-id')
 
         else:
             # 發佈者工單
             # 發佈者只能看自己發佈的流程，所有未被刪除的父流程
-            workflows = OrderInfo.objects.filter(project=project, publisher=name, is_parent=True, deleted=False,
+            workflows = OrderInfo.objects.filter(project__in=projects, publisher=name, is_parent=True, deleted=False,
                                                  **filters).values(*fields).order_by('-id')
 
         for workflow in workflows:
@@ -232,6 +236,9 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
             res['time'] = t
 
+        # 用戶專案
+        res['projects'] = re.split(r'[/|，|, |\n]\s*', request.user.project)
+
         # 获取数据库中所有段别
         segments = Segment.objects.all()
         res['segments'] = segments
@@ -254,7 +261,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             # 判斷工單是否接收，0:未接收 1:已接收
             if order.receive_status == 0:
-                res['msg'] = '工單未接收！！'
+                res['msg'] = '流程未接收！！'
             else:
                 order.status = int(request.POST['data'])
                 order.save()
@@ -279,10 +286,15 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                     publisher = workflow[2]  # 发布者
                     subject = workflow[3]  # 主旨
                     order = workflow[4]  # 工单
-                    order_type = workflow[5]  # 工单类型
-                    work_station = workflow[6]  # 工站
-                    key_content = workflow[7]  # 工单内容
-                    segment = workflow[8]  # 接收段别
+                    work_station = workflow[5]  # 工站
+                    key_content = workflow[6]  # 工单内容
+
+                    # 對用戶段別進行判斷
+                    if workflow[7] and not re.search(r'all', workflow[7], re.I):
+                        segment = workflow[7]  # 接收段别
+
+                    else:
+                        segment = 'All'
 
                     # 工单属性
                     fields = {
@@ -330,7 +342,6 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         # 發佈新流程
         else:
             # 用户专案、發佈者
-            project = request.user.project
             publisher = request.POST['publisher']
 
             # 工单信息主旨和發佈時間
@@ -339,7 +350,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             # 工单属性
             fields = {
-                'project': project, 'publish_dept': request.POST['publish_dept'], 'publisher': publisher,
+                'project': request.POST['project'], 'publish_dept': request.POST['publish_dept'], 'publisher': publisher,
                 'publish_time': publish_time, 'subject': subject, 'order': request.POST['order'],
                 'key_content': request.POST['key_content']
             }

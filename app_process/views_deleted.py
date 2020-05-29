@@ -1,4 +1,4 @@
-import json, time
+import json, time, re
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -19,7 +19,7 @@ class DeletedView(LoginRequiredMixin, View):
         res = dict()
 
         # 專案
-        res['projects'] = Project.objects.all()
+        res['projects'] = re.split(r'[/|，|, |\n]\s*', request.user.project)
         # 所有主旨
         res['subjects'] = Subject.objects.all()
         # 機種
@@ -49,7 +49,7 @@ class DeletedListView(LoginRequiredMixin, View):
                   'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
                   'withdraw_time', 'unit_type', 'station']
 
-        searchfields = ['segment', 'status', 'receive_status', 'unit_type', 'station', 'order']
+        searchfields = ['project', 'segment', 'status', 'receive_status', 'unit_type', 'station', 'order']
 
         filters = {i + '__icontains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 

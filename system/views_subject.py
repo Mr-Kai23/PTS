@@ -22,10 +22,6 @@ class SubjectView(LoginRequiredMixin, View):
     def get(self, request):
         res = dict()
 
-        # # 專案
-        # unit_types = UnitType.objects.all()
-        # res['unit_types'] = unit_types
-
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
@@ -41,7 +37,9 @@ class SubjectListView(LoginRequiredMixin, View):
 
         fields = ['id', 'subject']
         searchFields = ['subject']  # 与数据库字段一致
-        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}  # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+
+        # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}
 
         res = dict(data=list(Subject.objects.filter(**filters).values(*fields)))
 

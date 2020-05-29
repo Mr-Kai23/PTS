@@ -41,14 +41,24 @@
             <div class="box-header">
                 <form class="form-inline" id="queryForm">
                     <div class="form-group searchArea margin-r-5 margin-top-5">
-                        <label>機種名：</label>
-                        <select class="form-control inputText select2" name="unit_type" id="unit_type">
+                        <label>專案：</label>
+                        <select class="form-control inputText select2" name="project" id="project">
                             <option></option>
-                            {% for unit_type in unit_types %}
-                            <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
+                            {% for project in projects %}
+                                <option value="{{ project }}">{{ project }}</option>
                             {% endfor %}
                         </select>
                     </div>
+
+{#                    <div class="form-group searchArea margin-r-5 margin-top-5">#}
+{#                        <label>機種：</label>#}
+{#                        <select class="form-control inputText select2" name="unit_type" id="unit_type">#}
+{#                            <option></option>#}
+{#                            {% for unit_type in unit_types %}#}
+{#                            <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+{#                    </div>#}
                     <!--<div class="form-group searchArea margin-r-5 margin-top-5 ">-->
                     <!--<label>入庫日期:</label>-->
                     <!--<input type="text" name="indate" class="form-control form_datetime" id="indate">-->
@@ -66,6 +76,7 @@
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>ID</th>
+                        <th>專案</th>
                         <th>機種</th>
                         <th>操作</th>
                     </tr>
@@ -109,6 +120,7 @@
                     ajax: {
                         "url": "{% url 'system:basic-unit_type-list' %}",
                         "data": function (d) {
+                            d.project = $("#project").val();
                             d.unit_type = $("#unit_type").val();
                         }
                     },
@@ -118,6 +130,11 @@
                             data: "id",
                             width: "5%",
                         },
+
+                        {
+                            data: "project",
+                        },
+
                         {
                             data: "unit_type",
                         },

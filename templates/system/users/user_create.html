@@ -95,12 +95,13 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">專案</label>
                         <div class="col-sm-3">
-                            <select class="form-control select2" style="width:100%;" name="project">
-                                <option value="">--專案--</option>
-                                {% for project in projects %}
-                                    <option value="{{ project.project }}">{{ project.project }}</option>
-                                {% endfor %}
-                            </select>
+{#                            <select class="form-control select2" style="width:100%;" name="project">#}
+{#                                <option value="">--專案--</option>#}
+{#                                {% for project in projects %}#}
+{#                                    <option value="{{ project.project }}">{{ project.project }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+                            <input class="form-control" name="project" type="text" value=""/>
                         </div>
 
                         <label class="col-sm-2 control-label">段別</label>

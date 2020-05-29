@@ -1,4 +1,4 @@
-import json, time
+import json, time, re
 from django.core.serializers.json import DjangoJSONEncoder
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -17,12 +17,13 @@ class ReceptView(LoginRequiredMixin, View):
     def get(self, request, receive_id):
         res = dict()
 
-        # 專案
-        res['projects'] = Project.objects.all()
+        # 用戶專案
+        projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
+        res['projects'] = projects
         # 所有主旨
         res['subjects'] = Subject.objects.all()
         # 機種
-        res['unit_types'] = UnitType.objects.filter(project=request.user.project)
+        res['unit_types'] = UnitType.objects.filter(project__in=projects)
         # 工站
         res['stations'] = Stations.objects.all()
         # 段别
@@ -40,12 +41,12 @@ class ReceptView(LoginRequiredMixin, View):
 
 class ReceptListView(LoginRequiredMixin, View):
     """
-    接收工单显示视图
+    接收流程显示视图
     """
     def get(self, request):
 
         # 用戶專案、用戶名、用戶部門
-        project = request.user.project
+        projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
         username = request.user.name
         department = request.user.department.name
 
@@ -60,14 +61,14 @@ class ReceptListView(LoginRequiredMixin, View):
         # 本部門所有未接收工單
         # 子流程、未被刪除的
         if request.GET['receive_id'] == '1':
-            workflows = list(OrderInfo.objects.filter(project=project, receive_dept=department, receive_status=0,
+            workflows = list(OrderInfo.objects.filter(project__in=projects, receive_dept=department, receive_status=0,
                                                       is_parent=False, deleted=False,
                                                       **filters).values(*fields).order_by('-id'))
 
         # 我的待辦工單
         # 未刪除的、接收用戶自能拿到子流程，不用加 is_parent=False
         elif request.GET['receive_id'] == '2':
-            workflows = list(OrderInfo.objects.filter(project=project, receiver=username, receive_status=0,
+            workflows = list(OrderInfo.objects.filter(project__in=projects, receiver=username, receive_status=0,
                                                       deleted=False, **filters).values(*fields).order_by('-id'))
 
         for workflow in workflows:
@@ -122,11 +123,11 @@ class MessageView(View):
         res = dict(count=0)
 
         # 用戶專案
-        project = request.user.project
+        projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
         username = request.user.name
 
         # 本人的未接收流程數量，子流程，未被刪除的
-        count = OrderInfo.objects.filter(project=project, receiver=username, is_parent=False, deleted=False,
+        count = OrderInfo.objects.filter(project__in=projects, receiver=username, is_parent=False, deleted=False,
                                          receive_status=0).count()
 
         res['count'] = count

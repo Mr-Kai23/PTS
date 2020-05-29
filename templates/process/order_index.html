@@ -440,28 +440,25 @@
             $(".select2").select2();
         });
 
-        /*专案阶段二级联动*/
+        /*专案机种二级联动*/
 
         $("select[name='project']").change(function () {
 
             var project = $("select[name='project']").val();
 
-            //alert(fk_project_id);
-
             $.ajax({
                 type: "POST",
 
-                url: "{% url 'system:basic-project-build' %}",
+                url: "{% url 'system:basic-project-unit_type' %}",
 
                 data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
 
                 success: function (data) {
 
-                    var fk_st = $("select[name='build']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
-                    fk_st.append('<option></option>')
-                    $.each(data.builds, function (i, val) {
-                        //console.log(i + "===" + val.id)  // #表示浏览器控制台下打印消息
-                        fk_st.append('<option value="' + val.id + '">' + val.build + '</option>')
+                    var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
+                    unit_type.append('<option></option>');
+                    $.each(data.unit_types, function (i, val) {
+                        unit_type.append('<option value="' + val.id + '">' + val.unit_type + '</option>')
                     })
 
                 }

@@ -127,7 +127,7 @@ class UserView(LoginRequiredMixin, BreadcrumbMixin, TemplateView):
                     @Desc    :   用户上传信息核验，部门、专案和段别是否有效
                     """
                     if str(df.loc[i, '部門']) in departments:
-                        if set(str(df.loc[i, '專案']).split('/')).issubset(projects):
+                        if set(re.split(r'[/|，|, |\n]\s*', str(df.loc[i, '專案']))).issubset(projects):
                             if not str(df.loc[i, '段別']) or str(df.loc[i, '段別']) in segments or str(df.loc[i, '段別']).lower() == 'all':
 
                                 # 判断是否存在该用户

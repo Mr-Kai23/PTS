@@ -81,6 +81,15 @@
 
             <div class="box-header">
                 <form class="form-inline" id="queryForm">
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>專案：</label>
+                        <select class="form-control inputText select2" name="project" id="project">
+                            <option></option>
+                            {% for project in projects %}
+                                <option value="{{ project }}">{{ project }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
                     <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>機種：</label>
@@ -233,7 +242,7 @@
                         ajax: {
                             "url": "{% url 'process:order-workflow-list' %}",
                             "data": function (d) {
-
+                                d.project = $("#project").val();
                                 d.subject = $("#subject").val();
                                 d.order = $("#order").val();
                                 d.unit_type = $("#unit_type").val();
@@ -251,25 +260,29 @@
                             {
                                 data: "publish_dept",
                             },
+
                             {
                                 data: "publisher",
                             },
+
                             {
                                 data: "publish_time",
                                 render: function (data, type, full, meta) {
                                     return moment(data).format("YYYY-MM-DD HH:mm");
                                 }
                             },
+
                             {
                                 data: "subject",
                             },
+
                             {
                                 data: "order",
                             },
+
                             {
                                 data: "key_content",
                                 render: function (data) {
-                                    console.log(data)
                                     if (data.length > 5) {
                                         return data.substring(0, 5) + '...';
                                     } else {
@@ -278,22 +291,17 @@
 
                                 }
                             },
+
                             {
                                 data: "segment",
                             },
+
                             {
                                 data: "receiver",
                             },
+
                             {
                                 data: "receive_status",
-                                {#render: function (data, type, row, meta) {#}
-                                {#    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);#}
-                                {#    if (data == 0) {#}
-                                {#        return "未接收"#}
-                                {#    } else if (data == 1) {#}
-                                {#        return "已接收"#}
-                                {#    }#}
-                                {# }#}
                             },
 
                             {
@@ -302,7 +310,7 @@
                                 render: function (data, type, row, meta) {
                                     {% if request.user.account_type == 1  and request.user.user_type == 0 %}
 
-                                        if (row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}' && row['receiver'] == '{{ request.user.name }}' || row['receiver'] == '{{ request.user.superior.name }}') {
+                                        {#if (row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}' && row['receiver'] == '{{ request.user.name }}' || row['receiver'] == '{{ request.user.superior.name }}') {#}
 
 
                                             var str1 = data == 0 ? "<option value='0' selected>未投產</option>" : "<option value='0'>未投產</option>";
@@ -315,15 +323,15 @@
                                             "</select>"
 
                                             return res;
-                                        } else {
-                                            if (data == 0) {
-                                                return '未投產'
-                                            } else if (data == 1) {
-                                                return 'Ongoing'
-                                            } else {
-                                                return 'Closed'
-                                            }
-                                        }
+                                        {# } else {#}
+                                        {#    if (data == 0) {#}
+                                        {#        return '未投產'#}
+                                        {#    } else if (data == 1) {#}
+                                        {#        return 'Ongoing'#}
+                                        {#    } else {#}
+                                        {#        return 'Closed'#}
+                                        {#    }#}
+                                        {# }#}
                                     {% else %}
                                         if (data == 0) {
                                             return '未投產'
@@ -464,7 +472,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['60%', '70%'],
-                content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id,],
+                content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id],
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -514,32 +522,15 @@
                 cache: false,
                 success: function (msg) {
                     if (msg.result) {
-
                         oDataTable.ajax.reload();
                     } else {
                         layer.alert(msg.msg, {icon: 2});
+                        oDataTable.ajax.reload();
                     }
 
                 }
             });
         }
-
-        {#var val = $('select#updatestatus option:first').val();#}
-        {#console.log(val)#}
-        {##}
-        {#var obj = document.getElementById("updatestatus");#}
-        {#for(var i=0;i<obj.length;i++){#}
-        {#    if(obj[i].value==str)#}
-        {#        obj[i].selected = true;#}
-        {# }#}
-        {##}
-        {#var str = $('select#updatestatus')[id-1];#}
-        {#for(var i=0; i<str.length; i++){#}
-        {#    if(str[i].value == data){#}
-        {#        str[i].selected == true;#}
-        {#    }#}
-        {# }#}
-
 
 
         //详情
@@ -569,28 +560,25 @@
             $(".select2").select2();
         });
 
-        /*专案阶段二级联动*/
+        /*专案机种二级联动*/
 
         $("select[name='project']").change(function () {
 
             var project = $("select[name='project']").val();
 
-            //alert(fk_project_id);
-
             $.ajax({
                 type: "POST",
 
-                url: "{% url 'system:basic-project-build' %}",
+                url: "{% url 'system:basic-project-unit_type' %}",
 
                 data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
 
                 success: function (data) {
 
-                    var fk_st = $("select[name='build']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
-                    fk_st.append('<option></option>')
-                    $.each(data.builds, function (i, val) {
-                        //console.log(i + "===" + val.id)  // #表示浏览器控制台下打印消息
-                        fk_st.append('<option value="' + val.id + '">' + val.build + '</option>')
+                    var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
+                    unit_type.append('<option></option>');
+                    $.each(data.unit_types, function (i, val) {
+                        unit_type.append('<option value="' + val.id + '">' + val.unit_type + '</option>')
                     })
 
                 }

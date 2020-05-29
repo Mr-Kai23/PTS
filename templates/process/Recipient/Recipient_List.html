@@ -54,6 +54,16 @@
                     <form class="form-inline" id="queryForm">
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
+                            <label>專案：</label>
+                            <select class="form-control inputText select2" name="project" id="project">
+                                <option></option>
+                                {% for project in projects %}
+                                    <option value="{{ project }}">{{ project }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>機種：</label>
                             <select class="form-control inputText select2" name="unit_type" id="unit_type">
                                 <option></option>
@@ -98,24 +108,24 @@
                             </select>
                         </div>
 
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>執行狀況:</label>
-                            <select class="form-control inputText select2" name="status" id="status">
-                                <option></option>
-                                <option value="0"></option>
-                                <option value="1">Closed</option>
-                                <option value="2">Ongoing</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group searchArea margin-r-5 margin-top-5">
-                            <label>接收狀態:</label>
-                            <select class="form-control inputText select2" name="restatus" id="restatus">
-                                <option></option>
-                                <option value="0">未接收</option>
-                                <option value="1">已接收</option>
-                            </select>
-                        </div>
+{#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
+{#                            <label>執行狀況:</label>#}
+{#                            <select class="form-control inputText select2" name="status" id="status">#}
+{#                                <option></option>#}
+{#                                <option value="0"></option>#}
+{#                                <option value="1">Closed</option>#}
+{#                                <option value="2">Ongoing</option>#}
+{#                            </select>#}
+{#                        </div>#}
+{##}
+{#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
+{#                            <label>接收狀態:</label>#}
+{#                            <select class="form-control inputText select2" name="restatus" id="restatus">#}
+{#                                <option></option>#}
+{#                                <option value="0">未接收</option>#}
+{#                                <option value="1">已接收</option>#}
+{#                            </select>#}
+{#                        </div>#}
 
                         <button type="button" id="btnSearch" class="btn btn-default">
                             <i class="glyphicon glyphicon-search"></i>查询
@@ -206,7 +216,7 @@
                         ajax: {
                             "url": "{% url 'process:order-receive-list' %}?receive_id={{ receive_id }}",
                             "data": function (d) {
-
+                                d.project = $("#project").val();
                                 d.unit_type = $("#unit_type").val();
                                 d.subject = $("#subject").val();
                                 d.order = $("#order").val();
@@ -271,12 +281,10 @@
                                 render: function (data, type, row, meta) {
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
-                                    {% if request.user.account_type == 1 %}
-                                        if(row['segment'] == '{{ request.user.segment }}' || row['segment'] == '{{ request.user.superior.segment }}'){
-                                            ret = ret + "<button title='接收' onclick='doReceive("
-                                            + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
-                                        }
 
+                                    {% if request.user.account_type == 1 and receive_id == '2' %}
+                                        ret = ret + "<button title='接收' onclick='doReceive("
+                                        + data + ")'><i class='glyphicon glyphicon-check'></i></button>";
                                     {% endif %}
 
                                     return ret;
@@ -441,28 +449,25 @@
             $(".select2").select2();
         });
 
-        /*专案阶段二级联动*/
+        /*专案机种二级联动*/
 
         $("select[name='project']").change(function () {
 
             var project = $("select[name='project']").val();
 
-            //alert(fk_project_id);
-
             $.ajax({
                 type: "POST",
 
-                url: "{% url 'system:basic-project-build' %}",
+                url: "{% url 'system:basic-project-unit_type' %}",
 
                 data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
 
                 success: function (data) {
 
-                    var fk_st = $("select[name='build']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
-                    fk_st.append('<option></option>')
-                    $.each(data.builds, function (i, val) {
-                        //console.log(i + "===" + val.id)  // #表示浏览器控制台下打印消息
-                        fk_st.append('<option value="' + val.id + '">' + val.build + '</option>')
+                    var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
+                    unit_type.append('<option></option>');
+                    $.each(data.unit_types, function (i, val) {
+                        unit_type.append('<option value="' + val.id + '">' + val.unit_type + '</option>')
                     })
 
                 }
