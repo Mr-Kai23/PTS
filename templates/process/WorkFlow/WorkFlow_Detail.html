@@ -72,19 +72,30 @@
                                     <td class="success"></td>
                                     <td class="success"></td>
                                 </tr>
+                                {% if request.user.account_type == 1 %}
+                                    <tr>
+                                        <td class="info"><strong> 接收者 </strong></td>
+                                        <td class="info">{{ workflow.receiver }}</td>
+                                        <td class="info"></td>
+                                        <td class="info"></td>
+                                    </tr>
 
-                                <tr>
-                                    <td class="info"><strong> 接收者 </strong></td>
-                                    <td class="info">{{ workflow.receiver }}</td>
-                                    <td class="info"></td>
-                                    <td class="info"></td>
-                                </tr>
-                                <tr>
-                                    <td class="info"><strong> 接收時間 </strong></td>
-                                    <td class="info">{% if workflow.withdraw_time %}{{ workflow.withdraw_time }}{% else %}未接收{% endif %}</td>
-                                    <td class="info"></td>
-                                    <td class="info"></td>
-                                </tr>
+                                    <tr>
+                                        <td class="info"><strong> 接收時間 </strong></td>
+                                        <td class="info">{% if workflow.receive_time %}{{ workflow.receive_time }}{% else %}未接收{% endif %}</td>
+                                        <td class="info"></td>
+                                        <td class="info"></td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td class="info"><strong> 接收段別 </strong></td>
+                                        <td class="info">{{ workflow.segment }}</td>
+                                        <td class="info"></td>
+                                        <td class="info"></td>
+                                    </tr>
+                                {% endif %}
+
+
 
                                 <tr>
                                     <td class="danger"><strong> 主旨 </strong></td>
@@ -94,17 +105,22 @@
                                 </tr>
                                 <tr>
                                     <td class="danger"><strong> 工單 </strong></td>
-                                    <td class="danger"><textarea class="form-control" disabled="true" style="background: #f2dede; width: 150%; height: 100px;">{{ workflow.order }}</textarea></td>
+                                    <td class="danger"><textarea class="form-control" style="background: #f2dede; width: 150%; height: 100px;" contenteditable="false">{{ workflow.order }}</textarea></td>
+                                    <td class="danger"></td>
+                                    <td class="danger"></td>
+                                </tr>
+                                <tr>
+                                    <td class="danger"><strong> 工站 </strong></td>
+                                    <td class="danger"><textarea class="form-control" style="background: #f2dede; width: 150%; height: 100px;" contenteditable="false">{{ workflow.station }}</textarea></td>
                                     <td class="danger"></td>
                                     <td class="danger"></td>
                                 </tr>
                                 <tr>
                                     <td class="danger"><strong> 流程內容 </strong></td>
-                                    <td class="danger"><textarea class="form-control" style="background: #f2dede; width: 150%; height: 200px;">{{ workflow.key_content }}</textarea></td>
+                                    <td class="danger"><textarea class="form-control" style="background: #f2dede; width: 150%; height: 200px;" contenteditable="false">{{ workflow.key_content }}</textarea></td>
                                     <td class="danger"></td>
                                     <td class="danger"></td>
                                 </tr>
-
 
                                 </tbody>
                             </table>

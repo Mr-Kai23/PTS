@@ -146,6 +146,68 @@
 </div>
 {% endif %}
 
+{% if error_subject %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">流程主旨錯誤</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in error_subject %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if error_station %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">流程工站錯誤</div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th style="width: 5%">專案</th>
+          <th style="width: 5%">發佈部門</th>
+          <th style="width: 5%">發佈者</th>
+          <th style="width: 10%">主旨</th>
+          <th style="width: 10%">工單</th>
+          <th style="width: 10%">工站</th>
+          <th style="width: 25%">流程內容</th>
+          <th style="width: 10%">接收段別</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for workflow in error_station %}
+        <tr>
+            {% for info in workflow %}
+              <td>{{ info }}</td>
+            {% endfor %}
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endif %}
+
 <button type="button" style="margin-left: 10px;" class="btn btn-danger" onclick="window.location.href='/process/order/workflow/'">返回</button>
 {% if correct_workflow %}<button type="button" id="btnPublish" style="margin-left: 10px;" class="btn btn-primary" >發佈</button> {% endif %}
 

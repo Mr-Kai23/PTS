@@ -18,6 +18,7 @@ from django.urls import path
 from django.urls import include
 
 from app_process.views import BoardView, BoardListView
+from system.views import SystemView
 from system.views_user import IndexView, LoginView, LogoutView
 from django.conf.urls.static import static
 from PMS.settings import *

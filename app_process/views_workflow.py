@@ -64,10 +64,12 @@ class WorkFlowView(LoginRequiredMixin, View):
         """
         msg = ''
 
-        correct_workflow = []  # 上傳成功的工單
-        error_department = []  # 部門錯誤的工單
-        error_project = []  # 專案錯誤的工單
-        error_publisher = []  # 段別錯誤的工單
+        correct_workflow = []  # 上傳成功的流程
+        error_department = []  # 部門錯誤的流程
+        error_project = []  # 專案錯誤的流程
+        error_publisher = []  # 段別錯誤的流程
+        error_subject = []  # 主旨錯誤的流程
+        error_station = []  # 工站錯誤的流程
 
         file = request.FILES['file']
 
@@ -78,10 +80,17 @@ class WorkFlowView(LoginRequiredMixin, View):
 
             if list(df.columns) == column_list:
 
+                pattern = re.compile(r'[/|，|, |\n]\s*')
+
                 # 用户部门、專案
                 department = request.user.department.name
                 project = request.user.project
-                projects = re.split(r'[/|，|, |\n]\s*', project)
+                projects = pattern.split(project)
+
+                # 主旨
+                subjects = list(Subject.objects.values_list('subject', flat=True))
+                # 工站
+                stations = list(Stations.objects.filter(department=department).values_list('station', flat=True))
 
                 # 工單發佈時間、發佈者
                 publisher = request.user.name
@@ -91,14 +100,26 @@ class WorkFlowView(LoginRequiredMixin, View):
                     if str(df.loc[i, '專案']) in projects:
                         if department == df.loc[i, '發佈者部門']:
                             if publisher == df.loc[i, '發佈者姓名']:
+                                if df.loc[i, '主旨'] in subjects:
+                                    if pattern.split(df.loc[i, '工站']) in stations:
 
-                                # 上傳成功的工單，将工单信息放入缓存中
-                                # 到上传信息页面查看是否信息有误
-                                correct_workflow.append(df.loc[i].tolist())
-                                cache.set('workflow_cache', correct_workflow, 60*60)
+                                        # 上傳成功的工單，将工单信息放入缓存中
+                                        # 到上传信息页面查看是否信息有误
+                                        correct_workflow.append(df.loc[i].tolist())
+                                        cache.set('workflow_cache', correct_workflow, 60*60)
+
+                                    else:
+                                        msg = '流程工站錯誤！！'
+                                        error_station.append(df.loc[i].tolist())
+                                        break
+
+                                else:
+                                    msg = '流程主旨錯誤！！'
+                                    error_subject.append(df.loc[i].tolist())
+                                    break
 
                             else:
-                                msg = '工單發佈者與當前用戶不匹配！！'
+                                msg = '流程發佈者與當前用戶不匹配！！'
                                 error_publisher.append(df.loc[i].tolist())
                                 break
 
@@ -137,7 +158,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
         # 前端要显示的属性
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'withdraw_time', 'unit_type', 'station']
+                  'status', 'receive_time', 'unit_type', 'station']
 
         searchfields = ['subject', 'segment', 'status', 'receive_status', 'station', 'order']
 
@@ -270,7 +291,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
         # 上传信息页面，点击发布流程
-        if request.POST['publish']:
+        if 'publish' in request.POST and request.POST['publish']:
 
             # 从缓存中拿导入的工单数据
             workflows = cache.get('workflow_cache', None)
@@ -330,7 +351,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             # 判断表单是否有效
             if workflow_form.is_valid():
-                workflow.save()
+                workflow_form.save()
 
                 # 用户为发布者时才更新子流程
                 if request.user.account_type == 0:

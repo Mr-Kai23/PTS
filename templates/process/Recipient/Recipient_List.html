@@ -68,7 +68,7 @@
                             <select class="form-control inputText select2" name="unit_type" id="unit_type">
                                 <option></option>
                                 {% for unit_type in unit_types %}
-                                    <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                                    <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -78,7 +78,7 @@
                             <select class="form-control inputText select2" name="subject" id="subject">
                                 <option></option>
                                 {% for subject in subjects %}
-                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                                    <option value="{{ subject.subject }}">{{ subject.subject }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -93,19 +93,20 @@
                             <select class="form-control inputText select2" name="segment" id="segment">
                                 <option></option>
                                 {% for segment in segments %}
-                                    <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                                    <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <div class="form-group searchArea margin-r-5 margin-top-5">
                             <label>工站：</label>
-                            <select class="form-control inputText select2" name="station" id="station">
-                                <option></option>
-                                {% for station in stations %}
-                                    <option value="{{ station.id }}">{{ station.station }}</option>
-                                {% endfor %}
-                            </select>
+{#                            <select class="form-control inputText select2" name="station" id="station">#}
+{#                                <option></option>#}
+{#                                {% for station in stations %}#}
+{#                                    <option value="{{ station.station }}">{{ station.station }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select>#}
+                            <input type="text" name="station" class="form-control inputText" id="station">
                         </div>
 
 {#                        <div class="form-group searchArea margin-r-5 margin-top-5">#}
@@ -139,13 +140,15 @@
                         <tr valign="middle">
                             <th><input type="checkbox" id="checkAll"></th>
 {#                            <th>ID</th>#}
+                            <th>專案</th>
                             <th>發佈部門</th>
-                            <th>發佈DRI</th>
+                            <th>發佈者</th>
                             <th>發佈時間</th>
                             <th>主旨</th>
                             <th>工單</th>
                             <th>流程內容</th>
                             <th>段别</th>
+                            <th>接收者</th>
                             <th>接收狀態</th>
                             <th>執行狀況</th>
                             <th>操作</th>
@@ -234,6 +237,10 @@
                             {#    width: "5%",#}
                             {# },#}
                             {
+                                data: "project",
+                            },
+
+                            {
                                 data: "publish_dept",
                             },
                             {
@@ -251,25 +258,40 @@
 
                             {
                                 data: "order",
-                            },
-                            {
-                                data: "key_content",
                                 render: function (data) {
-                                    if (data.length > 10) {
-                                        return data.substring(0, 10) + '...';
+                                    if (data.length > 15) {
+                                        return data.substring(0, 15) + '...';
                                     } else {
                                         return data;
                                     }
 
                                 }
                             },
+
+                            {
+                                data: "key_content",
+                                render: function (data) {
+                                    if (data.length > 15) {
+                                        return data.substring(0, 15) + '...';
+                                    } else {
+                                        return data;
+                                    }
+
+                                }
+                            },
+
                             {
                                 data: "segment",
                             },
 
                             {
+                                data: "receiver",
+                            },
+
+                            {
                                 data: "receive_status",
                             },
+
                             {
                                 data: "status",
                             },

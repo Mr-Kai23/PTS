@@ -54,11 +54,13 @@ class DeletedListView(LoginRequiredMixin, View):
         filters = {i + '__icontains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 用戶只能看自己刪除的流程
+        # 发布者 删除了的工单
         if request.user.account_type == 0:
             workflows = list(OrderInfo.objects.filter(publisher=username, is_parent=True, deleted=True,
                                                       **filters).values(*fields).order_by('-id'))
 
-        # 我的待辦工單
+        # 接收者
+        # 删除了的工单
         elif request.user.account_type == 1:
             workflows = list(OrderInfo.objects.filter(receiver=username, deleted=True, is_parent=False,
                                                       **filters).values(*fields).order_by('-id'))

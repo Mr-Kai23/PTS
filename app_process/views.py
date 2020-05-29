@@ -17,7 +17,7 @@ from django.views.decorators.cache import cache_page
 
 from message import send_email, send_message
 from django.conf import settings
-import xlsxwriter
+# import xlsxwriter
 from io import BytesIO
 
 from django.http import HttpResponse
@@ -96,7 +96,7 @@ class BoardListView(View):
         """
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'withdraw_time']
+                  'status', 'receive_time']
 
         search_fields = ['project', 'segment', 'receive_status', 'status']
         filters = {i + '__icontains': json.loads(list(dict(request.GET).keys())[0])[i] for i in search_fields if
@@ -108,9 +108,8 @@ class BoardListView(View):
             filters['publish_time__gte'] = json.loads(list(dict(request.GET).keys())[0])['start_time']
             filters['publish_time__lte'] = json.loads(list(dict(request.GET).keys())[0])['end_time']
 
-        # 切片取50条数据
-        # sli = slice(0, 50)
-        workflows = OrderInfo.objects.filter(**filters).values(*fields).order_by('-id')
+        # 獲取数据
+        workflows = OrderInfo.objects.filter(**filters).exclude(subject='重點流程', status=2).values(*fields).order_by('-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

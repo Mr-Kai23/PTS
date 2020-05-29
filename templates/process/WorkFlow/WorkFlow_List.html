@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
-
     <!-- iCheck for checkboxes and radio inputs -->
 {% endblock %}
 
@@ -96,7 +95,7 @@
                         <select class="form-control inputText select2" name="unit_type" id="unit_type">
                             <option></option>
                             {% for unit_type in unit_types %}
-                                <option value="{{ unit_type.id }}">{{ unit_type.unit_type }}</option>
+                                <option value="{{ unit_type.unit_type }}">{{ unit_type.unit_type }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -106,7 +105,7 @@
                         <select class="form-control inputText select2" name="subject" id="subject">
                             <option></option>
                             {% for subject in subjects %}
-                                <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -121,7 +120,7 @@
                         <select class="form-control inputText select2" name="segment" id="segment">
                             <option></option>
                             {% for segment in segments %}
-                                <option value="{{ segment.id }}">{{ segment.segment }}</option>
+                                <option value="{{ segment.segment }}">{{ segment.segment }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -168,6 +167,7 @@
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
                         {#                            <th>ID</th>#}
+                        <th>專案</th>
                         <th>發佈部門</th>
                         <th>發佈者</th>
                         <th>發佈時間</th>
@@ -175,7 +175,11 @@
                         <th>工單</th>
                         <th>流程內容</th>
                         <th>段別</th>
-                        <th>接收者</th>
+
+                        {% if request.user.account_type == 1 %}
+                            <th>接收者</th>
+                        {% endif %}
+
                         <th>接收狀態</th>
                         <th>執行狀況</th>
                         {#                            <th>備註</th>#}
@@ -258,6 +262,10 @@
                             {#    width: "5%",#}
                             {# },#}
                             {
+                                data: "project",
+                            },
+
+                            {
                                 data: "publish_dept",
                             },
 
@@ -278,13 +286,21 @@
 
                             {
                                 data: "order",
+                                render: function (data) {
+                                    if (data.length > 15) {
+                                        return data.substring(0, 15) + '...';
+                                    } else {
+                                        return data;
+                                    }
+
+                                }
                             },
 
                             {
                                 data: "key_content",
                                 render: function (data) {
-                                    if (data.length > 5) {
-                                        return data.substring(0, 5) + '...';
+                                    if (data.length > 15) {
+                                        return data.substring(0, 15) + '...';
                                     } else {
                                         return data;
                                     }
@@ -294,11 +310,21 @@
 
                             {
                                 data: "segment",
+                                render: function (data) {
+                                    if (data.length > 15) {
+                                        return data.substring(0, 15) + '...';
+                                    } else {
+                                        return data;
+                                    }
+
+                                }
                             },
 
-                            {
-                                data: "receiver",
-                            },
+                            {% if request.user.account_type == 1 %}
+                                {
+                                    data: "receiver",
+                                },
+                            {% endif %}
 
                             {
                                 data: "receive_status",

@@ -51,8 +51,8 @@ class ReceptListView(LoginRequiredMixin, View):
         department = request.user.department.name
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
-                  'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
-                  'withdraw_time', 'unit_type', 'station']
+                  'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status', 'status',
+                  'receive_time', 'unit_type', 'station']
 
         searchfields = ['segment', 'status', 'receive_status', 'unit_type', 'station', 'order']
 

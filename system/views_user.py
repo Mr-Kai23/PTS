@@ -45,6 +45,60 @@ class IndexView(LoginRequiredMixin, View):
 
         return render(request, 'process/order_index.html', res)
 
+    # def get(self, request):
+    #     """
+    #     用于渲染看板页面
+    #     :param request:
+    #     :return:
+    #     """
+    #
+    #     # 用于存放每个段别下的工单
+    #     segment_orders = []
+    #     # 用存放每个段别下每种执行状态下的工单
+    #     un_accept_list = []
+    #     un_product_list = []
+    #     Ongoing_list = []
+    #     Closed_list = []
+    #
+    #     # 只看未被刪除的子流程
+    #     # 父流程只是給發佈者看，方便修改
+    #     orders = OrderInfo.objects.filter(is_parent=False, deleted=False)
+    #
+    #     # 獲取所有专案
+    #     projects = Project.objects.all()
+    #
+    #     # 获取所有段别下的工单数量
+    #     segments = Segment.objects.exclude(segment__icontains='all').order_by('id')
+    #
+    #     for segment in segments:
+    #         # 获取每个段别下的工单
+    #         segment_orders.append(orders.filter(segment=segment).all())
+    #         # 获取每个段别下的未接收的工单
+    #         un_accept_list.append(orders.filter(receive_status=0, segment=segment).count())
+    #         # 获取每个段别下的未投产的工单
+    #         un_product_list.append(orders.filter(status=0, segment=segment).count())
+    #         # 获取每个段别下的Ongoing的工单
+    #         Ongoing_list.append(orders.filter(status=1, segment=segment).count())
+    #         # 获取每个段别下的Closed的工单
+    #         Closed_list.append(orders.filter(status=2, segment=segment).count())
+    #
+    #     # 用于echarts显示
+    #     res = {
+    #         'un_receive': orders.filter(receive_status=0).count(),  # 待接收工单数量
+    #         'un_product': orders.filter(status=0).count(),  # 未投产工单数量
+    #         'ongoing': orders.filter(status=1).count(),  # 进行中
+    #         'closed': orders.filter(status=2).count(),  # 已完成
+    #         'segments': segments,
+    #         'projects': projects,
+    #         'segment_orders': segment_orders,
+    #         'un_accept_list': un_accept_list,
+    #         'un_product_list': un_product_list,
+    #         'Ongoing_list': Ongoing_list,
+    #         'Closed_list': Closed_list,
+    #     }
+    #
+    #     return render(request, 'process/Index.html', res)
+
 
 class LoginView(View):
 

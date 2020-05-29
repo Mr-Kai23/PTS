@@ -5,6 +5,7 @@ from app_process.views import OrderView, get_upload_module
 import app_process.views_workflow as views_workflow
 import app_process.views_recept as views_recept
 import app_process.views_deleted as views_deleted
+import app_process.views_contacts as views_contacts
 
 # import app_process.views as views
 from system.views import SystemView
@@ -38,7 +39,12 @@ urlpatterns = [
     url(r'^order/message/$', views_recept.MessageView.as_view(), name='order-message'),
 
     # 上传模板下载
-    url(r'^download/(?P<download_id>[0-9]{1})/$', get_upload_module, name='download')
+    url(r'^download/(?P<download_id>[0-9]{1})/$', get_upload_module, name='download'),
 
+    # 段別異常聯繫人路由
+    url(r'^order/contact/$', views_contacts.ContactView.as_view(), name='order-contact'),
+    url(r'^order/contact/list/$', views_contacts.ContactListView.as_view(), name='order-contact-list'),
+    url(r'^order/contact/create/$', views_contacts.ContactCreateView.as_view(), name='order-contact-create'),
+    url(r'^order/contact/delete/$', views_contacts.ContactDeleteView.as_view(), name='order-contact-delete'),
 
 ]

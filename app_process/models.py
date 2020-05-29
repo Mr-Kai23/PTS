@@ -117,23 +117,23 @@ class OrderInfo(models.Model):
         (2, 'Closed'),
     )
 
-    project = models.CharField(max_length=10, null=True, blank=True, default='', verbose_name='专案')
+    project = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='专案')
     build = models.CharField(max_length=10, null=True, blank=True, default='', verbose_name='阶段')
     publish_dept = models.CharField(max_length=10, default='', verbose_name='发布部门')
     publisher = models.CharField(max_length=20, null=True, blank=True, verbose_name='发布人')
     publish_status = models.SmallIntegerField(choices=publish_status_choice, default=0, blank=True, verbose_name='发布状态')
     publish_time = models.DateTimeField(null=True, blank=True, default=None, verbose_name='发布时间')
-    subject = models.CharField(max_length=30, null=True, blank=True, default='', verbose_name='主旨')
-    order = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='工单')
+    subject = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='主旨')
+    order = models.CharField(max_length=500, null=True, blank=True, default='', verbose_name='工单')
     key_content = models.CharField(max_length=5000, null=True, blank=True, default='', verbose_name='重点注意流程内容')
-    unit_type = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='机种')
-    segment = models.CharField(max_length=32, null=True, blank=True, default='', verbose_name='接收段别')
+    unit_type = models.CharField(max_length=32, null=True, blank=True, default="", verbose_name='机种')
+    segment = models.CharField(max_length=300, null=True, blank=True, default='', verbose_name='接收段别')
     receiver = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='接收人')
-    receive_dept = models.CharField(max_length=10, default='', verbose_name='接收部门')
-    station = models.CharField(max_length=50, null=True, blank=True, default="", verbose_name='工站')
+    receive_dept = models.CharField(max_length=10, default='', blank=True, verbose_name='接收部门')
+    station = models.CharField(max_length=500, null=True, blank=True, default="", verbose_name='工站')
     receive_status = models.SmallIntegerField(choices=receive_status_choice, default=0, blank=True, verbose_name='接收状态')
     status = models.SmallIntegerField(choices=status_choice, default=0, blank=True, verbose_name='执行状态')
-    withdraw_time = models.DateTimeField(null=True, blank=True, default=None, verbose_name='接收时间')
+    receive_time = models.DateTimeField(null=True, blank=True, default=None, verbose_name='接收时间')
 
     # 用於判斷該條工單是否為父工單，發佈者發佈的時候生成的父工單
     # 父工單保存發佈者發佈時的工單信息，例如多個段別、工站等信息
@@ -142,6 +142,9 @@ class OrderInfo(models.Model):
 
     # 用于标记流程是否已删除
     deleted = models.BooleanField(default=False)
+
+    # 優先級, 用與看板頁面的主旨為重点流程的流程排序
+    # priority = models.AutoField(null=True)
 
     def __str__(self):
         """定义每个数据对象的显示信息"""
@@ -154,3 +157,23 @@ class OrderInfo(models.Model):
         ordering = ['-publish_time']
         db_table = 'OderInfo'
 
+
+class ExceptionContact(models.Model):
+    """
+    段别异常联系人
+    """
+    project = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='专案')
+    segment = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='接收段别')
+    contact = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='联系人')
+    department = models.CharField(max_length=10, default='', verbose_name='联系人部门')
+    phone = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='联系人电话')
+
+    def __str__(self):
+        """定义每个数据对象的显示信息"""
+        return self.contact
+
+    class Meta:
+        """内部类，它用于定义一些Django模型类的行为特性"""
+        verbose_name = '段别异常联系人信息表'
+        verbose_name_plural = '段别异常联系人信息表'
+        db_table = 'ExceptionContact'
