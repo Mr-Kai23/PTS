@@ -193,7 +193,7 @@
                     DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
                     {
                         ajax: {
-                            "url": "{% url 'process:order-workflow-list' %}",
+                            "url": "{% url 'process:order-deleted-list' %}",
                             "data": function (d) {
                                 d.project = $("#project").val();
                                 d.subject = $("#subject").val();

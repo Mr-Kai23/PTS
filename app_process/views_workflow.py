@@ -5,14 +5,17 @@
 # ======================================================
 
 import json, time, datetime, re
+
+from django.core.files import File
 from django.core.serializers.json import DjangoJSONEncoder
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.shortcuts import render, get_object_or_404
+from django.utils.http import urlquote
 from django.views import View
 from django.views.decorators.cache import cache_page
 
 from app_process.forms import WorkflowForm
-from app_process.models import Segment, OrderInfo, Project, UnitType, Stations, Subject
+from app_process.models import Segment, OrderInfo, Project, UnitType, Stations, Subject, Attachment
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 from system.models import Menu
@@ -436,4 +439,8 @@ class WorkFlowDetailView(LoginRequiredMixin, View):
 
         res['workflow'] = workflow
 
+        # 獲取對應流程的附件
+        Attachment.objects.filter(workflow=workflow.id)
+
         return render(request, 'process/WorkFlow/WorkFlow_Detail.html', res)
+

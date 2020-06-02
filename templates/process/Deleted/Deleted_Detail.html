@@ -74,8 +74,13 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="info"><strong> 接收者 </strong></td>
-                                    <td class="info">{{ workflow.receiver }}</td>
+                                    {% if request.user.account_type == 0 %}
+                                        <td class="info"><strong> 接收段別 </strong></td>
+                                        <td class="info">{{ workflow.segment }}</td>
+                                    {% else %}
+                                        <td class="info"><strong> 接收者 </strong></td>
+                                        <td class="info">{{ workflow.receiver }}</td>
+                                    {% endif %}
                                     <td class="info"></td>
                                     <td class="info"></td>
                                 </tr>

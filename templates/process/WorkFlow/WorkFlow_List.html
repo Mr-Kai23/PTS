@@ -192,7 +192,6 @@
                 <br> <br>
             </div>
         </div>
-        </div>
     </section>
 
 {% endblock %}
@@ -214,6 +213,7 @@
     <script src="{% static 'export/js/vfs_fonts.js' %}"></script>
     <script src="{% static 'export/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'export/js/buttons.print.min.js' %}"></script>
+
     <script>
         // $(document).ready(function () {
         //     $('#dtbList').DataTable({
@@ -377,8 +377,14 @@
                                 render: function (data, type, row, meta) {
                                     var ret = "<button title='详情' onclick='doDetail("
                                         + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";
+
+                                    ret = ret + "<button title='附件' onclick='doAttach("
+                                        + data + ")'><i class='glyphicon glyphicon-file'></i></button>";
+
+
                                     // 發佈者才可以編輯
                                     {% if request.user.account_type == 0 %}
+
                                         // 用戶自己發佈的才可以編輯
                                         if (row['publisher'] == '{{ request.user.name }}') {
 
@@ -387,6 +393,7 @@
                                             ret = ret + "<button title='删除' onclick='doDelete("
                                                 + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
                                         }
+
                                     {% endif %}
                                     return ret;
                                 }
@@ -439,7 +446,7 @@
                 title: '新增',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '75%'],
+                area: ['60%', '78%'],
                 content: "{% url 'process:order-workflow-create' %}",
                 end: function () {
                     //关闭时做的事情
@@ -497,8 +504,24 @@
                 title: '编辑',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '70%'],
+                area: ['60%', '78%'],
                 content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id],
+                end: function () {
+                    //关闭时做的事情
+                    oDataTable.ajax.reload();
+                }
+            });
+        }
+
+        //附件
+        function doAttach(id) {
+            var div = layer.open({
+                type: 2,
+                title: '附件信息',
+                shadeClose: false,
+                maxmin: true,
+                area: ['60%', '78%'],
+                content: ["{% url 'process:order-attach' %}" + '?id=' + id],
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();

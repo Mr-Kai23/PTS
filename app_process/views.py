@@ -17,7 +17,7 @@ from django.views.decorators.cache import cache_page
 
 from message import send_email, send_message
 from django.conf import settings
-# import xlsxwriter
+import xlsxwriter
 from io import BytesIO
 
 from django.http import HttpResponse
@@ -109,7 +109,9 @@ class BoardListView(View):
             filters['publish_time__lte'] = json.loads(list(dict(request.GET).keys())[0])['end_time']
 
         # 獲取数据
-        workflows = OrderInfo.objects.filter(**filters).exclude(subject='重點流程', status=2).values(*fields).order_by('-id')
+        workflows = OrderInfo.objects.filter(**filters,
+                                             is_parent=False).exclude(subject='重點流程',
+                                                                      status=2).values(*fields).order_by('priority', '-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])
@@ -210,9 +212,15 @@ def create_workflow(parent_order, fields={}, segment_list=None):
     # 對應段別下 為 副線長（is_admin=False） 的接收者 的 部門、姓名、段別
     receivers = list(users.filter(is_admin=False).values_list('department__name', 'name', 'segment'))
 
-    # 根據不同的接收人，创建對應的多條工单
-    workflow_list = [OrderInfo(**fields, parent=parent_order, receive_dept=receive_dept, receiver=receiver, segment=segment) for
-                     receive_dept, receiver, segment in receivers]
+    # 如果主旨為重點流程，優先
+    if fields['subject'] == '重點流程':
+        # 根據不同的接收人，创建對應的多條工单
+        workflow_list = [OrderInfo(**fields, parent=parent_order, priority=True, receive_dept=receive_dept,
+                                   receiver=receiver, segment=segment) for receive_dept, receiver, segment in receivers]
+    else:
+        # 根據不同的接收人，创建對應的多條工单
+        workflow_list = [OrderInfo(**fields, parent=parent_order, receive_dept=receive_dept, receiver=receiver,
+                                   segment=segment) for receive_dept, receiver, segment in receivers]
 
     OrderInfo.objects.bulk_create(workflow_list)
 

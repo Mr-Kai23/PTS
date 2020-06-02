@@ -6,147 +6,162 @@
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
     <style>
-        textarea{
-            height:'150px',
+        textarea {
+            height: '150px',
         }
     </style>
 {% endblock %}
 
 {% block main %}
     <div class="box box-danger">
-        <form class="form-horizontal" id="addForm" method="post">
-            {% csrf_token %}
-            <input type="hidden" name='id' value="{{ workflow.id }}"/>
+    <form class="form-horizontal" id="addForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name='id' value="{{ workflow.id }}"/>
 
-            <div class="box-body">
-                <fieldset>
+        <div class="box-body">
+            <fieldset>
 
-                    <legend>
-                        <h4>流程發佈</h4>
-                    </legend>
+                <legend>
+                    <h4>流程發佈</h4>
+                </legend>
 
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">專案</label>
-                        <div class="col-sm-3">
-                            <select class="form-control inputText select2" name="project" id="project">
-                            <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--"  }}</option>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">專案</label>
+                    <div class="col-sm-3">
+                        <select class="form-control inputText select2" name="project" id="project">
+                            <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--" }}</option>
                             {% for project in projects %}
                                 <option value="{{ project }}">{{ project }}</option>
                             {% endfor %}
-                            </select>
-                        </div>
+                        </select>
                     </div>
+                </div>
 
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">發佈者部門</label>
-                        <div class="col-sm-3">
-                            {% if workflow %}
-                                <input class="form-control" name="publish_dept" type="text" value="{{ workflow.publish_dept }}" />
-                            {% else %}
-                                <input class="form-control" name="publish_dept" type="text" value="{{ request.user.department.name }}"/>
-                            {% endif %}
-                        </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">發佈者部門</label>
+                    <div class="col-sm-3">
+                        {% if workflow %}
+                            <input class="form-control" name="publish_dept" type="text"
+                                   value="{{ workflow.publish_dept }}"/>
+                        {% else %}
+                            <input class="form-control" name="publish_dept" type="text"
+                                   value="{{ request.user.department.name }}"/>
+                        {% endif %}
                     </div>
+                </div>
 
-                    <div class="form-group has-feedback">
-                         <label class="col-sm-2 control-label">發佈者姓名</label>
-                        <div class="col-sm-3">
-                            <input class="form-control" name="publisher" type="text" {% if workflow %} value="{{ workflow.publisher }}" {% else %} value="{{ request.user.name }}" {% endif %}/>
-                        </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">發佈者姓名</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" name="publisher" type="text" {% if workflow %}
+                               value="{{ workflow.publisher }}" {% else %} value="{{ request.user.name }}" {% endif %}/>
                     </div>
+                </div>
 
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">發佈時間</label>
-                        <div class="col-sm-3">
-                            <input class="form-control" name="publish_time" type="text" value="{{ time }}"/>
-                        </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">發佈時間</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" name="publish_time" type="text" value="{{ time }}"/>
                     </div>
+                </div>
 
-					<div class="form-group has-feedback">
-{#                        <label class="col-sm-2 control-label">主旨</label>#}
-{#                        <div class="col-sm-3">#}
-{#                            <textarea class="form-control" name="subject" style="width:300%" value="{{ workflow.subject }}">#}
-{#                                {{ workflow.subject }}#}
-{#                            </textarea>#}
-{#                        </div>#}
-                        <label class="col-sm-2 control-label">主旨</label>
-                        <div class="col-sm-3">
-                            <select class="form-control select2" style="width:100%;" name="subject">
-                                <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>
-                                {% for subject in subjects %}
-                                    <option value="{{ subject.subject }}">{{ subject.subject }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group has-feedback">
-                        <label class="col-sm-2 control-label">工單</label>
-                        <div class="col-sm-3">
-                            <textarea  class="form-control" name="order"  style="width:300%" value="{{ workflow.order}}" contenteditable="true">{{ workflow.order}}
-                            </textarea>
-                        </div>
-                    </div>
-                     <div class="form-group has-feedback">
-                         <label class="col-sm-2 control-label">流程內容</label>
-                         <div class="col-sm-3">
-                            <textarea class="form-control" name="key_content" style="width:300%" value="{{ workflow.key_content}}" contenteditable="true">{{ workflow.key_content}}
-                            </textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group has-feedback">
-						<label class="col-sm-2 control-label">工站</label>
-						<div class="col-sm-3">
-                            <input type="checkbox" name="station" value="All" />
-                            <label >All</label>
-                            {% for station in stations %}
-                                <input type="checkbox" name="station" value="{{ station.station }}" {% if station.station == workflow_stations %} checked="True" {% endif %}/>
-                                <label >{{ segment.segment }}</label>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">主旨</label>
+                    <div class="col-sm-3">
+                        <select class="form-control select2" style="width:100%;" name="subject">
+                            <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>
                             {% endfor %}
-
-						</div>
+                        </select>
                     </div>
+                </div>
 
-                    <div class="form-group has-feedback">
-						<label class="col-sm-2 control-label">接收段別</label>
-						<div class="col-sm-3">
-                            <input type="checkbox" name="segment" value="All" />
-                            <label >All</label>
-                            {% for segment in segments %}
-                                <input type="checkbox" name="segment" value="{{ segment.segment }}" {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
-                                <label >{{ segment.segment }}</label>
-                            {% endfor %}
-
-						</div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">工單</label>
+                    <div class="col-sm-3">
+                            <textarea class="form-control" name="order" style="width:300%" value="{{ workflow.order }}"
+                                      contenteditable="true">{{ workflow.order }}
+                            </textarea>
                     </div>
-
-                    <div class="box-footer ">
-                        <div class="row span7 text-center ">
-                            <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
-                            <button type="button" id="btnSave" class="btn btn-info margin-right ">確認</button>
-                        </div>
+                </div>
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">流程內容</label>
+                    <div class="col-sm-3">
+                            <textarea class="form-control" name="key_content" style="width:300%"
+                                      value="{{ workflow.key_content }}"
+                                      contenteditable="true">{{ workflow.key_content }}
+                            </textarea>
                     </div>
-                </fieldset>
-            </div>
-        </form>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">工站</label>
+                    <div class="col-sm-3">
+                        <input type="checkbox" name="station" value="All"/>
+                        <label>All</label>
+                        {% for station in stations %}
+                            <input type="checkbox" name="station" value="{{ station.station }}"
+                                    {% if station.station == workflow_stations %} checked="True" {% endif %}/>
+                            <label>{{ segment.segment }}</label>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">接收段別</label>
+                    <div class="col-sm-3">
+                        <input type="checkbox" name="segment" value="All"/>
+                        <label>All</label>
+                        {% for segment in segments %}
+                            <input type="checkbox" name="segment" value="{{ segment.segment }}"
+                                    {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
+                            <label>{{ segment.segment }}</label>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+{#                <div class="form-group has-feedback">#}
+{#                    <label class="col-sm-2 control-label">附件</label>#}
+{#                    <div class="col-sm-3">#}
+{#                        <input type="file" name="attach_excel" id="attach_excel"/>#}
+{#                    </div>#}
+{#                    <div class="col-sm-3">#}
+{#                        <input type="file" name="attach_excel" id="attach_excel"/>#}
+{#                    </div>#}
+{#                </div>#}
+
+                <div class="box-footer ">
+                    <div class="row span7 text-center ">
+                        <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
+                        <button type="submit" id="btnSave" class="btn btn-info margin-right ">確認</button>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </form>
+    </div>
 
 {% endblock %}
 
 {% block javascripts %}
     <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
+    <script src="{% static 'plugins/js/jquery.form.js' %}"></script>
     <script type="text/javascript">
 
         $("#btnSave").click(function () {
 
             var data = $("#addForm").serialize();
 
-            $.ajax({
+            $('#addForm').ajaxForm({
                 type: $("#addForm").attr('method'),
                 url: "{% url 'process:order-workflow-create' %}",
-                {#data: {id:id, data:data, cks:JSON.stringify(cks), csrfmiddlewaretoken: '{{ csrf_token }}'},#}
-                data: data,
+                data: {id:id, data:data, cks:JSON.stringify(cks), csrfmiddlewaretoken: '{{ csrf_token }}'},
+                {#data: data,#}
                 cache: false,
                 success: function (msg) {
                     if (msg.result) {
@@ -158,8 +173,34 @@
                         //$('errorMessage').html(msg.message)
                     }
 
-                }
-            });
+                 }
+
+
+             });
+
+{#            var options = {#}
+{#                url: url, //form提交数据的地址#}
+{#                type: action, //form提交的方式(method:post/get)#}
+{#                dataType: "json", //服务器返回数据类型#}
+{#                clearForm: false, //提交成功后是否清空表单中的字段值#}
+{#                restForm: false, //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态#}
+{#//          target:target, //服务器返回的响应数据显示在元素(Id)号确定#}
+{#//          beforeSubmit:function(), //提交前执行的回调函数#}
+{#                success: function (data, statusText) {//提交成功后执行的回调函数#}
+{#                    if (data && data.result) {#}
+{#                        layer.alert('工單添加成功！', {icon: 1}, function (index) {#}
+{#                            parent.layer.closeAll(); //关闭所有弹窗#}
+{#                        });#}
+{#                    } else {#}
+{#                        layer.alert(msg.user_create_form_errors, {icon: 5}); // 提示#}
+{#                    }#}
+{#                },#}
+{##}
+{#                timeout: 6000 //设置请求时间，超过该时间后，自动退出请求，单位(毫秒)。#}
+{#            };#}
+{##}
+{#            $("#addForm").ajaxForm(options).submit();#}
+
         });
 
 
@@ -181,9 +222,9 @@
             forceParse: 0,
             showMeridian: 1,
             format: 'yyyy-mm-dd'
-         }).on('changeDate', function (ev) {
+        }).on('changeDate', function (ev) {
             $(this).datetimepicker('hide');
-         });
+        });
 
         $(function () {
             //Initialize Select2 Elements

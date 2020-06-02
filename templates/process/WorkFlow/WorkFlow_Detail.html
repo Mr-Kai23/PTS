@@ -22,10 +22,11 @@
                     </div>
 
                     <div class="btn-group margin-l-5">
-                        <button type="button" class="btn btn-success btn-sm" title="列印" id="btnPrint">
-                            <i class="fa fa-download">列印</i>
+                        <button type="button" class="btn btn-info btn-sm" title="列印" id="btnPrint">
+                            <i class="fa fa-file-pdf-o">列印</i>
                         </button>
                     </div>
+
                     <div class="btn-group pull-right">
                     </div>
                 </div>
@@ -86,6 +87,7 @@
                                         <td class="info"></td>
                                         <td class="info"></td>
                                     </tr>
+
                                 {% else %}
                                     <tr>
                                         <td class="info"><strong> 接收段別 </strong></td>
@@ -93,9 +95,8 @@
                                         <td class="info"></td>
                                         <td class="info"></td>
                                     </tr>
+
                                 {% endif %}
-
-
 
                                 <tr>
                                     <td class="danger"><strong> 主旨 </strong></td>
@@ -207,6 +208,7 @@
         $("#btnOriReturn").on("click", function () {
             window.location.href = "{% url 'process:order-workflow' %}";
         });
+
 
     </script>
 

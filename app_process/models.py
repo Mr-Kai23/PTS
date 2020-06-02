@@ -144,7 +144,11 @@ class OrderInfo(models.Model):
     deleted = models.BooleanField(default=False)
 
     # 優先級, 用與看板頁面的主旨為重点流程的流程排序
-    # priority = models.AutoField(null=True)
+    priority = models.BooleanField(default=False)
+
+    # # 流程附件上傳
+    # attach_excel = models.FileField(upload_to='upload/%Y/%m/%d/', max_length=500, null=True, blank=True)
+    # attach_picture = models.ImageField(upload_to="image/%Y/%m/%d/", max_length=100, null=True, blank=True)
 
     def __str__(self):
         """定义每个数据对象的显示信息"""
@@ -177,3 +181,27 @@ class ExceptionContact(models.Model):
         verbose_name = '段别异常联系人信息表'
         verbose_name_plural = '段别异常联系人信息表'
         db_table = 'ExceptionContact'
+
+
+class Attachment(models.Model):
+    workflow = models.IntegerField(null=True, blank=True, default=None, verbose_name="流程ID")
+    # 流程附件上傳
+    attachment = models.FileField(upload_to='upload/%Y/%m/%d/', max_length=500, null=True, blank=True)
+
+    # def file_link(self):
+    #     if self.attachment:
+    #         return "<a href='%s'>download</a>" % (self.attachment.url,)
+    #     else:
+    #         return "No attachment"
+    #
+    # file_link.allow_tags = True
+
+    def __str__(self):
+        """定义每个数据对象的显示信息"""
+        return self.workflow
+
+    class Meta:
+        """内部类，它用于定义一些Django模型类的行为特性"""
+        verbose_name = '附件信息表'
+        verbose_name_plural = '附件信息表'
+        db_table = 'Attachment'

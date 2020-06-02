@@ -46,31 +46,31 @@ class DeletedListView(LoginRequiredMixin, View):
         username = request.user.name
 
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
-                  'publish_time', 'subject', 'key_content', 'segment', 'receive_status', 'status',
-                  'withdraw_time', 'unit_type', 'station']
+                  'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status', 'status',
+                  'receive_time', 'unit_type', 'station']
 
-        searchfields = ['project', 'segment', 'status', 'receive_status', 'unit_type', 'station', 'order']
+        searchfields = ['project', 'segment', 'status', 'receive_status', 'unit_type', 'order']
 
         filters = {i + '__icontains': request.GET.get(i, '') for i in searchfields if request.GET.get(i, '')}
 
         # 用戶只能看自己刪除的流程
         # 发布者 删除了的工单
         if request.user.account_type == 0:
-            workflows = list(OrderInfo.objects.filter(publisher=username, is_parent=True, deleted=True,
-                                                      **filters).values(*fields).order_by('-id'))
+            workflows = OrderInfo.objects.filter(**filters, publisher=username, is_parent=True, deleted=True,
+                                                 ).values(*fields).order_by('-id')
 
         # 接收者
         # 删除了的工单
         elif request.user.account_type == 1:
-            workflows = list(OrderInfo.objects.filter(receiver=username, deleted=True, is_parent=False,
-                                                      **filters).values(*fields).order_by('-id'))
+            workflows = OrderInfo.objects.filter(receiver=username, deleted=True, is_parent=False,
+                                                 **filters).values(*fields).order_by('-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])
             workflow['status'] = order.get_status_display()
             workflow['receive_status'] = order.get_receive_status_display()
 
-        res = dict(data=workflows)
+        res = dict(data=list(workflows))
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

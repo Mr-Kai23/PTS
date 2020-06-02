@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.urls import include
 
 from app_process.views import BoardView, BoardListView
@@ -22,6 +22,7 @@ from system.views import SystemView
 from system.views_user import IndexView, LoginView, LogoutView
 from django.conf.urls.static import static
 from PMS.settings import *
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,3 +44,8 @@ urlpatterns = [
 ]
 
 # ] + static(STATIC_URL, document_root=STATIC_ROOT)
+
+if DEBUG:
+    urlpatterns += [
+        re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+    ]

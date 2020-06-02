@@ -184,16 +184,18 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = "/media/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # STATIC_ROOT = [os.path.join(BASE_DIR, 'static')]
 
 LOGIN_URL = '/board/'
 
-SAFE_URL = ['/admin/', '/login/', '/logout/', '/', '/board/']
+SAFE_URL = ['/admin/', '/login/', '/logout/', '/', '/board/', '/media/']
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

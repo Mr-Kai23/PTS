@@ -6,6 +6,7 @@ import app_process.views_workflow as views_workflow
 import app_process.views_recept as views_recept
 import app_process.views_deleted as views_deleted
 import app_process.views_contacts as views_contacts
+import app_process.views_attachment as views_attachment
 
 # import app_process.views as views
 from system.views import SystemView
@@ -46,5 +47,13 @@ urlpatterns = [
     url(r'^order/contact/list/$', views_contacts.ContactListView.as_view(), name='order-contact-list'),
     url(r'^order/contact/create/$', views_contacts.ContactCreateView.as_view(), name='order-contact-create'),
     url(r'^order/contact/delete/$', views_contacts.ContactDeleteView.as_view(), name='order-contact-delete'),
+
+    # 段別異常聯繫人路由
+    url(r'^order/attach/$', views_attachment.AttachmentView.as_view(), name='order-attach'),
+    url(r'^order/attach/list/$', views_attachment.AttachmentListView.as_view(), name='order-attach-list'),
+    url(r'^order/attach/create/$', views_attachment.AttachmentCreateView.as_view(), name='order-attach-create'),
+    url(r'^order/attach/delete/$', views_attachment.AttachmentDeleteView.as_view(), name='order-attach-delete'),
+    # 附件下載
+    # url(r'^order/attach/download/$', views_attachment.AttachmentDownloadView.as_view(), name='order-attach-download'),
 
 ]
