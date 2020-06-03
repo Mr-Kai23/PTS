@@ -23,6 +23,11 @@ class StationView(LoginRequiredMixin, View):
     def get(self, request):
         res = dict()
 
+        # 所有專案
+        res['projects'] = Project.objects.all()
+        # 所有段別
+        res['segments'] = Segment.objects.all()
+
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
@@ -31,60 +36,101 @@ class StationView(LoginRequiredMixin, View):
 
     """
     @Author  :   Daniel                
-    @Time    :   2020-5-28 10:35
+    @Time    :   2020-6-2 16:34
     @Desc    :   工站导入
     """
     def post(self, request):
 
         """
-        工單導入
+        工站上傳
         :param request:
         :return: 返回渲染上传信息页面
         """
         msg = ''
 
-        correct_stations = []  # 上傳成功的工單
-        error_department = []  # 部門錯誤的工單
+        correct_stations = []  # 上傳成功的工站
+        error_segment = []  # 段別錯誤的工站
+        repeat_stations = []  # 重複上傳工站
 
         file = request.FILES['file']
 
+        # 過濾函數，用於過濾為空的值
+        def not_null(x):
+            if x:
+                return True
+
         if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
-            df = pd.read_excel(file, keep_default_na=False)
+            # df = pd.read_excel(file, skiprows=3, keep_default_na=False, index_col=0)
+            # 讀取excel
+            excel = pd.ExcelFile(file)
 
-            column_list = ['部門', '工站']
+            # 所有 sheet
+            sheets = excel.sheet_names
 
-            if list(df.columns) == column_list:
+            # 列名
+            column_list = ['#', 'Stage', 'Test Station name']
 
-                # 用户部门、專案
-                department = request.user.department.name
-                # 工站列表，存放創建的實例
-                stations = []
+            for index, sheet in enumerate(sheets):
+                df = excel.parse(sheets[index], skiprows=3, keep_default_na=False, index_col=0)
 
-                # 讀取工單數據
-                for i in range(len(df)):
+                # 工站專案
+                project = sheets[index].split()[0]
+                # 獲取所有段別
+                segments = list(Segment.objects.values_list('segment', flat=True))
 
-                    if department == df.loc[i, '部門']:
+                if list(df.columns) == column_list:
 
-                        stations.append(Stations(department=df.loc[i, '部門'], station=df.loc[i, '工站']))
+                    # 用户部门、專案
+                    department = request.user.department.name
+                    # 工站列表，存放創建的實例
+                    stations = []
 
-                        # 正確上傳的工站
-                        correct_stations.append(df.loc[i].tolist())
+                    # 上傳的 segment
+                    upload_segment = list(filter(not_null, df.Stage))
 
-                    else:
-                        msg = '請勿上傳其他部門工站！！'
-                        error_department.append(df.loc[i].tolist())
-                        break
+                    # 臨時存放段別
+                    tem_segment = ''
+                    # 讀取工單數據
+                    for i in range(len(df)):
+                        df_list = list(df.values)[i]
 
-                if not error_department:
-                    # 創建工站
-                    Stations.objects.bulk_create(stations)
-                    msg = '工站上傳！！'
+                        if upload_segment in segments:
+                            # 如果段別有值，將段別賦值給 臨時段別
+                            if df_list[1]:
+                                segment = df_list[1]
+                                tem_segment = segment
+                            else:
+                                segment = tem_segment
+                                df_list[1] = tem_segment
 
-            else:
-                msg = '請選擇正確的文件！！'
+                            # 獲取或創建工站
+                            station, create = Stations.objects.get_or_create(project=project, department=department,
+                                                                             station=df_list[2], segment=segment)
+                            # 如果為創建
+                            if create:
+                                stations.append(station)
+                                # 正確上傳的工站
+                                correct_stations.append(df_list)
+
+                            else:
+                                # 重複上傳工站
+                                repeat_stations.append(df_list)
+
+                        else:
+                            error_segment.append(df_list)
+
+                    # 如果沒有錯誤工站信息
+                    if not error_segment:
+                        # 創建工站
+                        Stations.objects.bulk_create(stations)
+                        msg = '工站上傳！！'
+
+                else:
+                    msg = '請選擇正確的文件！！'
 
         return render(request, 'system/Stations/Stations_upload_info.html',
-                      {"msg": msg, "correct_stations": correct_stations, "error_department": error_department})
+                      {"msg": msg, "correct_stations": correct_stations, 'repeat_stations': repeat_stations,
+                       "error_segment": error_segment})
 
 
 class StationListView(LoginRequiredMixin, View):
@@ -92,12 +138,18 @@ class StationListView(LoginRequiredMixin, View):
     工站详情
     """
     def get(self, request):
+        # 用戶部門
+        department = request.user.department.name
 
-        fields = ['id', 'department', 'station']
-        searchFields = ['station', 'department']  # 与数据库字段一致
-        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}  # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        fields = ['id', 'project', 'department', 'segment', 'station']
+        searchFields = ['project', 'station', 'segment', 'department']  # 与数据库字段一致
 
-        res = dict(data=list(Stations.objects.filter(**filters).values(*fields)))
+        # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}
+
+        stations = Stations.objects.filter(**filters, department=department).values(*fields)
+
+        res = dict(data=list(stations))
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

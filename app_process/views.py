@@ -299,17 +299,28 @@ def get_upload_module(request, download_id):
         'font_size': 14,
     })
 
+    # 流程模板
     if download_id == '0':
         title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別']
 
+        # 第0列到第12列設置列寬
+        sheet.set_column(0, 7, 15)
         # 数据库所有主旨
         subjects = list(Subject.objects.values_list('subject', flat=True))
         sheet.data_validation('D2', {'validate': 'list', 'source': subjects})
 
-    else:
+        # 設置列名
+        sheet.write_row('A1', title, title_format)
+        # 給一行空值
+        sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+
+    # 用戶模板
+    elif download_id == '1':
         title = ['姓名', '工號', '用戶名', '郵箱', '手機', '部門', '上級', '專案', '段別', '備註', '賬號類型', '用戶類型',
                  '所屬角色组']
 
+        # 第0列到第12列設置列寬
+        sheet.set_column(0, 12, 15)
         # 数据库所有段别
         segments = list(Segment.objects.values_list('segment', flat=True))
         sheet.data_validation('I2', {'validate': 'list', 'source': segments})
@@ -317,10 +328,20 @@ def get_upload_module(request, download_id):
         sheet.data_validation('L2', {'validate': 'list', 'source': ['副線長', '線長', '專案主管']})
         sheet.data_validation('M2', {'validate': 'list', 'source': ['系統管理', '流程管理']})
 
-    # 設置第一行為空值
-    sheet.write_row('A1', title, title_format)
-    # 給一行空值
-    sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+        # 設置列名
+        sheet.write_row('A1', title, title_format)
+        # 給一行空值
+        sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+
+    elif download_id == '2':
+        title = ['#', 'Stage', 'Test Station name']
+
+        sheet.set_column(1, 3, 20)
+        # 設置列名
+        sheet.write_row('B4', title, title_format)
+
+        # 給一行空值
+        sheet.write_row('B5', ['' for i in range(len(title))], field_format)
 
     workbook.close()
     excel.seek(0)

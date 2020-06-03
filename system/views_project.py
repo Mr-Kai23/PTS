@@ -11,7 +11,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from custom import BreadcrumbMixin
 from app_process.forms import ProjectCreateForm
-from app_process.models import Project, UnitType
+from app_process.models import Project, UnitType, Stations
 from system.mixin import LoginRequiredMixin
 from system.models import Structure,Menu
 
@@ -94,8 +94,13 @@ class ProjectAndUnitTypeLinkView(View):
         res = dict()
 
         if request.POST.get('project'):
+            # 獲取對應專案下的機種
             unit_types = UnitType.objects.filter(project=request.POST.get('project')).values(*['unit_type'])
             res['unit_types'] = list(unit_types)
+
+            # 獲取對應專案下的工站
+            stations = Stations.objects.filter(project=request.POST.get('project')).values(*['station'])
+            res['stations'] = list(stations)
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

@@ -58,6 +58,7 @@ class Stations(models.Model):
     """
     project = models.CharField(max_length=10, null=True, blank=True, verbose_name='专案')
     department = models.CharField(max_length=10, null=True, blank=True, verbose_name='部门')
+    segment = models.CharField(max_length=20, null=True, blank=True, verbose_name='段别')
     station = models.CharField(max_length=50, null=True, blank=True, default="", verbose_name='工站')
 
     class Meta:

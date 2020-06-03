@@ -10,71 +10,103 @@
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
 
 {% if msg == "工單上傳！！" %}
-<div class="alert alert-success">
-    <strong>{{ msg }}</strong>
-</div>
+    <div class="alert alert-success">
+        <strong>{{ msg }}</strong>
+    </div>
 
 {% else %}
 
-<div class="alert alert-danger">
-    <strong>{{ msg }}</strong>
-</div>
+    <div class="alert alert-danger">
+        <strong>{{ msg }}</strong>
+    </div>
 
 {% endif %}
 
 {% if correct_stations %}
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">工站信息校對</div>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">工站信息校對</div>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width: 5%">部門</th>
-          <th style="width: 10%">工站</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for station in correct_stations %}
-        <tr>
-            {% for info in station %}
-              <td>{{ info }}</td>
+        <table class="table">
+            <thead>
+            <tr>
+                <th style="width: 5%">專案</th>
+                <th style="width: 5%">部門</th>
+                <th style="width: 5%">段別</th>
+                <th style="width: 10%">工站</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for station in correct_stations %}
+                <tr>
+                    {% for info in station %}
+                        <td>{{ info }}</td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+{% if repeat_stations %}
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">重複工站信息</div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th style="width: 5%">專案</th>
+                <th style="width: 5%">部門</th>
+                <th style="width: 5%">段別</th>
+                <th style="width: 10%">工站</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for station in repeat_stations %}
+                <tr>
+                    {% for info in station %}
+                        <td>{{ info }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+{% if error_segment %}
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">工站發佈部門錯誤</div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th style="width: 5%">專案</th>
+                <th style="width: 5%">部門</th>
+                <th style="width: 5%">段別</th>
+                <th style="width: 10%">工站</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for station in error_department %}
+                <tr>
+                    {% for info in station %}
+                        <td>{{ info }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endif %}
 
 
-{% if error_department %}
-<div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading">工站發佈部門錯誤</div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width: 5%">部門</th>
-          <th style="width: 10%">工站</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for station in error_department %}
-        <tr>
-            {% for info in station %}
-              <td>{{ info }}</td>
-            {% endfor %}
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-</div>
-{% endif %}
-
-
-<button type="button" style="margin-left: 10px;" class="btn btn-danger" onclick="window.location.href='/system/basic/station/'">返回</button>
+<button type="button" style="margin-left: 10px;" class="btn btn-danger"
+        onclick="window.location.href='/system/basic/station/'">返回
+</button>
 
 </body>
 </html>

@@ -96,22 +96,8 @@
                 </div>
 
                 <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">工站</label>
-                    <div class="col-sm-3">
-                        <input type="checkbox" name="station" value="All"/>
-                        <label>All</label>
-                        {% for station in stations %}
-                            <input type="checkbox" name="station" value="{{ station.station }}"
-                                    {% if station.station == workflow_stations %} checked="True" {% endif %}/>
-                            <label>{{ segment.segment }}</label>
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
                     <label class="col-sm-2 control-label">接收段別</label>
-                    <div class="col-sm-3">
+                    <div class="col-sm-3" style="width: 60%">
                         <input type="checkbox" name="segment" value="All"/>
                         <label>All</label>
                         {% for segment in segments %}
@@ -119,6 +105,25 @@
                                     {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
                             <label>{{ segment.segment }}</label>
                         {% endfor %}
+
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">工站</label>
+                    <div class="col-sm-3" id="station" style="width: 60%">
+                        {% if stations %}
+                            <input type="checkbox" name="station" value="All"/>
+                            <label>All</label>
+                            {% for station in stations %}
+                                <input type="checkbox" name="station" value="{{ station.station }}"
+                                        {% if station.station == workflow_stations %} checked="True" {% endif %}/>
+                                <label>{{ station.station }}</label>
+                            {% endfor %}
+                        {% else %}
+                            <input type="checkbox" name="station" value="All"/>
+                            <label>All</label>
+                        {% endif %}
 
                     </div>
                 </div>
@@ -150,7 +155,7 @@
 {% block javascripts %}
     <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
-    <script src="{% static 'plugins/js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
     <script type="text/javascript">
 
         $("#btnSave").click(function () {
@@ -175,31 +180,40 @@
 
                  }
 
-
              });
 
-{#            var options = {#}
-{#                url: url, //form提交数据的地址#}
-{#                type: action, //form提交的方式(method:post/get)#}
-{#                dataType: "json", //服务器返回数据类型#}
-{#                clearForm: false, //提交成功后是否清空表单中的字段值#}
-{#                restForm: false, //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态#}
-{#//          target:target, //服务器返回的响应数据显示在元素(Id)号确定#}
-{#//          beforeSubmit:function(), //提交前执行的回调函数#}
-{#                success: function (data, statusText) {//提交成功后执行的回调函数#}
-{#                    if (data && data.result) {#}
-{#                        layer.alert('工單添加成功！', {icon: 1}, function (index) {#}
-{#                            parent.layer.closeAll(); //关闭所有弹窗#}
-{#                        });#}
-{#                    } else {#}
-{#                        layer.alert(msg.user_create_form_errors, {icon: 5}); // 提示#}
-{#                    }#}
-{#                },#}
-{##}
-{#                timeout: 6000 //设置请求时间，超过该时间后，自动退出请求，单位(毫秒)。#}
-{#            };#}
-{##}
-{#            $("#addForm").ajaxForm(options).submit();#}
+        });
+
+        /*专案机种二级联动*/
+
+        $("select[name='project']").change(function () {
+
+            var project = $("select[name='project']").val();
+
+            $.ajax({
+                type: "POST",
+
+                url: "{% url 'system:basic-project-unit_type' %}",
+
+                data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
+
+                success: function (data) {
+                    console.log(data);
+
+                    {#var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');#}
+                    {#unit_type.append('<option></option>');#}
+                    {#$.each(data.unit_types, function (i, val) {#}
+                    {#    unit_type.append('<option value="' + val.unit_type + '">' + val.unit_type + '</option>')#}
+                    {# });#}
+
+                    var station=$("#station").empty();
+                    station.append('<input type="checkbox" name="station" value="All"/><label>All</label>');
+                    $.each(data.stations, function (i, val) {
+                        station.append('<input type="checkbox" name="station" value="'+val.station+'"/><label>'+val.station+'</label>')
+                    });
+
+                }
+            });
 
         });
 

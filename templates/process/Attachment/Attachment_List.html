@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-{#    <link rel="stylesheet" href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}">#}
+    <link rel="stylesheet" href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
-{#    <link rel="stylesheet" href="{% static 'dist/css/myself.css' %}">#}
-{#    <link rel="stylesheet" href="{% static 'dist/css/skins/skin-blue.min.css' %}">#}
+    <link rel="stylesheet" href="{% static 'dist/css/myself.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/skins/skin-blue.min.css' %}">
 
     <!-- iCheck for checkboxes and radio inputs -->
 {% endblock %}
@@ -48,11 +48,6 @@
 
                 </div>
             </div>
-
-{#            <div class="box-header">#}
-{#                <form class="form-inline" id="queryForm">#}
-{#                </form>#}
-{#            </div>#}
 
             <div class="box-body">
                 <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
@@ -92,15 +87,15 @@
     <script src="{% static 'export/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'export/js/buttons.print.min.js' %}"></script>
 
-    <!-- jQuery 2.2.3 -->
+{#    <!-- jQuery 2.2.3 -->#}
 {#    <script src="{% static 'plugins/jQuery/jquery-2.2.3.min.js' %}"></script>#}
-    <!-- Bootstrap 3.3.6 -->
+{#    <!-- Bootstrap 3.3.6 -->#}
 {#    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>#}
-    <!-- AdminLTE App -->
+{#    <!-- AdminLTE App -->#}
 {#    <script src="{% static 'dist/js/app.min.js' %}"></script>#}
-
+{##}
 {#    <script src="{% static 'js/messageNotice.js' %}"></script>#}
-        <script>
+    <script>
         // $(document).ready(function () {
         //     $('#dtbList').DataTable({
         //         dom: 'Bfrtip',
@@ -214,25 +209,6 @@
                 }
             });
         });
-
-        {#//附件#}
-        {#function doDownload(id) {#}
-        {#    $.ajax({#}
-        {#        type: "GET",#}
-        {#        url: ["{% url 'process:order-attach-download' %}" + '?id=' + id],#}
-        {#        cache: false,#}
-        {#        success: function (msg) {#}
-        {#            if (msg.result) {#}
-        {#                layer.alert("操作成功！", {icon: 1});#}
-        {#                oDataTable.ajax.reload();#}
-        {#            } else {#}
-        {#                layer.alert("操作失败！", {icon: 2});#}
-        {#            }#}
-        {##}
-        {#        }#}
-        {#    });#}
-        {#}#}
-
 
         //批量删除
         $("#btnDelete").click(function () {

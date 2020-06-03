@@ -41,11 +41,12 @@ urlpatterns = [
     # process
     path('process/', include('app_process.urls', namespace='process')),
 
+    re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+
 ]
 
 # ] + static(STATIC_URL, document_root=STATIC_ROOT)
 
-if DEBUG:
-    urlpatterns += [
-        re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
-    ]
+    # urlpatterns += [
+    #     re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+    # ]

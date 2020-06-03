@@ -239,6 +239,9 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 将流程对象传到前端页面
             res['workflow'] = workflow
 
+            # 為編輯時只拿流程對應專案下的工站
+            res['stations'] = Stations.objects.filter(project=workflow.project, department=request.user.department.name)
+
             # 流程的发布时间
             res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M')
 
@@ -266,9 +269,6 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         # 获取数据库中所有段别
         segments = Segment.objects.all()
         res['segments'] = segments
-
-        # 数据库中该部门下所有的工站
-        res['stations'] = Stations.objects.filter(department=request.user.department.name)
 
         # 获取数据库中所有主旨
         res['subjects'] = Subject.objects.all()
