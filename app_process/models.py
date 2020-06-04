@@ -86,6 +86,7 @@ class Subject(models.Model):
     """
     主旨信息表
     """
+    department = models.CharField(max_length=10, default='', verbose_name='部门')
     subject = models.CharField(max_length=30, null=True, blank=True, default='', verbose_name='主旨')
 
     def __str__(self):

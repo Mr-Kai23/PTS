@@ -54,10 +54,10 @@ class StationView(LoginRequiredMixin, View):
 
         file = request.FILES['file']
 
-        # 過濾函數，用於過濾為空的值
-        def not_null(x):
-            if x:
-                return True
+        # # 過濾函數，用於過濾為空的值
+        # def not_null(x):
+        #     if x:
+        #         return True
 
         if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
             # df = pd.read_excel(file, skiprows=3, keep_default_na=False, index_col=0)
@@ -68,15 +68,15 @@ class StationView(LoginRequiredMixin, View):
             sheets = excel.sheet_names
 
             # 列名
-            column_list = ['#', 'Stage', 'Test Station name']
+            column_list = ['#', 'Test Station name']
 
             for index, sheet in enumerate(sheets):
-                df = excel.parse(sheets[index], skiprows=3, keep_default_na=False, index_col=0)
+                df = excel.parse(sheets[index], skiprows=2, keep_default_na=False, index_col=0)
 
                 # 工站專案
                 project = sheets[index].split()[0]
-                # 獲取所有段別
-                segments = list(Segment.objects.values_list('segment', flat=True))
+                # # 獲取所有段別
+                # segments = list(Segment.objects.values_list('segment', flat=True))
 
                 if list(df.columns) == column_list:
 
@@ -86,51 +86,34 @@ class StationView(LoginRequiredMixin, View):
                     stations = []
 
                     # 上傳的 segment
-                    upload_segment = list(filter(not_null, df.Stage))
+                    # upload_segment = list(filter(not_null, df.Stage))
 
-                    # 臨時存放段別
-                    tem_segment = ''
                     # 讀取工單數據
                     for i in range(len(df)):
                         df_list = list(df.values)[i]
 
-                        if upload_segment in segments:
-                            # 如果段別有值，將段別賦值給 臨時段別
-                            if df_list[1]:
-                                segment = df_list[1]
-                                tem_segment = segment
-                            else:
-                                segment = tem_segment
-                                df_list[1] = tem_segment
-
-                            # 獲取或創建工站
-                            station, create = Stations.objects.get_or_create(project=project, department=department,
-                                                                             station=df_list[2], segment=segment)
-                            # 如果為創建
-                            if create:
-                                stations.append(station)
-                                # 正確上傳的工站
-                                correct_stations.append(df_list)
-
-                            else:
-                                # 重複上傳工站
-                                repeat_stations.append(df_list)
+                        # 獲取或創建工站
+                        station, create = Stations.objects.get_or_create(project=project, department=department,
+                                                                         station=df_list[1])
+                        # 如果為創建
+                        if create:
+                            stations.append(station)
+                            # 正確上傳的工站
+                            correct_stations.append(df_list)
 
                         else:
-                            error_segment.append(df_list)
+                            # 重複上傳工站
+                            repeat_stations.append(df_list)
 
-                    # 如果沒有錯誤工站信息
-                    if not error_segment:
-                        # 創建工站
-                        Stations.objects.bulk_create(stations)
-                        msg = '工站上傳！！'
+                    # 創建工站
+                    Stations.objects.bulk_create(stations)
+                    msg = '工站上傳！！'
 
                 else:
                     msg = '請選擇正確的文件！！'
 
         return render(request, 'system/Stations/Stations_upload_info.html',
-                      {"msg": msg, "correct_stations": correct_stations, 'repeat_stations': repeat_stations,
-                       "error_segment": error_segment})
+                      {"msg": msg, "correct_stations": correct_stations, 'repeat_stations': repeat_stations})
 
 
 class StationListView(LoginRequiredMixin, View):

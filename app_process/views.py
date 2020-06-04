@@ -8,7 +8,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 
-from app_process.models import OrderInfo, Segment, Project, Subject
+from app_process.models import OrderInfo, Segment, Project, Subject, Attachment
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 import json, re
@@ -130,59 +130,72 @@ class OrderView(LoginRequiredMixin, View):
     """
 
     def get(self, request):
-        # orders = OrderInfo.objects.all()
-        # res = {
-        #     'created': orders.count(),
-        #     'receive': orders.filter(receive_status=0).count(),
-        #     'finished': orders.filter(receive_status=1, status=1).count()
-        # }
 
-        # 用于存放每个段别下的工单
-        segment_orders = []
-        # 用存放每个段别下每种执行状态下的工单
-        un_accept_list = []
-        un_product_list = []
-        Ongoing_list = []
-        Closed_list = []
+        # 接收者
+        user = request.user.name
+        orders = OrderInfo.objects.all()
 
-        # 只看未被刪除的子流程
-        # 父流程只是給發佈者看，方便修改
-        orders = OrderInfo.objects.filter(is_parent=False, deleted=False)
+        # 圖片
+        attachments = Attachment.objects.filter(workflow__isnull=True)
 
-        # 獲取所有专案
-        projects = Project.objects.all()
+        if attachments:
+            attachment = attachments.last().attachment
+        else:
+            attachment = ''
 
-        # 获取所有段别下的工单数量
-        segments = Segment.objects.exclude(segment__icontains='all').order_by('id')
-
-        for segment in segments:
-            # 获取每个段别下的工单
-            segment_orders.append(orders.filter(segment=segment).all())
-            # 获取每个段别下的未接收的工单
-            un_accept_list.append(orders.filter(receive_status=0, segment=segment).count())
-            # 获取每个段别下的未投产的工单
-            un_product_list.append(orders.filter(status=0, segment=segment).count())
-            # 获取每个段别下的Ongoing的工单
-            Ongoing_list.append(orders.filter(status=1, segment=segment).count())
-            # 获取每个段别下的Closed的工单
-            Closed_list.append(orders.filter(status=2, segment=segment).count())
-
-        # 用于echarts显示
         res = {
-            'un_receive': orders.filter(receive_status=0).count(),  # 待接收工单数量
-            'un_product': orders.filter(status=0).count(),  # 未投产工单数量
-            'ongoing': orders.filter(status=1).count(),  # 进行中
-            'closed': orders.filter(status=2).count(),  # 已完成
-            'segments': segments,
-            'projects': projects,
-            'segment_orders': segment_orders,
-            'un_accept_list': un_accept_list,
-            'un_product_list': un_product_list,
-            'Ongoing_list': Ongoing_list,
-            'Closed_list': Closed_list,
+            'created': orders.filter(publisher=user, is_parent=True).count(),
+            'commission': orders.filter(receiver=user, receive_status=0).count(),  # 待辦事項
+            'finished': orders.filter(receiver=user, receive_status=1, status=1).count(),
+            'image': attachment
         }
 
-        return render(request, 'process/Index.html', res)
+        # # 用于存放每个段别下的工单
+        # segment_orders = []
+        # # 用存放每个段别下每种执行状态下的工单
+        # un_accept_list = []
+        # un_product_list = []
+        # Ongoing_list = []
+        # Closed_list = []
+        #
+        # # 只看未被刪除的子流程
+        # # 父流程只是給發佈者看，方便修改
+        # orders = OrderInfo.objects.filter(is_parent=False, deleted=False)
+        #
+        # # 獲取所有专案
+        # projects = Project.objects.all()
+        #
+        # # 获取所有段别下的工单数量
+        # segments = Segment.objects.exclude(segment__icontains='all').order_by('id')
+        #
+        # for segment in segments:
+        #     # 获取每个段别下的工单
+        #     segment_orders.append(orders.filter(segment=segment).all())
+        #     # 获取每个段别下的未接收的工单
+        #     un_accept_list.append(orders.filter(receive_status=0, segment=segment).count())
+        #     # 获取每个段别下的未投产的工单
+        #     un_product_list.append(orders.filter(status=0, segment=segment).count())
+        #     # 获取每个段别下的Ongoing的工单
+        #     Ongoing_list.append(orders.filter(status=1, segment=segment).count())
+        #     # 获取每个段别下的Closed的工单
+        #     Closed_list.append(orders.filter(status=2, segment=segment).count())
+        #
+        # # 用于echarts显示
+        # res = {
+        #     'un_receive': orders.filter(receive_status=0).count(),  # 待接收工单数量
+        #     'un_product': orders.filter(status=0).count(),  # 未投产工单数量
+        #     'ongoing': orders.filter(status=1).count(),  # 进行中
+        #     'closed': orders.filter(status=2).count(),  # 已完成
+        #     'segments': segments,
+        #     'projects': projects,
+        #     'segment_orders': segment_orders,
+        #     'un_accept_list': un_accept_list,
+        #     'un_product_list': un_product_list,
+        #     'Ongoing_list': Ongoing_list,
+        #     'Closed_list': Closed_list,
+        # }
+
+        return render(request, 'process/order_index.html', res)
 
 
 def create_workflow(parent_order, fields={}, segment_list=None):
@@ -334,14 +347,14 @@ def get_upload_module(request, download_id):
         sheet.write_row('A2', ['' for i in range(len(title))], field_format)
 
     elif download_id == '2':
-        title = ['#', 'Stage', 'Test Station name']
+        title = ['#', 'Test Station name']
 
         sheet.set_column(1, 3, 20)
         # 設置列名
-        sheet.write_row('B4', title, title_format)
+        sheet.write_row('B3', title, title_format)
 
         # 給一行空值
-        sheet.write_row('B5', ['' for i in range(len(title))], field_format)
+        sheet.write_row('B4', ['' for i in range(len(title))], field_format)
 
     workbook.close()
     excel.seek(0)

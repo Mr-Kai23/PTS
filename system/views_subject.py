@@ -26,6 +26,10 @@ class SubjectView(LoginRequiredMixin, View):
         if menu is not None:
             res.update(menu)
 
+        # 部門
+        departments = Structure.objects.all()
+        res['departments'] = departments
+
         return render(request, 'system/Subject/Subject_List.html', res)
 
 
@@ -35,7 +39,7 @@ class SubjectListView(LoginRequiredMixin, View):
     """
     def get(self, request):
 
-        fields = ['id', 'subject']
+        fields = ['id', 'department', 'subject']
         searchFields = ['subject']  # 与数据库字段一致
 
         # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
@@ -59,6 +63,10 @@ class SubjectUpdateView(LoginRequiredMixin, View):
         else:
             subject = Subject.objects.all()
             res['subject'] = subject
+
+        # 部門
+        departments = Structure.objects.all()
+        res['departments'] = departments
 
         return render(request, 'system/Subject/Subject_Update.html', res)
 

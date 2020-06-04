@@ -22,7 +22,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.serializers.json import DjangoJSONEncoder
 from system.models import Structure, Menu
-from app_process.models import OrderInfo, Project, Segment
+from app_process.models import OrderInfo, Project, Segment, Attachment
 from datetime import datetime
 from django.db.models import Count, Q
 User = get_user_model()
@@ -36,13 +36,24 @@ class IndexView(LoginRequiredMixin, View):
         :param request:
         :return: 渲染主頁面
         """
+        # 接收者
+        user = request.user.name
+        orders = OrderInfo.objects.all()
+
+        # 圖片
+        attachments = Attachment.objects.filter(workflow__isnull=True)
+
+        if attachments:
+            attachment = attachments.last().attachment
+        else:
+            attachment = ''
 
         res = {
-            'created': OrderInfo.objects.all().count(),
-            'receive': OrderInfo.objects.filter(receive_status=0).count(),
-            'finished': OrderInfo.objects.filter(receive_status=1, status=1).count()
+            'created': orders.filter(publisher=user, is_parent=True).count(),
+            'commission': orders.filter(receiver=user, receive_status=0).count(),  # 待辦事項
+            'finished': orders.filter(receiver=user, receive_status=1, status=1).count(),
+            'image': attachment
         }
-
         return render(request, 'process/order_index.html', res)
 
     # def get(self, request):

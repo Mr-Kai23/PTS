@@ -65,17 +65,22 @@
                 {#data: {id:id, data:data, csrfmiddlewaretoken: '{{ csrf_token }}'},#}
                 {#data: data,#}
                 cache: false,
-                success: function (msg) {
-                    if (msg.result) {
-                        layer.alert('工單添加成功！', {icon: 1}, function (index) {
-                            parent.layer.closeAll(); //关闭所有弹窗
-                        });
-                    } else {
-                        layer.alert(msg.user_create_form_errors, {icon: 5});
-                        //$('errorMessage').html(msg.message)
-                    }
 
-                 }
+                end: function () {
+                    //关闭时做的事情
+                    oDataTable.ajax.reload();
+                }
+                {#success: function (msg) {#}
+                {#    if (msg.result) {#}
+                {#        layer.alert('工單添加成功！', {icon: 1}, function (index) {#}
+                {#            parent.layer.closeAll(); //关闭所有弹窗#}
+                {#        });#}
+                {#    } else {#}
+                {#        layer.alert(msg.user_create_form_errors, {icon: 5});#}
+                {#        //$('errorMessage').html(msg.message)#}
+                {#    }#}
+                {##}
+                {# }#}
 
 
              });

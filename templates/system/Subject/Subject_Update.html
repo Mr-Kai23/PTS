@@ -21,6 +21,18 @@
                 </legend>
 
                 <div class="form-group has-feedback">
+                    <label class="col-sm-2 control-label">部門</label>
+                    <div class="col-sm-3">
+                        <select class="form-control inputText select2" name="department" id="department" style="width: 150%">
+                            <option value="{{ subject.department }}">{{subject.department|default:"--部門--" }}</option>
+                            {% for department in departments %}
+                                <option value="{{ department.name }}">{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group has-feedback">
                     <label class="col-sm-2 control-label">主旨</label>
                     <div class="col-sm-3">
                        <input class="form-control" name="subject" type="text" value="{{ subject.subject }}" style="width: 150%"/>

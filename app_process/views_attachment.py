@@ -4,7 +4,7 @@
 # @Desc    :   工單處理視圖
 # ======================================================
 
-import json, time, datetime, re
+import json, time, datetime, re, os
 
 from django.core.files import File
 from django.core.serializers.json import DjangoJSONEncoder
@@ -84,18 +84,23 @@ class AttachmentCreateView(LoginRequiredMixin, View):
         """
         res = dict()
 
-        # 流程ID
-        res['workflow_id'] = request.GET['workflow_id']
+        if 'workflow_id' in request.GET and request.GET['workflow_id']:
+            # 流程ID
+            res['workflow_id'] = request.GET['workflow_id']
 
         return render(request, 'process/Attachment/Attachment_Create.html', res)
 
     def post(self, request):
         res = dict(result=False)
 
-        # 上傳附件
-        Attachment.objects.create(workflow=int(request.POST['id']), attachment=request.FILES['attach_excel'])
+        if request.FILES['attach_excel']:
+            # 上傳附件
+            if 'id' in request.POST and request.POST['id']:
+                Attachment.objects.create(workflow=int(request.POST['id']), attachment=request.FILES['attach_excel'])
+            else:
+                Attachment.objects.create(attachment=request.FILES['attach_excel'])
 
-        res['result'] = True
+            res['result'] = True
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
@@ -112,9 +117,23 @@ class AttachmentDeleteView(LoginRequiredMixin, View):
         if 'id' in request.POST and request.POST.get('id'):
             ids = map(int, request.POST.get('id').split(','))
 
-            Attachment.objects.filter(id__in=ids).delete()
+            attachments = Attachment.objects.filter(id__in=ids)
 
-            res['result'] = True
+        else:
+            attachments = Attachment.objects.filter(workflow__isnull=True)
+
+        # 絕對路徑
+        abs_path = os.getcwd()
+
+        # 獲取文件路徑，刪除
+        files_path = list(attachments.values_list('attachment', flat=True))
+        # 刪除
+        attachments.delete()
+
+        for path in files_path:
+            os.remove(abs_path + '/media/' + path)
+
+        res['result'] = True
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

@@ -34,6 +34,9 @@ class WorkFlowView(LoginRequiredMixin, View):
 
         pattern = re.compile(r'[/|，|, |\n]\s*')
 
+        # 用戶部門
+        department = request.user.department.name
+
         # 用戶專案
         projects = pattern.split(request.user.project)
         res['projects'] = projects
@@ -41,10 +44,18 @@ class WorkFlowView(LoginRequiredMixin, View):
         res['segments'] = pattern.split(request.user.segment)
         # 機種
         res['unit_types'] = UnitType.objects.filter(project__in=projects)
-        # 工站
-        res['stations'] = Stations.objects.filter(department=request.user.department.name)
-        # 所有主旨
-        res['subjects'] = Subject.objects.all()
+
+        # 如果部門為 RF 或 TDL 只能拿自己部門的工站和主旨
+        if department in ['RF', 'TDL']:
+            # 工站
+            res['stations'] = Stations.objects.filter(department=department)
+            # 所有主旨
+            res['subjects'] = Subject.objects.filter(department=department)
+        else:
+            # 工站
+            res['stations'] = Stations.objects.all()
+            # 所有主旨
+            res['subjects'] = Subject.objects.all()
 
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
@@ -103,7 +114,7 @@ class WorkFlowView(LoginRequiredMixin, View):
                     if str(df.loc[i, '專案']) in projects:
                         if department == df.loc[i, '發佈者部門']:
                             if publisher == df.loc[i, '發佈者姓名']:
-                                if df.loc[i, '主旨'] in subjects:
+                                if pattern.split(df.loc[i, '主旨']) in subjects:
                                     if pattern.split(df.loc[i, '工站']) in stations:
 
                                         # 上傳成功的工單，将工单信息放入缓存中
@@ -230,6 +241,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         :return: 渲染创建页面
         """
         res = dict(msg='')
+        # 用戶部門
+        department = request.user.department.name
 
         # 當為更新流程時
         if 'id' in request.GET and request.GET['id']:
@@ -239,8 +252,13 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 将流程对象传到前端页面
             res['workflow'] = workflow
 
-            # 為編輯時只拿流程對應專案下的工站
-            res['stations'] = Stations.objects.filter(project=workflow.project, department=request.user.department.name)
+            # 如果部門為 RF 或 TDL 只能拿自己部門的工站和主旨
+            if department in ['RF', 'TDL']:
+                # 為編輯時只拿流程對應專案對應部門下的工站
+                res['stations'] = Stations.objects.filter(project=workflow.project, department=department)
+            else:
+                # 為編輯時只拿流程對應專案下的工站
+                res['stations'] = Stations.objects.filter(project=workflow.project)
 
             # 流程的发布时间
             res['time'] = workflow.publish_time.strftime('%Y-%m-%d %H:%M')
@@ -248,7 +266,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 用于将工单段别、工站分割
             pattern = re.compile(r'[/|;|\n]\s*')
 
-            # 獲取流程的工站和段別
+            # 獲取流程的工站、段別主旨
             # 當為發佈者是，編輯的是父流程，有多個段別
             if request.user.account_type == 0:
                 res['workflow_segments'] = pattern.split(workflow.segment)
@@ -256,6 +274,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 res['workflow_segments'] = workflow.segment
 
             res['workflow_stations'] = pattern.split(workflow.station)
+            res['workflow_subjects'] = pattern.split(workflow.subject)
 
         else:
 
@@ -270,8 +289,11 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         segments = Segment.objects.all()
         res['segments'] = segments
 
-        # 获取数据库中所有主旨
-        res['subjects'] = Subject.objects.all()
+        # 如果部門為 RF 或 TDL 只能拿自己部門的主旨
+        if department in ['RF', 'TDL']:
+            res['subjects'] = Subject.objects.filter(department=department)
+        else:
+            res['subjects'] = Subject.objects.all()
 
         return render(request, 'process/WorkFlow/WorkFlow_Create.html', res)
 
@@ -324,6 +346,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                     fields = {
                         'project': project, 'publish_dept': department, 'publisher': publisher,
                         'publish_time': publish_time, 'subject': subject, 'order': order, 'key_content': key_content,
+                        'station': work_station
                     }
 
                     # 段别列表
@@ -368,15 +391,25 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 用户专案、發佈者
             publisher = request.POST['publisher']
 
-            # 工单信息主旨和發佈時間
-            subject = request.POST['subject']
+            # 流程信息主旨 發佈時間 工站
             publish_time = request.POST['publish_time']
+            subject = '/'.join(request.POST.getlist('subject'))
+
+            stations = request.POST.getlist('station')
+
+            special_stations = ['AP POR Stations', 'All AP Stations', 'All RF POR Stations', 'All RF Stations']
+
+            re_stations = set(stations) & set(special_stations)
+            if re_stations:
+                station = '/'.join(list(re_stations))
+            else:
+                station = '/'.join(request.POST.getlist('station'))
 
             # 工单属性
             fields = {
-                'project': request.POST['project'], 'publish_dept': request.POST['publish_dept'], 'publisher': publisher,
-                'publish_time': publish_time, 'subject': subject, 'order': request.POST['order'],
-                'key_content': request.POST['key_content']
+                'project': request.POST['project'], 'publish_dept': request.POST['publish_dept'],
+                'publisher': publisher, 'publish_time': publish_time, 'subject': subject,
+                'order': request.POST['order'], 'key_content': request.POST['key_content'], 'station': station
             }
 
             # 判断工单接收DRI,以字符串的形式存储

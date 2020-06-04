@@ -57,7 +57,11 @@ class StructureCreateView(LoginRequiredMixin, View):
         structure_form = StructureForm(request.POST, instance=structure)  # request.POST 获取表单数据
         if structure_form.is_valid():
             structure_form.save()
+            # 將部門名稱改為大寫
+            structure.name = request.POST['name'].upper()
+            structure.save()
             res['result'] = True
+
         return HttpResponse(json.dumps(res), content_type='application/json')
 
 

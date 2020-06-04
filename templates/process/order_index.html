@@ -15,7 +15,7 @@
 
     <section class="content-header">
         <h1>
-            創建工單
+            創建流程
         </h1>
     </section>
 
@@ -28,7 +28,7 @@
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <h3>發佈</h3>
-                        <p>工單</p>
+                        <p>流程</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-pencil"></i>
@@ -45,7 +45,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">工单数据统计</h3>
+                        <h3 class="box-title">流程数据统计</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="row">
@@ -53,7 +53,7 @@
                             <div class="info-box">
                                 <span class="info-box-icon bg-aqua"><i class="fa fa-pencil-square-o"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-text">我的创建</span>
+                                    <span class="info-box-text">流程信息</span>
                                     <span class="info-box-number">{{ created }}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
@@ -63,8 +63,8 @@
                             <div class="info-box">
                                 <span class="info-box-icon bg-green"><i class="fa fa-hourglass-2"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-text">待办事项</span>
-                                    <span class="info-box-number">{{ receive }}</span>
+                                    <span class="info-box-text">我的待辦</span>
+                                    <span class="info-box-number">{{ commission }}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->
@@ -73,46 +73,43 @@
                             <div class="info-box">
                                 <span class="info-box-icon bg-yellow"><i class="fa fa-check"></i></span>
                                 <div class="info-box-content">
-                                    <span class="info-box-text">已结案</span>
+                                    <span class="info-box-text">已結案</span>
                                     <span class="info-box-number">{{ finished }}</span>
+                                </div><!-- /.info-box-content -->
+                            </div><!-- /.info-box -->
+                        </a><!-- /.col -->
+
+                        <a class="col-md-3 col-sm-6 col-xs-12" href="/board/">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-red"><i class="fa fa-arrow-right"></i></span>
+                                <div class="info-box-content">
+                                    {#                                    <span class="info-box-text">前往看板</span>#}
+                                    <h4 style="margin-top: 13%">前往看板</h4>
+                                    {#                                    <span class="info-box-number">{{ finished }}</span>#}
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a><!-- /.col -->
 
                     </div>
                 </div>
+            </div>
+        </div>
 
-
-                {#        <div id="devlist">#}
-                {#            <div class="box box-primary" id="liebiao">#}
-                {#             <div class="box-body">#}
-                {#                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">#}
-                {#                        <thead>#}
-                {#                        <tr valign="middle">#}
-                {#                            <th>ID</th>#}
-                {#                            <th>發佈部門</th>#}
-                {#                            <th>發佈DRI</th>#}
-                {#                            <th>發佈時間</th>#}
-                {#                            <th>主旨</th>#}
-                {#                            <th>工單</th>#}
-                {#                            <th>重點注意流程內容</th>#}
-                {#                            <th>段別</th>#}
-                {#                            <th>接收DRI</th>#}
-                {#                            <th>接收狀態</th>#}
-                {#                            <th>執行狀況</th>#}
-                {#                            <th>操作</th>#}
-                {#                        </tr>#}
-                {#                        </thead>#}
-                {#                        <tbody>#}
-                {#                        </tbody>#}
-                {#                    </table>#}
-                {#                    <tbody id="imp" role="imp">#}
-                {#                    <tr> <tr>#}
-                {#                    </tbody>#}
-                {#                </div>#}
-                {#            </div>#}
-                {#        </div>#}
     </section>
+
+    <div style="margin-left: 15px" style="float: left;">
+        <button type="button" id="btnCreate" class="btn btn-default">
+            <i class="glyphicon glyphicon-plus"></i> 上傳附件圖片
+        </button>
+        <button type="button" id="btnDelete" class="btn btn-default" >
+            <i class="glyphicon glyphicon-trash"></i> 删除附件圖片
+        </button>
+    </div>
+
+    <div style="margin-left: 15px">
+        <img src="/media/{{ image }}" />
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -144,128 +141,6 @@
 
     <script type="text/javascript">
 
-
-        var oDataTable = null;
-        $(function () {
-
-            oDataTable = initTable();
-
-            function initTable() {
-                var oTable = $('#dtbList').DataTable($.extend(true, {},
-
-                    DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
-
-                    {
-
-                        ajax: {
-                            "url": "{% url 'process:order-workflow-list' %}",
-                            "data": function (d) {
-
-                                d.project = $("#project").val();
-                                d.build = $("#build").val();
-                                d.unit_type = $("#unit_type").val();
-                                d.segment = $("#segment").val();
-                                d.status = $("#status").val();
-                                d.receive_status = $("#restatus").val();
-
-                            },
-                        },
-
-                        columns: [
-                            {#DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,#}
-
-                            {#{#}
-                            {#    data: "id",#}
-                            {#    width: "5%",#}
-                            {# },#}
-                            {
-                                data: "publish_dept",
-                            },
-                            {
-                                data: "publisher",
-                            },
-                            {
-                                data: "publish_time",
-                                render: function (data, type, full, meta) {
-                                    return moment(data).format("YYYY-MM-DD HH:mm");
-                                }
-                            },
-                            {
-                                data: "subject",
-                            },
-
-                            {
-                                data: "order",
-                            },
-                            {
-                                data: "key_content",
-                            },
-                            {
-                                data: "segment",
-                            },
-                            {
-                                data: "receiver",
-                            },
-                            {
-                                data: "receive_status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        return "未接收"
-                                    } else if (data == 1) {
-                                        return "已接收"
-                                    }
-                                }
-                            },
-                            {
-                                data: "status",
-                                render: function (data, type, row, meta) {
-                                    //console.log(">0>", data, ">1>", type, ">2>", row, ">3>", meta);
-                                    if (data == 0) {
-                                        $("tr td:eq(11)").css('background', 'red');
-                                        return ""
-                                    } else if (data == 1) {
-                                        $("tr td:eq(11)").css('background', 'yellow');
-                                        return "Ongoing"
-                                    } else if (data == 2) {
-                                        $("tr td:eq(11)").css('background', 'green');
-                                        return "Closed"
-                                    }
-                                }
-                            },
-
-                            {#{#}
-                            {#    data: "id",#}
-                            {#    width: "12%",#}
-                            {#    bSortable: "false",#}
-                            {#    render: function (data, type, row, meta) {#}
-                            {#        var ret = "<button title='详情' onclick='doDetail("#}
-                            {#            + data + ")'><i class='glyphicon glyphicon-list-alt'></i></button>";#}
-                            {#        ret = ret + "<button title='编辑' onclick='doUpdate("#}
-                            {#            + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";#}
-                            {#        ret = ret + "<button title='删除' onclick='doDelete("#}
-                            {#            + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";#}
-                            {#        return ret;#}
-                            {#    }#}
-                            {# }#}
-                        ],
-
-                        // "order": [[1, 'id']],
-
-                    },
-
-                    {
-                        "lengthMenu": [[10, 50, 100, 500], [10, 50, 100, 500]]
-                    }
-                ));
-                oTable.order([1, 'asc']).draw();
-
-                return oTable;
-            }
-
-        });
-
-
         //查询
         $("#btnSearch").click(function () {
             oDataTable.ajax.reload();
@@ -287,15 +162,15 @@
             oDataTable.ajax.reload();
         });
 
-        //新增
+        //上傳附件圖片
         $("#btnCreate").click(function () {
             layer.open({
                 type: 2,
-                title: '新增',
+                title: '上傳附件圖片',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '60%'],
-                content: "{% url 'process:order-workflow-create' %}",
+                area: ['28%', '28%'],
+                content: "{% url 'process:order-attach-create' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -303,32 +178,22 @@
             });
         });
 
+
         //批量删除
         $("#btnDelete").click(function () {
-            if ($("input[name='checkList']:checked").length == 0) {
-                layer.msg("请选择要删除的记录");
-                return;
-            }
 
-            var arrId = [];
-            $("input[name='checkList']:checked").each(function () {
-                //alert($(this).val());
-                arrId.push($(this).val());
-            });
+            var id = '';
 
-            sId = arrId.join(',');
-
-            layer.alert('确定删除吗？', {
+            layer.alert('确定刪除吗？', {
                 title: '提示'
                 , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
                 , time: 0 //不自动关闭
                 , btn: ['YES', 'NO']
                 , yes: function (index) {
-                    layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'process:order-workflow-delete' %}",
-                        data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                        url: "{% url 'process:order-attach-delete' %}",
+                        data: {"ids": id, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
                             if (msg.result) {
@@ -345,126 +210,11 @@
         });
 
 
-        //编辑
-        function doUpdate(id) {
-            var div = layer.open({
-                type: 2,
-                title: '编辑',
-                shadeClose: false,
-                maxmin: true,
-                area: ['60%', '60%'],
-                content: ["{% url 'process:order-workflow-create' %}" + '?id=' + id,],
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
-        }
-
-        //删除物料
-        function doDelete(id) {
-            layer.alert('确定删除吗？', {
-                title: '提示'
-                , icon: 3 //0:感叹号 1：对号 2：差号 3：问号 4：小锁 5：哭脸 6：笑脸
-                , time: 0 //不自动关闭
-                , btn: ['YES', 'NO']
-                , yes: function (index) {
-                    layer.close(index);
-                    $.ajax({
-                        type: "POST",
-                        url: "{% url 'process:order-workflow-delete' %}",
-                        data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
-                        cache: false,
-                        success: function (msg) {
-                            if (msg.result) {
-                                layer.alert('删除成功！', {icon: 1});
-                                oDataTable.ajax.reload();
-                            } else {
-                                //alert(msg.message);
-                                layer.alert('删除失败！', {icon: 2});
-                            }
-
-                        }
-                    });
-                }
-            });
-
-        }
-
-
-        // 導入  id="btnImport"
-        $("#btnImport").on("click", function () {
-            // alert("导入功能在此书写");
-            layer.open({
-                type: 1,
-                title: "批量导入用户信息",
-                closeBtn: 1,
-                shadeClose: false,
-                area: ['600px', '200px'],
-                content: $("#upload"),
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-            });
+        // 前往看板
+        $("#btnBoard").on("click", function () {
+            window.location.href = "{% url 'board' %}";
         });
 
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++==
-
-
-        //详情
-        //此处inventoryId确定某一机台
-        function doDetail(id) {
-            window.location.href = "{% url 'process:order-workflow-detail' %}?inventoryId=" + id;
-        }
-
-        /*input 时间输入选择*/
-        $(".form_datetime").datetimepicker({
-            language: 'zh',
-            minView: 'month', //选择范围知道日期，不选择时分
-            //weekStart: 1,
-            //todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            //startView: 2,
-            forceParse: 0,
-            showMeridian: 1,
-            format: 'yyyy-mm-dd'
-        }).on('changeDate', function (ev) {
-            $(this).datetimepicker('hide');
-        });
-
-        $(function () {
-            //Initialize Select2 Elements
-            $(".select2").select2();
-        });
-
-        /*专案机种二级联动*/
-
-        $("select[name='project']").change(function () {
-
-            var project = $("select[name='project']").val();
-
-            $.ajax({
-                type: "POST",
-
-                url: "{% url 'system:basic-project-unit_type' %}",
-
-                data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
-
-                success: function (data) {
-
-                    var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');
-                    unit_type.append('<option></option>');
-                    $.each(data.unit_types, function (i, val) {
-                        unit_type.append('<option value="' + val.id + '">' + val.unit_type + '</option>')
-                    })
-
-                }
-            });
-
-        });
     </script>
 
     <script>

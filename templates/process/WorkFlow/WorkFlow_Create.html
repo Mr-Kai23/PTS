@@ -67,13 +67,22 @@
 
                 <div class="form-group has-feedback">
                     <label class="col-sm-2 control-label">主旨</label>
-                    <div class="col-sm-3">
-                        <select class="form-control select2" style="width:100%;" name="subject">
-                            <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>
-                            {% for subject in subjects %}
-                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>
-                            {% endfor %}
-                        </select>
+{#                    <div class="col-sm-3">#}
+{#                        <select class="form-control select2" style="width:100%;" name="subject">#}
+{#                            <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>#}
+{#                            {% for subject in subjects %}#}
+{#                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>#}
+{#                            {% endfor %}#}
+{#                        </select>#}
+{#                    </div>#}
+                    <div class="col-sm-3" style="width: 60%">
+
+                        {% for subject in subjects %}
+                            <input type="checkbox" name="subject" value="{{ subject.subject }}"
+                                    {% if subject.subject in workflow_subjects %} checked="True" {% endif %}/>
+                            <label>{{ subject.subject }}</label>
+                        {% endfor %}
+
                     </div>
                 </div>
 
@@ -98,7 +107,7 @@
                 <div class="form-group has-feedback">
                     <label class="col-sm-2 control-label">接收段別</label>
                     <div class="col-sm-3" style="width: 60%">
-                        <input type="checkbox" name="segment" value="All"/>
+                        <input type="checkbox" name="segment" value="All" />
                         <label>All</label>
                         {% for segment in segments %}
                             <input type="checkbox" name="segment" value="{{ segment.segment }}"
@@ -113,16 +122,31 @@
                     <label class="col-sm-2 control-label">工站</label>
                     <div class="col-sm-3" id="station" style="width: 60%">
                         {% if stations %}
-                            <input type="checkbox" name="station" value="All"/>
-                            <label>All</label>
+                            <input type="checkbox" name="station" value="AP POR Stations"/>
+                            <label>AP POR Stations</label>
+                            <input type="checkbox" name="station" value="All AP Stations"/>
+                            <label>All AP Stations</label>
+                            <input type="checkbox" name="station" value="All RF POR Stations"/>
+                            <label>All RF POR Stations</label>
+                            <input type="checkbox" name="station" value="All RF Stations"/>
+                            <label>All RF Stations</label>
                             {% for station in stations %}
                                 <input type="checkbox" name="station" value="{{ station.station }}"
                                         {% if station.station == workflow_stations %} checked="True" {% endif %}/>
                                 <label>{{ station.station }}</label>
                             {% endfor %}
                         {% else %}
-                            <input type="checkbox" name="station" value="All"/>
-                            <label>All</label>
+                            {% if request.user.department.name == 'TDL' %}
+                                <input type="checkbox" name="station" value="AP POR Stations"/>
+                                <label>AP POR Stations</label>
+                                <input type="checkbox" name="station" value="All AP Stations"/>
+                                <label>All AP Stations</label>
+                            {% elif request.user.department.name == 'RF' %}
+                                <input type="checkbox" name="station" value="All RF POR Stations"/>
+                                <label>All RF POR Stations</label>
+                                <input type="checkbox" name="station" value="All RF Stations"/>
+                                <label>All RF Stations</label>
+                            {% endif %}
                         {% endif %}
 
                     </div>
@@ -207,7 +231,13 @@
                     {# });#}
 
                     var station=$("#station").empty();
-                    station.append('<input type="checkbox" name="station" value="All"/><label>All</label>');
+                    {% if request.user.department.name == 'TDL' %}
+                        station.append('<input type="checkbox" name="station" value="AP POR Stations"/><label>AP POR Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="All AP Stations"/><label>All AP Stations</label>');
+                    {% elif request.user.department.name == 'RF' %}
+                        station.append('<input type="checkbox" name="station" value="All RF POR Stations"/><label>All RF POR Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="All RF Stations"/><label>All RF Stations</label>');
+                    {% endif %}
                     $.each(data.stations, function (i, val) {
                         station.append('<input type="checkbox" name="station" value="'+val.station+'"/><label>'+val.station+'</label>')
                     });

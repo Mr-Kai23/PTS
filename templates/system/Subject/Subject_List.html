@@ -42,6 +42,16 @@
                 <form class="form-inline" id="queryForm">
 
                     <div class="form-group searchArea margin-r-5 margin-top-5">
+                        <label>部門：</label>
+                        <select class="form-control inputText select2" name="department" id="department">
+                            <option></option>
+                            {% for department in departments %}
+                                <option value="{{ department.name }}">{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group searchArea margin-r-5 margin-top-5">
                         <label>主旨：</label>
                         <input type="text" name="subject" class="form-control inputText" id="subject">
                     </div>
@@ -64,6 +74,7 @@
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
                         <th>ID</th>
+                        <th>部門</th>
                         <th>主旨</th>
                         <th>操作</th>
                     </tr>
@@ -107,6 +118,7 @@
                     ajax: {
                         "url": "{% url 'system:basic-subject-list' %}",
                         "data": function (d) {
+                            d.department = $("#department").val();
                             d.subject = $("#subject").val();
                         }
                     },
@@ -115,6 +127,9 @@
                         {
                             data: "id",
                             width: "5%",
+                        },
+                        {
+                            data: "department",
                         },
                         {
                             data: "subject",
