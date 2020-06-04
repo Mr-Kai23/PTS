@@ -55,7 +55,7 @@
          </div>
      </div>
 </div>
-    </section>
+</section>
 
 {% endblock %}
 
@@ -67,6 +67,7 @@
     <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
+      <script src="{% static 'js/jquery.form.js' %}"></script>
 
     <!--导出excel-->
     <script src="{% static 'export/js/jquery.dataTables.min.js' %}"></script>
@@ -168,13 +169,38 @@
 
         //新增
         $("#btnCreate").click(function () {
-            layer.open({
+           layer.open({
                 type: 2,
                 title: '新增',
                 shadeClose: false,
+                btn:['提交','canxel'],
                 maxmin: true,
                 area: ['50%', '50%'],
                 content: "{% url 'process:order-attach-create' %}" + '?workflow_id=' + '{{ workflow_id }}',
+                btn1:function(layero,index) {
+                    {#window#}
+                    {#console.log($('#btnSave'))#}
+                     $('#addForm').ajaxForm({
+                type: $("#addForm").attr('method'),
+                url: "{% url 'process:order-attach-create' %}",
+                {#data: {id:id, data:data, csrfmiddlewaretoken: '{{ csrf_token }}'},#}
+                {#data: data,#}
+                cache: false,
+                success: function (msg) {
+                    console.log(11)
+                 }
+                     });
+                    setTimeout(function(){
+                        oDataTable.ajax.reload();
+
+                },500)
+
+
+
+
+
+                },
+
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();

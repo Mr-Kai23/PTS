@@ -34,13 +34,6 @@
                     </div>
                 </div>
 
-                <div class="box-footer ">
-                    <div class="row span7 text-center ">
-                        <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
-                        <button type="submit" id="btnSave" class="btn btn-info margin-right ">確認</button>
-                    </div>
-                </div>
-
             </fieldset>
         </div>
     </form>
@@ -51,36 +44,38 @@
 {% block javascripts %}
     <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
-    <script src="{% static 'plugins/js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
     <script type="text/javascript">
 
-        $("#btnSave").click(function () {
+        function custom_close(){
+            if(confirm("您确定要关闭本页吗？")){
+                window.opener=null;
+                window.open('','_self');
+                window.close();
+            }
+            else{
+            }
+        }
 
+        $("#btnSave").click(function () {
             {#var data = $("#addForm").serialize();#}
             {#var id = '{{ workflow_id }}';#}
-
             $('#addForm').ajaxForm({
                 type: $("#addForm").attr('method'),
                 url: "{% url 'process:order-attach-create' %}",
                 {#data: {id:id, data:data, csrfmiddlewaretoken: '{{ csrf_token }}'},#}
                 {#data: data,#}
                 cache: false,
+                success: function (msg) {
+                    if (msg.result) {
+                        // return false;
+                        layer.close(1)
+                    } else {
+                        layer.alert(msg.user_create_form_errors, {icon: 5});
+                        //$('errorMessage').html(msg.message)
+                    }
 
-                end: function () {
-                    //关闭时做的事情
-                    oDataTable.ajax.reload();
-                }
-                {#success: function (msg) {#}
-                {#    if (msg.result) {#}
-                {#        layer.alert('工單添加成功！', {icon: 1}, function (index) {#}
-                {#            parent.layer.closeAll(); //关闭所有弹窗#}
-                {#        });#}
-                {#    } else {#}
-                {#        layer.alert(msg.user_create_form_errors, {icon: 5});#}
-                {#        //$('errorMessage').html(msg.message)#}
-                {#    }#}
-                {##}
-                {# }#}
+                 }
 
 
              });
