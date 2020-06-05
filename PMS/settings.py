@@ -94,16 +94,16 @@ WSGI_APPLICATION = 'PMS.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'PMS',
-#         'HOST': '10.134.82.244',
-#         'PORT': '3306',
-#         'USER': 'F7690014',
-#         'PASSWORD': 'BIGDATA123.',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'PMS',
+        'HOST': '10.134.82.244',
+        'PORT': '3306',
+        'USER': 'F7690014',
+        'PASSWORD': 'BIGDATA123.',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -116,16 +116,16 @@ WSGI_APPLICATION = 'PMS.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'PTS',
-        'HOST': '10.141.7.36',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'xiayanxia12',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'PTS',
+#         'HOST': '10.141.7.36',
+#         'PORT': '3306',
+#         'USER': 'root',
+#         'PASSWORD': 'xiayanxia12',
+#     }
+# }
 
 
 # Password validation
