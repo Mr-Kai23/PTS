@@ -173,11 +173,10 @@
                 content: "{% url 'process:order-attach-create' %}",
                 end: function () {
                     //关闭时做的事情
-                    oDataTable.ajax.reload();
+                    window.location.reload();
                 }
             });
         });
-
 
         //批量删除
         $("#btnDelete").click(function () {

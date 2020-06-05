@@ -16,6 +16,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.cache import cache_page
 
 from message import send_email, send_message
+from Celery.service import send_email_async
 from django.conf import settings
 import xlsxwriter
 from io import BytesIO
@@ -263,11 +264,27 @@ def send_email_message(info_dict, mobiles, emails):
     hour = date[3]
     minute = date[4]
 
+    html = """
+    Hi, all:<br>
+        {subject}測試流程:<br>
+        {key_content}
+        
+    """
+    # 郵件內容
+    message = html.format(subject=subject, key_content=key_content)
+
     # 發送郵件
-    send_email(subject,
-               key_content,
-               settings.DEFAULT_FROM_EMAIL,
-               list(emails))
+    send_email_async.delay(email_address=None, email_password=None, subject=subject,
+                           msg=message,
+                           send_from=settings.DEFAULT_FROM_EMAIL,
+                           send_to=list(emails))
+
+    # # 发送邮件
+    # send_email(subject,
+    #            key_content,
+    #            settings.DEFAULT_FROM_EMAIL,
+    #            ['daniel.k.zhou@foxconn.com'])
+
     # 發送短信
     send_message(list(mobiles),
                  [project + "專案" + department + "部門" + publisher, year, month, day, hour, minute, subject],

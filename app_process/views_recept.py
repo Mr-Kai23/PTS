@@ -61,9 +61,16 @@ class ReceptListView(LoginRequiredMixin, View):
         # 本部門所有未接收工單
         # 子流程、未被刪除的
         if request.GET['receive_id'] == '1':
-            workflows = list(OrderInfo.objects.filter(project__in=projects, receive_dept=department, receive_status=0,
-                                                      is_parent=False, deleted=False,
-                                                      **filters).values(*fields).order_by('-id'))
+            # 接收者
+            if request.user.account_type == 1:
+                workflows = list(OrderInfo.objects.filter(project__in=projects, receive_dept=department,
+                                                          receive_status=0, is_parent=False, deleted=False,
+                                                          **filters).values(*fields).order_by('-id'))
+            else:
+                # 發佈者
+                workflows = list(OrderInfo.objects.filter(project__in=projects, publisher=username, receive_status=0,
+                                                          is_parent=False, deleted=False,
+                                                          **filters).values(*fields).order_by('-id'))
 
         # 我的待辦工單
         # 未刪除的、接收用戶自能拿到子流程，不用加 is_parent=False

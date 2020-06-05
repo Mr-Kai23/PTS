@@ -128,7 +128,11 @@
                         <th>工單</th>
                         <th>流程內容</th>
                         <th>段別</th>
-                        <th>接收者</th>
+
+                        {% if request.user.account_type == 1 %}
+                            <th>接收者</th>
+                        {% endif %}
+
                         <th>接收狀態</th>
                         <th>執行狀況</th>
                         {#                            <th>備註</th>#}
@@ -245,9 +249,11 @@
                                 data: "segment",
                             },
 
-                            {
-                                data: "receiver",
-                            },
+                            {% if request.user.account_type == 1 %}
+                                {
+                                    data: "receiver",
+                                },
+                            {% endif %}
 
                             {
                                 data: "receive_status",

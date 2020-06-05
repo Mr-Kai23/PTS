@@ -2,9 +2,9 @@
 {% load staticfiles %}
 
 {% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'js/plugins/layer/skin/layer.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
-    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
     <style>
         textarea {
             height: '150px',
@@ -14,198 +14,187 @@
 
 {% block main %}
     <div class="box box-danger">
-    <form class="form-horizontal" id="addForm" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="hidden" name='id' value="{{ workflow.id }}"/>
+        <form class="form-horizontal" id="addForm" method="post">
+            {% csrf_token %}
+            <input type="hidden" name='id' value="{{ workflow.id }}"/>
 
-        <div class="box-body">
-            <fieldset>
+            <div class="box-body">
+                <fieldset>
 
-                <legend>
-                    <h4>流程發佈</h4>
-                </legend>
+                    <legend>
+                        <h4>流程發佈</h4>
+                    </legend>
 
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">專案</label>
-                    <div class="col-sm-3">
-                        <select class="form-control inputText select2" name="project" id="project">
-                            <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--" }}</option>
-                            {% for project in projects %}
-                                <option value="{{ project }}">{{ project }}</option>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">專案</label>
+                        <div class="col-sm-3">
+                            <select class="form-control inputText select2" name="project" id="project">
+                                <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--" }}</option>
+                                {% for project in projects %}
+                                    <option value="{{ project }}">{{ project }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">發佈者部門</label>
+                        <div class="col-sm-3">
+                            {% if workflow %}
+                                <input class="form-control" name="publish_dept" type="text"
+                                       value="{{ workflow.publish_dept }}"/>
+                            {% else %}
+                                <input class="form-control" name="publish_dept" type="text"
+                                       value="{{ request.user.department.name }}"/>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">發佈者姓名</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="publisher" type="text" {% if workflow %}
+                                   value="{{ workflow.publisher }}" {% else %}
+                                   value="{{ request.user.name }}" {% endif %}/>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">發佈時間</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="publish_time" type="text" value="{{ time }}"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">主旨</label>
+                        {#                    <div class="col-sm-3">#}
+                        {#                        <select class="form-control select2" style="width:100%;" name="subject">#}
+                        {#                            <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>#}
+                        {#                            {% for subject in subjects %}#}
+                        {#                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>#}
+                        {#                            {% endfor %}#}
+                        {#                        </select>#}
+                        {#                    </div>#}
+                        <div class="col-sm-3" style="width: 60%">
+
+                            {% for subject in subjects %}
+                                <input type="checkbox" name="subject" value="{{ subject.subject }}"
+                                        {% if subject.subject in workflow_subjects %} checked="True" {% endif %}/>
+                                <label>{{ subject.subject }}</label>
                             {% endfor %}
-                        </select>
+
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">發佈者部門</label>
-                    <div class="col-sm-3">
-                        {% if workflow %}
-                            <input class="form-control" name="publish_dept" type="text"
-                                   value="{{ workflow.publish_dept }}"/>
-                        {% else %}
-                            <input class="form-control" name="publish_dept" type="text"
-                                   value="{{ request.user.department.name }}"/>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">發佈者姓名</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" name="publisher" type="text" {% if workflow %}
-                               value="{{ workflow.publisher }}" {% else %} value="{{ request.user.name }}" {% endif %}/>
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">發佈時間</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" name="publish_time" type="text" value="{{ time }}"/>
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">主旨</label>
-{#                    <div class="col-sm-3">#}
-{#                        <select class="form-control select2" style="width:100%;" name="subject">#}
-{#                            <option value="{{ workflow.subject }}">{{ workflow.subject|default:"--主旨--" }}</option>#}
-{#                            {% for subject in subjects %}#}
-{#                                <option value="{{ subject.subject }}">{{ subject.subject }}</option>#}
-{#                            {% endfor %}#}
-{#                        </select>#}
-{#                    </div>#}
-                    <div class="col-sm-3" style="width: 60%">
-
-                        {% for subject in subjects %}
-                            <input type="checkbox" name="subject" value="{{ subject.subject }}"
-                                    {% if subject.subject in workflow_subjects %} checked="True" {% endif %}/>
-                            <label>{{ subject.subject }}</label>
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">工單</label>
-                    <div class="col-sm-3">
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">工單</label>
+                        <div class="col-sm-3">
                             <textarea class="form-control" name="order" style="width:300%" value="{{ workflow.order }}"
                                       contenteditable="true">{{ workflow.order }}
                             </textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">流程內容</label>
-                    <div class="col-sm-3">
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">流程內容</label>
+                        <div class="col-sm-3">
                             <textarea class="form-control" name="key_content" style="width:300%"
                                       value="{{ workflow.key_content }}"
                                       contenteditable="true">{{ workflow.key_content }}
                             </textarea>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">接收段別</label>
-                    <div class="col-sm-3" style="width: 60%">
-                        <input type="checkbox" name="segment" value="All" />
-                        <label>All</label>
-                        {% for segment in segments %}
-                            <input type="checkbox" name="segment" value="{{ segment.segment }}"
-                                    {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
-                            <label>{{ segment.segment }}</label>
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <div class="form-group has-feedback">
-                    <label class="col-sm-2 control-label">工站</label>
-                    <div class="col-sm-3" id="station" style="width: 60%">
-                        {% if stations %}
-                            <input type="checkbox" name="station" value="AP POR Stations"/>
-                            <label>AP POR Stations</label>
-                            <input type="checkbox" name="station" value="All AP Stations"/>
-                            <label>All AP Stations</label>
-                            <input type="checkbox" name="station" value="All RF POR Stations"/>
-                            <label>All RF POR Stations</label>
-                            <input type="checkbox" name="station" value="All RF Stations"/>
-                            <label>All RF Stations</label>
-                            {% for station in stations %}
-                                <input type="checkbox" name="station" value="{{ station.station }}"
-                                        {% if station.station == workflow_stations %} checked="True" {% endif %}/>
-                                <label>{{ station.station }}</label>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">接收段別</label>
+                        <div class="col-sm-3" style="width: 60%">
+                            <input type="checkbox" name="segment" value="All"/>
+                            <label>All</label>
+                            {% for segment in segments %}
+                                <input type="checkbox" name="segment" value="{{ segment.segment }}"
+                                        {% if segment.segment in workflow_segments %} checked="True" {% endif %}/>
+                                <label>{{ segment.segment }}</label>
                             {% endfor %}
-                        {% else %}
-                            {% if request.user.department.name == 'TDL' %}
+
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">工站</label>
+                        <div class="col-sm-3" id="station" style="width: 60%">
+                            {% if stations %}
                                 <input type="checkbox" name="station" value="AP POR Stations"/>
                                 <label>AP POR Stations</label>
                                 <input type="checkbox" name="station" value="All AP Stations"/>
                                 <label>All AP Stations</label>
-                            {% elif request.user.department.name == 'RF' %}
                                 <input type="checkbox" name="station" value="All RF POR Stations"/>
                                 <label>All RF POR Stations</label>
                                 <input type="checkbox" name="station" value="All RF Stations"/>
                                 <label>All RF Stations</label>
+                                {% for station in stations %}
+                                    <input type="checkbox" name="station" value="{{ station.station }}"
+                                            {% if station.station == workflow_stations %} checked="True" {% endif %}/>
+                                    <label>{{ station.station }}</label>
+                                {% endfor %}
+                            {% else %}
+                                {% if request.user.department.name == 'TDL' %}
+                                    <input type="checkbox" name="station" value="AP POR Stations"/>
+                                    <label>AP POR Stations</label>
+                                    <input type="checkbox" name="station" value="All AP Stations"/>
+                                    <label>All AP Stations</label>
+                                {% elif request.user.department.name == 'RF' %}
+                                    <input type="checkbox" name="station" value="All RF POR Stations"/>
+                                    <label>All RF POR Stations</label>
+                                    <input type="checkbox" name="station" value="All RF Stations"/>
+                                    <label>All RF Stations</label>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
 
+                        </div>
                     </div>
+
+                </fieldset>
+
+            </div>
+
+            <div class="box-footer ">
+                <div class="row span7 text-center ">
+                    <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
+                    <button type="button" id="btnSave" class="btn btn-info margin-right ">確認</button>
                 </div>
+            </div>
 
-{#                <div class="form-group has-feedback">#}
-{#                    <label class="col-sm-2 control-label">附件</label>#}
-{#                    <div class="col-sm-3">#}
-{#                        <input type="file" name="attach_excel" id="attach_excel"/>#}
-{#                    </div>#}
-{#                    <div class="col-sm-3">#}
-{#                        <input type="file" name="attach_excel" id="attach_excel"/>#}
-{#                    </div>#}
-{#                </div>#}
-
-                <div class="box-footer ">
-                    <div class="row span7 text-center ">
-                        <button type="button" id="btnCancel" class="btn btn-default margin-right ">重置</button>
-                        <button type="submit" id="btnSave" class="btn btn-info margin-right ">確認</button>
-                    </div>
-                </div>
-
-            </fieldset>
-        </div>
-    </form>
+        </form>
     </div>
 
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
+    <script src="{% static 'plugins/combo-select/jquery.combo.select.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
-    <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
+
     <script type="text/javascript">
 
         $("#btnSave").click(function () {
-
             var data = $("#addForm").serialize();
-
-            $('#addForm').ajaxForm({
+            $.ajax({
                 type: $("#addForm").attr('method'),
                 url: "{% url 'process:order-workflow-create' %}",
-                data: {id:id, data:data, cks:JSON.stringify(cks), csrfmiddlewaretoken: '{{ csrf_token }}'},
-                {#data: data,#}
+                data: data,
                 cache: false,
                 success: function (msg) {
                     if (msg.result) {
-                        layer.alert('工單添加成功！', {icon: 1}, function (index) {
+                        layer.alert('流程發佈成功！', {icon: 1}, function (index) {
                             parent.layer.closeAll(); //关闭所有弹窗
                         });
                     } else {
-                        layer.alert(msg.user_create_form_errors, {icon: 5});
+                        layer.alert('流程發佈失敗！', {icon: 5});
                         //$('errorMessage').html(msg.message)
                     }
-
-                 }
-
-             });
-
+                    return;
+                }
+            });
         });
 
         /*专案机种二级联动*/
@@ -230,7 +219,7 @@
                     {#    unit_type.append('<option value="' + val.unit_type + '">' + val.unit_type + '</option>')#}
                     {# });#}
 
-                    var station=$("#station").empty();
+                    var station = $("#station").empty();
                     {% if request.user.department.name == 'TDL' %}
                         station.append('<input type="checkbox" name="station" value="AP POR Stations"/><label>AP POR Stations</label>');
                         station.append('<input type="checkbox" name="station" value="All AP Stations"/><label>All AP Stations</label>');
@@ -239,7 +228,7 @@
                         station.append('<input type="checkbox" name="station" value="All RF Stations"/><label>All RF Stations</label>');
                     {% endif %}
                     $.each(data.stations, function (i, val) {
-                        station.append('<input type="checkbox" name="station" value="'+val.station+'"/><label>'+val.station+'</label>')
+                        station.append('<input type="checkbox" name="station" value="' + val.station + '"/><label>' + val.station + '</label>')
                     });
 
                 }
@@ -252,7 +241,7 @@
         $("#btnCancel").click(function () {
             window.location.reload();
 
-        })
+        });
 
         /*input 时间输入选择*/
         $(".form_datetime").datetimepicker({

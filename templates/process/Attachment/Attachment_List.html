@@ -11,9 +11,9 @@
 
 {% block content %}
     <!-- Main content -->
-     <div class="content">
-         <div id="devlist">
-             <div class="box box-primary" id="liebiao">
+    <div class="content">
+        <div id="devlist">
+            <div class="box box-primary" id="liebiao">
                 <div class="box-header">
                     <div class="btn-group pull-left">
                         <button type="button" id="btnRefresh" class="btn btn-default">
@@ -36,26 +36,26 @@
                         </div>
                     {% endif %}
                 </div>
-                    <div class="box-body">
-                        <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
-                            <thead>
-                            <tr valign="middle">
-                                <th><input type="checkbox" id="checkAll"></th>
-                                <th>ID</th>
-                                <th>附件</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                        <br> <br>
-                    </div>
+                <div class="box-body">
+                    <table id="dtbList" class="display nowrap" cellspacing="0" width="100%">
+                        <thead>
+                        <tr valign="middle">
+                            <th><input type="checkbox" id="checkAll"></th>
+                            <th>ID</th>
+                            <th>附件</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br> <br>
                 </div>
-         </div>
-     </div>
-</div>
-</section>
+            </div>
+        </div>
+    </div>
+    </div>
+    </section>
 
 {% endblock %}
 
@@ -67,7 +67,7 @@
     <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
     <script src="{% static 'plugins/select2/select2.full.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap-datetimepicker.js' %}"></script>
-      <script src="{% static 'js/jquery.form.js' %}"></script>
+    <script src="{% static 'js/jquery.form.js' %}"></script>
 
     <!--导出excel-->
     <script src="{% static 'export/js/jquery.dataTables.min.js' %}"></script>
@@ -109,7 +109,7 @@
                             {
                                 data: "attachment",
                                 render: function (data, type, row, meta) {
-                                    var ret = "<a href='/media/"+ row['path'] +'/'+ data + "' download=" + data + ">"+data+"</a>";
+                                    var ret = "<a href='/media/" + row['path'] + '/' + data + "' download=" + data + ">" + data + "</a>";
                                     return ret;
                                 }
                             },
@@ -123,7 +123,7 @@
                                     {#            + data + ")'><i class='glyphicon glyphicon-download'></i></button>";#}
 
                                     var ret = "<button title='删除' onclick='doDelete("
-                                            + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
+                                        + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
 
                                     return ret;
                                 }
@@ -169,62 +169,20 @@
 
         //新增
         $("#btnCreate").click(function () {
-           layer.open({
+            layer.open({
                 type: 2,
                 title: '新增',
                 shadeClose: false,
-                btn:['提交','canxel'],
                 maxmin: true,
                 area: ['50%', '50%'],
                 content: "{% url 'process:order-attach-create' %}" + '?workflow_id=' + '{{ workflow_id }}',
-                btn1:function(layero,index) {
-                    {#window#}
-                    {#console.log($('#btnSave'))#}
-                     $('#addForm').ajaxForm({
-                type: $("#addForm").attr('method'),
-                url: "{% url 'process:order-attach-create' %}",
-                {#data: {id:id, data:data, csrfmiddlewaretoken: '{{ csrf_token }}'},#}
-                {#data: data,#}
-                cache: false,
-                success: function (msg) {
-                    console.log(11)
-                 }
-                     });
-                    setTimeout(function(){
-                        oDataTable.ajax.reload();
-
-                },500)
-
-
-
-
-
-                },
-
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
                 }
             });
+            oDataTable.ajax.reload();
         });
-
-        {#//附件#}
-        {#function doDownload(id) {#}
-        {#    $.ajax({#}
-        {#        type: "GET",#}
-        {#        url: ["{% url 'process:order-attach-download' %}" + '?id=' + id],#}
-        {#        cache: false,#}
-        {#        success: function (msg) {#}
-        {#            if (msg.result) {#}
-        {#                layer.alert("操作成功！", {icon: 1});#}
-        {#                oDataTable.ajax.reload();#}
-        {#            } else {#}
-        {#                layer.alert("操作失败！", {icon: 2});#}
-        {#            }#}
-        {##}
-        {#        }#}
-        {#    });#}
-        {#}#}
 
 
         //批量删除

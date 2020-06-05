@@ -451,7 +451,15 @@ class WorkFlowDeleteView(LoginRequiredMixin, View):
         if 'id' in request.POST and request.POST.get('id'):
             ids = map(int, request.POST.get('id').split(','))
 
-            OrderInfo.objects.filter(id__in=ids).update(deleted=True)
+            orders = OrderInfo.objects.filter(id__in=ids)
+
+            for order in orders:
+                # 获取子流程
+                child_orders = order.orderinfo_set
+                if child_orders:
+                    child_orders.update(deleted=True)
+
+            orders.update(deleted=True)
 
             res['result'] = True
 

@@ -151,6 +151,10 @@ class StationUpdateView(LoginRequiredMixin, View):
             station = Stations.objects.all()
             res['station'] = station
 
+        # 部門
+        departments = Structure.objects.all()
+        res['departments'] = departments
+
         return render(request, 'system/Stations/Stations_Update.html', res)
 
     def post(self, request):

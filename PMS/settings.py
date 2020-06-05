@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zmonaqk=2*-u0vc_shy+#4&d7b@67%dyrm3&4(rgx7)#r@5fug'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -204,4 +204,4 @@ EMAIL_HOST = '10.134.28.95'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWOED = ''
-DEFAULT_FROM_EMAIL = 'PMS@mail.foxconn.com'
+DEFAULT_FROM_EMAIL = 'PTS@mail.foxconn.com'
