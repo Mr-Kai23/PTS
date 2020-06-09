@@ -332,7 +332,7 @@ def get_upload_module(request, download_id):
 
     # 流程模板
     if download_id == '0':
-        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別']
+        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別', 'DRI(白班)', 'DRI(晚班)']
 
         # 第0列到第12列設置列寬
         sheet.set_column(0, 7, 15)

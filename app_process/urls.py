@@ -53,7 +53,8 @@ urlpatterns = [
     url(r'^order/attach/list/$', views_attachment.AttachmentListView.as_view(), name='order-attach-list'),
     url(r'^order/attach/create/$', views_attachment.AttachmentCreateView.as_view(), name='order-attach-create'),
     url(r'^order/attach/delete/$', views_attachment.AttachmentDeleteView.as_view(), name='order-attach-delete'),
-    # 附件下載
-    # url(r'^order/attach/download/$', views_attachment.AttachmentDownloadView.as_view(), name='order-attach-download'),
+
+    # SN上傳
+    url(r'^order/import/$', views_workflow.WorkflowSnImport.as_view(), name='order-import'),
 
 ]

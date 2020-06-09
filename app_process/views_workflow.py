@@ -90,7 +90,8 @@ class WorkFlowView(LoginRequiredMixin, View):
         if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
             df = pd.read_excel(file, keep_default_na=False)
 
-            column_list = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別']
+            column_list = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別', 'DRI(白班)',
+                           'DRI(晚班)']
 
             if list(df.columns) == column_list:
 
@@ -289,6 +290,9 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
             # 默认取用户第一个专案下的的工站
             res['stations'] = Stations.objects.filter(project=projects[0])
+
+        # 機種
+        res['unit_types'] = UnitType.objects.filter(project__in=projects)
 
         # 获取数据库中所有段别
         segments = Segment.objects.all()
@@ -552,4 +556,35 @@ class WorkFlowDetailView(LoginRequiredMixin, View):
         Attachment.objects.filter(workflow=workflow.id)
 
         return render(request, 'process/WorkFlow/WorkFlow_Detail.html', res)
+
+
+class WorkflowSnImport(LoginRequiredMixin, View):
+    """
+    流程SN導入
+    """
+    def post(self, request):
+        res = dict()
+
+        # 用於發佈流程時，SN的
+        # 獲取文件
+        file = request.FILES['sn_file']
+
+        # sn列表，用於存放讀取出的sn
+        sn_list = []
+
+        if file.name.endswith(".xlsx") or file.name.endswith(".xls"):  # 判断上传文件是否为表格
+            df = pd.read_excel(file, skiprows=1, index_col=0, keep_default_na=False)
+
+            column_list = ['SN']
+
+            if list(df.columns) == column_list:
+
+                for i in range(len(df)):
+                    df_list = list(df.values)[i]
+                    sn_list.append(str(df_list[0]))
+
+                res['sn'] = '/'.join(sn_list)
+
+            return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
+
 

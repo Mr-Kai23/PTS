@@ -56,8 +56,6 @@
 
         $("#btnSave").click(function () {
 
-            $("#addForm").ajaxForm(options).submit();
-
             var options = {
                 url: "{% url 'process:order-attach-create' %}", //form提交数据的地址
                 type: "POST", //form提交的方式(method:post/get)
@@ -65,7 +63,6 @@
                 clearForm: false, //提交成功后是否清空表单中的字段值
                 restForm: false, //提交成功后是否重置表单中的字段值，即恢复到页面加载时的状态
                 success: function (data, statusText) {//提交成功后执行的回调函数
-                    console.log(data);
                     if (data.result) {
                         layer.alert('附件添加成功！', {icon: 1}, function (index) {
                             parent.layer.closeAll(); //关闭所有弹窗
@@ -73,17 +70,15 @@
                     } else {
                         layer.alert('附件添加失敗！', {icon: 5});
                     }
-                },
-                end: function () {
-
-                },
-
+                }
             };
 
-            setTimeout(function () {
-                parent.layer.closeAll();
+            $("#addForm").ajaxForm(options).submit();
 
-            }, 500);
+            {#setTimeout(function () {#}
+            {#    parent.layer.closeAll();#}
+            {##}
+            {# }, 500);#}
 
         });
 
