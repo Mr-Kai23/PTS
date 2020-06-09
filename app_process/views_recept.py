@@ -131,6 +131,7 @@ class MessageView(View):
 
         # 用戶專案
         projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
+
         username = request.user.name
 
         # 本人的未接收流程數量，子流程，未被刪除的

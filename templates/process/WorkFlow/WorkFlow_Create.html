@@ -29,7 +29,7 @@
                         <label class="col-sm-2 control-label">專案</label>
                         <div class="col-sm-3">
                             <select class="form-control inputText select2" name="project" id="project">
-                                <option value="{{ workflow.project }}">{{ workflow.project|default:"--專案--" }}</option>
+                                <option value="{{ workflow.project|default:projects.0 }}">{{ workflow.project|default:projects.0 }}</option>
                                 {% for project in projects %}
                                     <option value="{{ project }}">{{ project }}</option>
                                 {% endfor %}
@@ -122,34 +122,48 @@
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">工站</label>
                         <div class="col-sm-3" id="station" style="width: 60%">
-                            {% if stations %}
-                                <input type="checkbox" name="station" value="AP POR Stations"/>
+
+                            {% if request.user.department.name == 'TDL' %}
+                                <input type="checkbox" name="station" value="AP POR Stations"
+                                        {% if "AP POR Stations" in workflow_stations %} checked="True" {% endif %}/>
                                 <label>AP POR Stations</label>
-                                <input type="checkbox" name="station" value="All AP Stations"/>
+                                <input type="checkbox" name="station" value="All AP Stations"
+                                        {% if "All AP Stations" in workflow_stations %} checked="True" {% endif %}/>
                                 <label>All AP Stations</label>
-                                <input type="checkbox" name="station" value="All RF POR Stations"/>
+                            {% elif request.user.department.name == 'RF' %}
+                                <input type="checkbox" name="station" value="All RF POR Stations"
+                                        {% if "All RF POR Stations" in workflow_stations %} checked="True" {% endif %}/>
                                 <label>All RF POR Stations</label>
-                                <input type="checkbox" name="station" value="All RF Stations"/>
+                                <input type="checkbox" name="station" value="All RF Stations"
+                                        {% if "All RF Stations" in workflow_stations %} checked="True" {% endif %}/>
                                 <label>All RF Stations</label>
-                                {% for station in stations %}
-                                    <input type="checkbox" name="station" value="{{ station.station }}"
-                                            {% if station.station == workflow_stations %} checked="True" {% endif %}/>
-                                    <label>{{ station.station }}</label>
-                                {% endfor %}
-                            {% else %}
-                                {% if request.user.department.name == 'TDL' %}
-                                    <input type="checkbox" name="station" value="AP POR Stations"/>
-                                    <label>AP POR Stations</label>
-                                    <input type="checkbox" name="station" value="All AP Stations"/>
-                                    <label>All AP Stations</label>
-                                {% elif request.user.department.name == 'RF' %}
-                                    <input type="checkbox" name="station" value="All RF POR Stations"/>
-                                    <label>All RF POR Stations</label>
-                                    <input type="checkbox" name="station" value="All RF Stations"/>
-                                    <label>All RF Stations</label>
-                                {% endif %}
                             {% endif %}
 
+                            {% for station in stations %}
+                                <input type="checkbox" name="station" value="{{ station.station }}"
+                                        {% if station.station in workflow_stations %} checked="True" {% endif %}/>
+                                <label>{{ station.station }}</label>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback" id="station_num" hidden="true">
+                        <label class="col-sm-2 control-label">工站號</label>
+                        <div class="col-sm-3" style="width: 60%">
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">工站DRI</label>
+                        <label class="col-sm-1 ">白班</label>
+                        <div >
+                            <input name="day_dri" type="text" value="{{ workflow.day_dri }}" style="margin-left: 1px"/>
+                        </div>
+
+                        <label class="col-sm-1 ">晚班</label>
+                        <div >
+                            <input name="night_dri" type="text" value="{{ workflow.night_dri }}" style="margin-left: 1px"/>
                         </div>
                     </div>
 
@@ -190,7 +204,7 @@
                         });
                     } else {
                         layer.alert('流程發佈失敗！', {icon: 5});
-                        //$('errorMessage').html(msg.message)
+
                     }
                     return;
                 }
@@ -211,7 +225,6 @@
                 data: {"project": project, csrfmiddlewaretoken: '{{ csrf_token }}'},
 
                 success: function (data) {
-                    console.log(data);
 
                     {#var unit_type = $("select[name='unit_type']").empty();  //.append('<option value>'+'--请选择--'+'</option>');#}
                     {#unit_type.append('<option></option>');#}
@@ -221,15 +234,48 @@
 
                     var station = $("#station").empty();
                     {% if request.user.department.name == 'TDL' %}
-                        station.append('<input type="checkbox" name="station" value="AP POR Stations"/><label>AP POR Stations</label>');
-                        station.append('<input type="checkbox" name="station" value="All AP Stations"/><label>All AP Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="AP POR Stations"/>' +
+                            '<label>AP POR Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="All AP Stations"/>' +
+                            '<label>All AP Stations</label>');
                     {% elif request.user.department.name == 'RF' %}
-                        station.append('<input type="checkbox" name="station" value="All RF POR Stations"/><label>All RF POR Stations</label>');
-                        station.append('<input type="checkbox" name="station" value="All RF Stations"/><label>All RF Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="All RF POR Stations"/>' +
+                            '<label>All RF POR Stations</label>');
+                        station.append('<input type="checkbox" name="station" value="All RF Stations"/>' +
+                            '<label>All RF Stations</label>');
                     {% endif %}
                     $.each(data.stations, function (i, val) {
                         station.append('<input type="checkbox" name="station" value="' + val.station + '"/><label>' + val.station + '</label>')
                     });
+
+                }
+            });
+
+        });
+
+        /*工站和工站號聯動*/
+
+        $("#station").change(function () {
+
+            var data = $("#addForm").serialize();
+
+            $.ajax({
+                type: "POST",
+
+                url: "{% url 'system:basic-station-number' %}",
+
+                data: {"data": data, csrfmiddlewaretoken: '{{ csrf_token }}'},
+
+                success: function (data) {
+                    if(data.stations){
+                        $('#station_num').removeAttr('hidden');
+                        var number = $("#number").empty();
+                        $.each(data.numbers, function (i, val) {
+                            station.append('<input type="checkbox" name="number" value="' + val + '"/><label>' + val + '</label>')
+                        });
+                    }else {
+                        $('#station_num').attr('hidden', 'true');
+                    }
 
                 }
             });
@@ -267,3 +313,4 @@
     </script>
 
 {% endblock %}
+

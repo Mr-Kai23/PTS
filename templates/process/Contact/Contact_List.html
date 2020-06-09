@@ -194,9 +194,9 @@
                                 bSortable: "false",
                                 render: function (data, type, row, meta) {
                                     {% if request.user.account_type == 0 %}
-                                        var ret = "<button title='编辑' onclick='doUpdate("
+                                        var ret = "<button title='編輯' onclick='doUpdate("
                                                 + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
-                                            ret = ret + "<button title='删除' onclick='doDelete("
+                                            ret = ret + "<button title='刪除' onclick='doDelete("
                                                 + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
                                     {% endif %}
 

@@ -1,4 +1,4 @@
-import json
+import json, re
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
@@ -187,5 +187,48 @@ class StationDeleteView(LoginRequiredMixin, View):
             res['result'] = True
 
         return HttpResponse(json.dumps(res), content_type='application/json')
+
+
+# 工站 和 工站號 联动
+class StationAndNumberView(View):
+    def post(self, request):
+
+        from collections import defaultdict
+
+        pattern = re.compile(r'[/|，|,|\s]\s*')
+
+        res = dict()
+        station_list = []
+        number_lsit = []
+        # 用来存放参数值的字典
+        dic = defaultdict(list)
+
+        # 获取过来的数据
+        datas = request.POST['data'].split('&')
+        # 将参数和值关联成字典
+        for data in datas:
+            key, value = tuple(data.split('='))
+            dic[key].append(value)
+
+        if dic['station']:
+
+            # 将中间有空格的工站名被+填充了的，替换回空格
+            for sta in dic['station']:
+                station_list.append(re.sub(r'\++', ' ', sta))
+
+            # 獲取對應專案下的工站
+            stations = Stations.objects.filter(project__in=dic['project'], station__in=station_list)
+
+            # 取出每个工站的工站号
+            for station in stations:
+                if station.number:
+                    number_lsit += pattern.split(station.number)
+
+            if number_lsit:
+                res['numbers'] = number_lsit
+            else:
+                res['numbers'] = None
+
+        return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 
 

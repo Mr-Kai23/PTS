@@ -60,6 +60,7 @@ class Stations(models.Model):
     department = models.CharField(max_length=10, null=True, blank=True, verbose_name='部门')
     segment = models.CharField(max_length=20, null=True, blank=True, verbose_name='段别')
     station = models.CharField(max_length=50, null=True, blank=True, default="", verbose_name='工站')
+    number = models.CharField(max_length=100, null=True, blank=True, default="", verbose_name='工站号')
 
     class Meta:
         verbose_name = '工站表'
@@ -148,9 +149,12 @@ class OrderInfo(models.Model):
     # 優先級, 用與看板頁面的主旨為重点流程的流程排序
     priority = models.BooleanField(default=False)
 
-    # # 流程附件上傳
-    # attach_excel = models.FileField(upload_to='upload/%Y/%m/%d/', max_length=500, null=True, blank=True)
-    # attach_picture = models.ImageField(upload_to="image/%Y/%m/%d/", max_length=100, null=True, blank=True)
+    # RF新增
+    # SN
+    sn = models.CharField(max_length=500, null=True, blank=True, verbose_name='SN')
+    day_dri = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='白班工站DRI')
+    night_dri = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='晚班工站DRI')
+    number = models.CharField(max_length=250, null=True, blank=True, default="", verbose_name='工站号')
 
     def __str__(self):
         """定义每个数据对象的显示信息"""

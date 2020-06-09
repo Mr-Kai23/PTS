@@ -87,4 +87,7 @@ urlpatterns = [
 
     # 专案 和 机种 联动
     url(r'^basic/project/unit_type$', views_project.ProjectAndUnitTypeLinkView.as_view(), name='basic-project-unit_type'),
+
+    # 工站选中获取工站号
+    url(r'^basic/station/number/$', views_stations.StationAndNumberView.as_view(), name='basic-station-number'),
 ]

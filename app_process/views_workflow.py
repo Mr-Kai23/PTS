@@ -159,7 +159,7 @@ class WorkFlowView(LoginRequiredMixin, View):
 
 class WorkFlowListView(LoginRequiredMixin, View):
     """
-    工单显示视图
+    流程显示视图
     """
 
     def get(self, request):
@@ -172,7 +172,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
         # 前端要显示的属性
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'receive_time', 'unit_type', 'station']
+                  'status', 'receive_time', 'unit_type', 'station', 'number', 'day_dri', 'night_dri', 'sn']
 
         searchfields = ['subject', 'segment', 'status', 'receive_status', 'station', 'order']
 
@@ -231,7 +231,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
 
 class WorkFlowCreateView(LoginRequiredMixin, View):
     """
-    工單創建视图
+    流程創建视图
     """
 
     def get(self, request):
@@ -243,6 +243,10 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         res = dict(msg='')
         # 用戶部門
         department = request.user.department.name
+
+        # 用戶專案
+        projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
+        res['projects'] = projects
 
         # 當為更新流程時
         if 'id' in request.GET and request.GET['id']:
@@ -277,13 +281,14 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             res['workflow_subjects'] = pattern.split(workflow.subject)
 
         else:
+            # 新建流程时
 
-            # 新建的时候，获取当前的时间为工单创建时间
+            # 获取当前的时间为工单创建时间
             t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
             res['time'] = t
 
-        # 用戶專案
-        res['projects'] = re.split(r'[/|，|, |\n]\s*', request.user.project)
+            # 默认取用户第一个专案下的的工站
+            res['stations'] = Stations.objects.filter(project=projects[0])
 
         # 获取数据库中所有段别
         segments = Segment.objects.all()
@@ -299,6 +304,8 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
 
     def post(self, request):
         res = dict(result=False)
+
+        pattern = re.compile(r'[/|;|\n]\s*')
 
         # 手动更新流程状态保存
         if 'ids' in request.POST and request.POST['ids']:
@@ -324,7 +331,6 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             if workflows:
                 # 发布时间
                 publish_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-                pattern = re.compile(r'[/|;|\n]\s*')
 
                 for workflow in workflows:
                     project = workflow[0]  # 专案
@@ -373,18 +379,78 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
         if 'id' in request.POST and request.POST['id']:
             workflow = get_object_or_404(OrderInfo, id=int(request.POST['id']))
 
-            workflow_form = WorkflowForm(request.POST, instance=workflow)
+            # 更新發佈時間
+            new_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
-            # 判断表单是否有效
-            if workflow_form.is_valid():
-                workflow_form.save()
+            # 更新流程
+            workflow.project = request.POST['project']
+            workflow.subject = request.POST['subject']
+            workflow.order = request.POST['order']
+            workflow.key_content = request.POST['key_content']
+            workflow.publish_time = new_time
+            workflow.number = '/'.join(request.POST.getlist('number'))
 
-                # 用户为发布者时才更新子流程
-                if request.user.account_type == 0:
-                    # 更新子流程
-                    OrderInfo.objects.filter(parent=workflow).update(subject=workflow.subject, station=workflow.station,
-                                                                     order=workflow.order, key_content=workflow.key_content)
-                res['result'] = True
+            # 原來和新的段別
+            old_seg = set(pattern.split(workflow.segment))
+            new_seg = set(request.POST.getlist('segment'))
+
+            fields = {
+                # 工单属性
+                'project': request.POST['project'], 'publish_dept': workflow.publish_dept,
+                'publisher': workflow.publisher, 'publish_time': new_time,
+                'subject': request.POST['subject'], 'order': request.POST['order'],
+                'key_content': request.POST['key_content'],
+                'station': '/'.join(request.POST.getlist('station')),
+                'number': '/'.join(request.POST.getlist('number')),
+                'day_dri': request.POST['day_dri'], 'night_dri': request.POST['night_dri']
+            }
+
+            workflow.segment = '/'.join(request.POST.getlist('segment'))
+            workflow.day_dri = request.POST['day_dri']
+            workflow.night_dri = request.POST['night_dri']
+            workflow.save()
+
+            # 判斷新舊段別是否有不同
+            if 'All' not in old_seg and 'All' not in new_seg and old_seg.difference(new_seg):
+                # 更新子工單數量
+                # 如果原來工單段別不為All
+                if 'All' not in old_seg:
+
+                    # 如果新段別不為 All,才需要去比較是否要刪除
+                    if 'All' not in new_seg:
+                        # 表示在新的段別中不存在的段別
+                        # 表示要刪除該段別子流程
+                        if old_seg - new_seg:
+                            # 刪除錯發的子流程
+                            OrderInfo.objects.filter(parent=workflow, segment__in=(old_seg - new_seg)).delete()
+
+                        # 表示在舊的段別中不存在的段別
+                        # 創建新子流程
+                        if new_seg - old_seg:
+                            # 創建新的段別的字流程
+                            create_workflow(workflow, fields, new_seg - old_seg)
+
+                    # 如果新段別是 All
+                    else:
+
+                        diff_segment = set(list(Segment.objects.values_list('segment', flat=True))) - old_seg
+                        # 創建新的段別的子流程
+                        create_workflow(workflow, fields, diff_segment)
+
+                else:
+                    # 當原來的segment 為 All
+                    diff_segment = set(list(Segment.objects.values_list('segment', flat=True))) - new_seg
+
+                    if diff_segment:
+                        # 刪除錯發的字流程
+                        OrderInfo.objects.filter(parent=workflow, segment__in=diff_segment).delete()
+
+            # 用户为发布者时才更新子流程
+            if request.user.account_type == 0:
+                # 更新子流程
+                OrderInfo.objects.filter(parent=workflow).update(**fields)
+
+            res['result'] = True
 
         # 發佈新流程
         else:
@@ -409,7 +475,9 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             fields = {
                 'project': request.POST['project'], 'publish_dept': request.POST['publish_dept'],
                 'publisher': publisher, 'publish_time': publish_time, 'subject': subject,
-                'order': request.POST['order'], 'key_content': request.POST['key_content'], 'station': station
+                'order': request.POST['order'], 'key_content': request.POST['key_content'], 'station': station,
+                'number': '/'.join(request.POST.getlist('number')), 'day_dri': request.POST['day_dri'],
+                'night_dri': request.POST['night_dri']
             }
 
             # 判断工单接收DRI,以字符串的形式存储

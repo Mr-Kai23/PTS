@@ -26,7 +26,7 @@
                         <div class="btn-group pull-left">&nbsp</div>
                         <div class="btn-group pull-left">
                             <button type="button" id="btnCreate" class="btn btn-default">
-                                <i class="glyphicon glyphicon-plus"></i> 新增
+                                <i class="glyphicon glyphicon-plus"></i> 發佈
                             </button>
                         </div>
 
@@ -166,7 +166,7 @@
                     <thead>
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
-                        {#                            <th>ID</th>#}
+                        <th>ID</th>
                         <th>專案</th>
                         <th>發佈部門</th>
                         <th>發佈者</th>
@@ -257,10 +257,10 @@
                         },
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
-                            {#{#}
-                            {#    data: "id",#}
-                            {#    width: "5%",#}
-                            {# },#}
+                            {
+                                data: "id",
+                                width: "5%",
+                             },
                             {
                                 data: "project",
                             },
@@ -388,7 +388,7 @@
                                         // 用戶自己發佈的才可以編輯
                                         if (row['publisher'] == '{{ request.user.name }}') {
 
-                                            ret = ret + "<button title='编辑' onclick='doUpdate("
+                                            ret = ret + "<button title='更新' onclick='doUpdate("
                                                 + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
                                             ret = ret + "<button title='删除' onclick='doDelete("
                                                 + data + ")'><i class='glyphicon glyphicon-trash'></i></button>";
@@ -443,7 +443,7 @@
         $("#btnCreate").click(function () {
             layer.open({
                 type: 2,
-                title: '新增',
+                title: '發佈',
                 shadeClose: false,
                 maxmin: true,
                 area: ['60%', '78%'],
@@ -501,7 +501,7 @@
         function doUpdate(id) {
             var div = layer.open({
                 type: 2,
-                title: '编辑',
+                title: '更新',
                 shadeClose: false,
                 maxmin: true,
                 area: ['60%', '78%'],

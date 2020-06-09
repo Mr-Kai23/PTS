@@ -14,8 +14,7 @@
 
 {% block main %}
     <div class="box box-danger">
-        <form class="form-horizontal" id="addForm" method="post" enctype="multipart/form-data"
-        >
+        <form class="form-horizontal" id="addForm" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name='id' value="{{ workflow_id }}"/>
 

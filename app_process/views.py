@@ -16,7 +16,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.cache import cache_page
 
 from message import send_email, send_message
-from Celery.service import send_email_async
+from Celery_Task.service import send_email_async
 from django.conf import settings
 import xlsxwriter
 from io import BytesIO
@@ -79,6 +79,7 @@ class BoardView(View):
             'un_product_list': un_product_list,
             'Ongoing_list': Ongoing_list,
             'Closed_list': Closed_list,
+            'len': orders.count()*2
         }
 
         return render(request, 'process/Board.html', res)
@@ -110,7 +111,7 @@ class BoardListView(View):
             filters['publish_time__lte'] = json.loads(list(dict(request.GET).keys())[0])['end_time']
 
         # 獲取数据
-        workflows = OrderInfo.objects.filter(**filters,
+        workflows = OrderInfo.objects.filter(**filters, deleted=False,
                                              is_parent=False).exclude(subject='重點流程',
                                                                       status=2).values(*fields).order_by('priority', '-id')
 
@@ -273,11 +274,11 @@ def send_email_message(info_dict, mobiles, emails):
     # 郵件內容
     message = html.format(subject=subject, key_content=key_content)
 
-    # 發送郵件
-    send_email_async.delay(email_address=None, email_password=None, subject=subject,
-                           msg=message,
-                           send_from=settings.DEFAULT_FROM_EMAIL,
-                           send_to=list(emails))
+    # # 發送郵件
+    # send_email_async.delay(email_address=None, email_password=None, subject=subject,
+    #                        msg=message,
+    #                        send_from=settings.DEFAULT_FROM_EMAIL,
+    #                        send_to=list(emails))
 
     # # 发送邮件
     # send_email(subject,
