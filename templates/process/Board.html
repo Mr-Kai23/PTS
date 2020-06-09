@@ -99,7 +99,7 @@
             width: 26%;
             margin-top: 1.4%;
             margin-left: 0.5%;
-            background-color: #35314C;
+            background-color: #263143;
             position: relative;
         }
 
@@ -115,7 +115,7 @@
 
 </style>
 </head>
-<body style="background:linear-gradient(to top,#fff,#000D22)">
+<body style="background-color:#263143;">
 <div style="margin-left:1.5%; margin-right:1.5%;">
 
     <div style="display: block; margin-top:1%;margin-bottom:1%">
@@ -251,15 +251,15 @@
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未投產") {
-                            tableData += "<td style='font-weight: 300; height:48px; font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Ongoing") {
-                            tableData += "<td style='font-weight: 300; height:48px;font-size:18px; background-color:#2B2B2B;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "Closed") {
-                            tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#2B2B2B; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else {
-                            tableData += "<td style='font-weight: 300; min-height:48px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#2B2B2B; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; min-height:48px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
