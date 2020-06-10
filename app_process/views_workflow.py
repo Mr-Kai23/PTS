@@ -372,7 +372,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                     mobiles, emails = create_workflow(father_order, fields, segment_list)
 
                     # 郵件和信息發送
-                    # send_email_message(fields, mobiles, emails)
+                    send_email_message(fields, mobiles, emails)
 
                 res['result'] = True
 
@@ -507,7 +507,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             res['result'] = True
 
             # 郵件和信息發送需要的數據
-            # send_email_message(fields, mobiles, emails)
+            send_email_message(fields, mobiles, emails)
 
         return HttpResponse(json.dumps(res, cls=DjangoJSONEncoder), content_type='application/json')
 

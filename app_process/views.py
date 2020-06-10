@@ -15,7 +15,7 @@ import json, re
 from django.core.serializers.json import DjangoJSONEncoder
 from django.views.decorators.cache import cache_page
 
-from message import send_email, send_message
+from message import send_message
 from Celery_Task.service import send_email_async
 from django.conf import settings
 import xlsxwriter
@@ -287,7 +287,7 @@ def send_email_message(info_dict, mobiles, emails):
     #            ['daniel.k.zhou@foxconn.com'])
 
     # 發送短信
-    send_message(list(mobiles),
+    send_message(['15364911676'],
                  [project + "專案" + department + "部門" + publisher, year, month, day, hour, minute, subject],
                  '6311', '7')
 

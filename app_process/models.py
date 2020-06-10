@@ -115,9 +115,9 @@ class OrderInfo(models.Model):
 
     # 执行状态
     status_choice = (
-        (0, '未投產'),
-        (1, 'Ongoing'),
-        (2, 'Closed'),
+        (0, '未執行'),
+        (1, '執行中'),
+        (2, '已完成'),
     )
 
     project = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='专案')
