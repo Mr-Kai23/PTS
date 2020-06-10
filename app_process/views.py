@@ -274,11 +274,11 @@ def send_email_message(info_dict, mobiles, emails):
     # 郵件內容
     message = html.format(subject=subject, key_content=key_content)
 
-    # # 發送郵件
-    # send_email_async.delay(email_address=None, email_password=None, subject=subject,
-    #                        msg=message,
-    #                        send_from=settings.DEFAULT_FROM_EMAIL,
-    #                        send_to=list(emails))
+    # 發送郵件
+    send_email_async.delay(email_address=None, email_password=None, subject=subject,
+                           msg=message,
+                           send_from=settings.DEFAULT_FROM_EMAIL,
+                           send_to=list(emails))
 
     # # 发送邮件
     # send_email(subject,
