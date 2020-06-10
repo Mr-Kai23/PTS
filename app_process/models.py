@@ -155,7 +155,7 @@ class OrderInfo(models.Model):
     day_dri = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='白班工站DRI')
     night_dri = models.CharField(max_length=20, null=True, blank=True, default='', verbose_name='晚班工站DRI')
     number = models.CharField(max_length=250, null=True, blank=True, default="", verbose_name='工站号')
-    station_version = models.CharField(max_length=250, null=True, blank=True, verbose_name='工站版本号')
+    station_version = models.CharField(max_length=250, null=True, blank=True, default="", verbose_name='工站版本号')
 
     def __str__(self):
         """定义每个数据对象的显示信息"""

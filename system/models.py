@@ -79,7 +79,7 @@ class UserInfo(AbstractUser):
     gender = models.CharField(max_length=10, choices=(("male", "男"), ("female", "女")), default="male",
                               verbose_name="性别")
     mobile = models.CharField(max_length=11, default="", verbose_name="手机号码")
-    email = models.EmailField(max_length=50, default="", verbose_name="邮箱")
+    email = models.CharField(max_length=50, null=True, blank=True, default="", verbose_name="邮箱")
     image = models.ImageField(upload_to="image/%Y/%m", default="image/default.jpg", max_length=100, null=True, blank=True)
     department = models.ForeignKey("Structure", null=True, blank=True, on_delete=models.SET_NULL, verbose_name="部门")
     post = models.CharField(max_length=50, null=True, blank=True, verbose_name="职位")
