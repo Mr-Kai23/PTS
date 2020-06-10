@@ -140,9 +140,9 @@
                         <label>執行狀況:</label>
                         <select class="form-control inputText select2" name="status" id="status">
                             <option></option>
-                            <option value="0">未投產</option>
-                            <option value="1">Ongoing</option>
-                            <option value="2">Closed</option>
+                            <option value="0">未執行</option>
+                            <option value="1">執行中</option>
+                            <option value="2">已完成</option>
                         </select>
                     </div>
 
@@ -336,9 +336,9 @@
                                 render: function (data, type, row, meta) {
                                     {% if request.user.account_type == 1  and request.user.user_type == 0 %}
 
-                                        var str1 = data == 0 ? "<option value='0' selected>未投產</option>" : "<option value='0'>未投產</option>";
-                                        var str2 = data == 1 ? "<option value='1' selected>Ongoing</option>" : "<option value='1'>Ongoing</option>";
-                                        var str3 = data == 2 ? "<option value='2' selected>Closed</option>" : "<option value='2'>Closed</option>";
+                                        var str1 = data == 0 ? "<option value='0' selected>未執行</option>" : "<option value='0'>未執行</option>";
+                                        var str2 = data == 1 ? "<option value='1' selected>執行中</option>" : "<option value='1'>執行中</option>";
+                                        var str3 = data == 2 ? "<option value='2' selected>已完成</option>" : "<option value='2'>已完成</option>";
 
                                         var res = "<select class='form-control select2' style='width:100%;' id='updatestatus" + row['id'] + "' type='text'" +
                                             "onchange='save(" + row['id'] + ")'>"
@@ -350,11 +350,11 @@
                                     {% else %}
 
                                         if (data == 0) {
-                                            return '未投產'
+                                            return '未執行'
                                         } else if (data == 1) {
-                                            return 'Ongoing'
+                                            return '執行中'
                                         } else {
-                                            return 'Closed'
+                                            return '已完成'
                                         }
 
                                     {% endif %}

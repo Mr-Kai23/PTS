@@ -147,9 +147,9 @@
                 <select class="form-control inputText select2" name="status" id="status"
                         style="float:left;width:6.5%;height:32px;background-color:#5F6769;font-size: large;color:white;">
                   <option></option>
-                    <option value="0">未投產</option>
-                    <option value="1">Ongoing</option>
-                    <option value="2">Closed</option>
+                    <option value="0">未執行</option>
+                    <option value="1">執行中</option>
+                    <option value="2">已完成</option>
                 </select>
 
               <label style="color:#AAC2EA;font-size:x-large;float:left;margin-right:0.5%;margin-left:1.5%;">接收状态 :</label>
@@ -250,11 +250,11 @@
                 var tableData = "<tr>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
-                        if (data[i][arr[j]] == "未投產") {
+                        if (data[i][arr[j]] == "未執行") {
                             tableData += "<td style='font-weight: 300; height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
-                        } else if (data[i][arr[j]] == "Ongoing") {
+                        } else if (data[i][arr[j]] == "執行中") {
                             tableData += "<td style='font-weight: 300; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
-                        } else if (data[i][arr[j]] == "Closed") {
+                        } else if (data[i][arr[j]] == "已完成") {
                             tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
                             tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
@@ -319,7 +319,7 @@
             textStyle: {
                 color: 'white'//字体颜色
             },
-            data: ['未接收', '未投產', '進行中', '已完成']
+            data: ['未接收', '未執行', '執行中', '已完成']
         },
         series: [
             {
@@ -377,8 +377,8 @@
                 },
                 data: [
                     {value: {{ un_receive }}, name: '未接收'},
-                    {value: {{ un_product }}, name: '未投產'},
-                    {value: {{ ongoing }}, name: '進行中'},
+                    {value: {{ un_product }}, name: '未執行'},
+                    {value: {{ ongoing }}, name: '執行中'},
                     {value: {{ closed }}, name: '已完成'},
                 ],
 
@@ -519,7 +519,7 @@
             textStyle: {
                 color: 'white'//字体颜色
             },
-            data: ['未接收', '未投產', '進行中', '已完成'],
+            data: ['未接收', '未執行', '執行中', '已完成'],
 
         },
         grid: {
@@ -559,30 +559,30 @@
                     show: true,
                     position: 'insideRight'
                 },
-                data: [{% for accpet in un_accept_list %} '{{ accpet }}', {% endfor %}]
+                data: [{% for accpet in un_accept_list %}  '{{ accpet }}', {% endfor %}]
                 {#data: [2, 1, 1, 2, 2, 1]#}
             },
 
             {
-                name: '未投產',
+                name: '未執行',
                 type: 'bar',
                 stack: '总量',
                 label: {
                     show: true,
                     position: 'insideRight'
                 },
-                data: [{% for product in un_product_list %} '{{ product }}', {% endfor %}]
+                data: [{% for product in un_product_list %}  '{{ product }}', {% endfor %}]
                 {#data: [1, 2, 2, 1, 2, 1]#}
             },
             {
-                name: '進行中',
+                name: '執行中',
                 type: 'bar',
                 stack: '总量',
                 label: {
                     show: true,
                     position: 'insideRight'
                 },
-                data: [{% for Ongoing in Ongoing_list %} '{{ Ongoing }}', {% endfor %}]
+                data: [{% for Ongoing in Ongoing_list %}  '{{ Ongoing }}', {% endfor %}]
                 {#data: [1, 2, 2, 1, 1, 1]#}
             },
             {
