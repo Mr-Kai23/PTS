@@ -287,7 +287,7 @@ def send_email_message(info_dict, mobiles, emails):
     #            ['daniel.k.zhou@foxconn.com'])
 
     # 發送短信
-    send_message(['15364911676'],
+    send_message(list(mobiles),
                  [project + "專案" + department + "部門" + publisher, year, month, day, hour, minute, subject],
                  '6311', '7')
 
