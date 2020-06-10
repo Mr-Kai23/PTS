@@ -214,7 +214,7 @@
                 title: '新增',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '91%'],
+                area: ['60%', '90%'],
                 content: "{% url 'system:basic-user-create' %}",
                 end: function () {
                     //关闭时做的事情
@@ -231,7 +231,7 @@
                 title: '编辑',
                 shadeClose: false,
                 maxmin: true,
-                area: ['60%', '81%'],
+                area: ['60%', '80%'],
                 content: ["{% url 'system:basic-user-detail' %}" + '?id=' + id, 'no'],
                 end: function () {
                     oDataTable.ajax.reload();

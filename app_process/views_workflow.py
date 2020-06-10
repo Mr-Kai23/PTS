@@ -173,7 +173,8 @@ class WorkFlowListView(LoginRequiredMixin, View):
         # 前端要显示的属性
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
-                  'status', 'receive_time', 'unit_type', 'station', 'number', 'day_dri', 'night_dri', 'sn']
+                  'status', 'receive_time', 'unit_type', 'station', 'number', 'day_dri', 'night_dri', 'sn',
+                  'station_version']
 
         searchfields = ['subject', 'segment', 'status', 'receive_status', 'station', 'order']
 

@@ -22,7 +22,7 @@
                 <fieldset>
 
                     <legend>
-                        <h4>流程發佈</h4>
+                        <h4>基本信息</h4>
                     </legend>
 
                     <div class="form-group has-feedback">
@@ -75,6 +75,9 @@
                         </div>
                     </div>
 
+                    <legend>
+                        <h4>流程內容</h4>
+                    </legend>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">主旨</label>
                         <div class="col-sm-3" style="width: 67%">
@@ -183,6 +186,13 @@
                         <label class="col-sm-1 ">晚班</label>
                         <div >
                             <input name="night_dri" type="text" value="{{ workflow.night_dri }}" style="margin-left: 1px"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-2 control-label">工站版本號</label>
+                        <div class="col-sm-3">
+                            <input class="form-control" name="station_version" type="text" value="{{ workflow.station_version }}"/>
                         </div>
                     </div>
 
