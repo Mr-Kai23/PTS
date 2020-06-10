@@ -87,8 +87,8 @@ class UserInfo(AbstractUser):
     roles = models.ManyToManyField("role", verbose_name="角色", blank=True)
 
     work_num = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='工号')
-    project = models.CharField(max_length=10, null=True, blank=True, default="", verbose_name='专案')
-    segment = models.CharField(max_length=20, null=True, blank=True, default="", verbose_name='段别')
+    project = models.CharField(max_length=30, null=True, blank=True, default="", verbose_name='专案')
+    segment = models.CharField(max_length=30, null=True, blank=True, default="", verbose_name='段别')
     account_type = models.SmallIntegerField(choices=account_type_choice, default=0, verbose_name='账号类别')
     is_admin = models.BooleanField(default=False)
     user_type = models.SmallIntegerField(choices=user_type_choice, null=True, blank=True, default=0, verbose_name='用户类型')
