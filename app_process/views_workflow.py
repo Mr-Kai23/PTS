@@ -45,7 +45,7 @@ class WorkFlowView(LoginRequiredMixin, View):
         #     # 段别
         #     res['segments'] = pattern.split(request.user.segment)
         # else:
-        res['segments'] = list(Segment.objects.values_list('segment', flat=True))
+        res['segments'] = Segment.objects.all()
 
         # 機種
         res['unit_types'] = UnitType.objects.filter(project__in=projects)
