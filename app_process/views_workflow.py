@@ -40,8 +40,13 @@ class WorkFlowView(LoginRequiredMixin, View):
         # 用戶專案
         projects = pattern.split(request.user.project)
         res['projects'] = projects
-        # 段别
-        res['segments'] = pattern.split(request.user.segment)
+
+        # if request.user.segment:
+        #     # 段别
+        #     res['segments'] = pattern.split(request.user.segment)
+        # else:
+        res['segments'] = list(Segment.objects.values_list('segment', flat=True))
+
         # 機種
         res['unit_types'] = UnitType.objects.filter(project__in=projects)
 
@@ -68,7 +73,6 @@ class WorkFlowView(LoginRequiredMixin, View):
     @Time    :   2020-5-20 Update
     @Desc    :   工单导入
     """
-
     def post(self, request):
 
         """
