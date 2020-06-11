@@ -394,10 +394,11 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 更新流程
             workflow.project = request.POST['project']
             workflow.subject = request.POST['subject']
-            workflow.order = request.POST['order']
-            workflow.key_content = request.POST['key_content']
+            workflow.order = request.POST['order'].lstrip()
+            workflow.key_content = request.POST['key_content'].lstrip()
             workflow.publish_time = new_time
             workflow.number = '/'.join(request.POST.getlist('number'))
+            workflow.sn = request.POST['sn'].lstrip()
 
             # 原來和新的段別
             old_seg = set(pattern.split(workflow.segment))
@@ -407,11 +408,12 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
                 # 工单属性
                 'project': request.POST['project'], 'publish_dept': workflow.publish_dept,
                 'publisher': workflow.publisher, 'publish_time': new_time,
-                'subject': request.POST['subject'], 'order': request.POST['order'],
-                'key_content': request.POST['key_content'],
+                'subject': request.POST['subject'], 'order': request.POST['order'].lstrip(),
+                'key_content': request.POST['key_content'].lstrip(),
                 'station': '/'.join(request.POST.getlist('station')),
                 'number': '/'.join(request.POST.getlist('number')),
-                'day_dri': request.POST['day_dri'], 'night_dri': request.POST['night_dri']
+                'day_dri': request.POST['day_dri'], 'night_dri': request.POST['night_dri'],
+                'sn': request.POST['sn'].lstrip()
             }
 
             workflow.segment = '/'.join(request.POST.getlist('segment'))
@@ -484,9 +486,10 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             fields = {
                 'project': request.POST['project'], 'publish_dept': request.POST['publish_dept'],
                 'publisher': publisher, 'publish_time': publish_time, 'subject': subject,
-                'order': request.POST['order'], 'key_content': request.POST['key_content'], 'station': station,
-                'number': '/'.join(request.POST.getlist('number')), 'day_dri': request.POST['day_dri'],
-                'night_dri': request.POST['night_dri']
+                'order': request.POST['order'].lstrip(), 'key_content': request.POST['key_content'].lstrip(),
+                'station': station, 'number': '/'.join(request.POST.getlist('number')),
+                'day_dri': request.POST['day_dri'], 'night_dri': request.POST['night_dri'],
+                'sn': request.POST['sn'].lstrip()
             }
 
             # 判断工单接收DRI,以字符串的形式存储
