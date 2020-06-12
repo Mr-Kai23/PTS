@@ -404,6 +404,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             old_seg = set(pattern.split(workflow.segment))
             new_seg = set(request.POST.getlist('segment'))
 
+            # 属性字典用于更新或创建子流程
             fields = {
                 # 工单属性
                 'project': request.POST['project'], 'publish_dept': workflow.publish_dept,

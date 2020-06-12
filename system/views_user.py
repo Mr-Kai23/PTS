@@ -332,9 +332,15 @@ class UserDetailView(LoginRequiredMixin, View):
     def get(self, request):
         user = get_object_or_404(User, pk=int(request.GET['id']))
         # users = User.objects.exclude(Q(id=int(request.GET['id'])) | Q(username='admin'))
+
         # 获取被修改用户部门的 admin 用户
-        superiors = User.objects.filter(department=user.department, account_type=user.account_type,
-                                        is_admin=True).values()
+        users = User.objects.filter(department=user.department, account_type=user.account_type, is_admin=True)
+        if user.user_type == 0:
+            # 获取被修改用户部门的 admin 用户
+            superiors = users.filter(user_type=1)
+        else:
+            superiors = users.filter(user_type=2)
+
         structures = Structure.objects.values()
         segments = Segment.objects.values()
         projects = Project.objects.values()
