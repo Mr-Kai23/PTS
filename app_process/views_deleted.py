@@ -63,7 +63,7 @@ class DeletedListView(LoginRequiredMixin, View):
         # 删除了的工单
         elif request.user.account_type == 1:
             workflows = OrderInfo.objects.filter(receiver=username, deleted=True, is_parent=False,
-                                                 **filters).values(*fields).order_by('-id')
+                                                 **filters).values(*fields).order_by('-publish_time', '-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

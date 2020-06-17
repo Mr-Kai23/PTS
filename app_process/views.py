@@ -113,7 +113,9 @@ class BoardListView(View):
         # 獲取数据
         workflows = OrderInfo.objects.filter(**filters, deleted=False,
                                              is_parent=False).exclude(subject='重點流程',
-                                                                      status=2).values(*fields).order_by('priority', '-id')
+                                                                      status=2).values(*fields).order_by('priority',
+                                                                                                         '-publish_time',
+                                                                                                         '-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

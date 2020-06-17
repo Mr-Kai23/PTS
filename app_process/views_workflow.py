@@ -178,7 +178,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
         fields = ['id', 'project', 'build', 'order', 'publish_dept', 'publisher', 'publish_status',
                   'publish_time', 'subject', 'key_content', 'segment', 'receiver', 'receive_status',
                   'status', 'receive_time', 'unit_type', 'station', 'number', 'day_dri', 'night_dri', 'sn',
-                  'station_version']
+                  'station_version', 'parent', 'is_parent']
 
         searchfields = ['subject', 'segment', 'status', 'receive_status', 'station', 'order']
 
@@ -192,7 +192,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
                 # 接收者只能看接收人是自己的子工單
                 workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, receiver=name,
                                                      deleted=False, is_parent=False,
-                                                     **filters).values(*fields).order_by('-id')
+                                                     **filters).values(*fields).order_by('-publish_time', '-id')
 
             else:
                 # 获取当先用户的下级
@@ -204,7 +204,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
                     # 看下级 副线长 的所有流程
                     workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, is_parent=False,
                                                          deleted=False, receiver__in=juniors_name,
-                                                         **filters).values(*fields).order_by('-id')
+                                                         **filters).values(*fields).order_by('-publish_time', '-id')
                 # 如果用戶為专案主管
                 elif request.user.user_type == 2:
                     lower_juniors = []
@@ -217,17 +217,22 @@ class WorkFlowListView(LoginRequiredMixin, View):
 
                     workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, is_parent=False,
                                                          receiver__in=lower_juniors, deleted=False,
-                                                         **filters).values(*fields).order_by('-id')
+                                                         **filters).values(*fields).order_by('-publish_time', '-id')
 
         else:
             # 發佈者工單
             # 發佈者只能看自己發佈的流程，所有未被刪除的父流程
             workflows = OrderInfo.objects.filter(project__in=projects, publisher=name, is_parent=True, deleted=False,
-                                                 **filters).values(*fields).order_by('-id')
+                                                 **filters).values(*fields).order_by('-publish_time', '-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])
-            # workflow['status'] = order.get_status_display()
+
+            if workflow['is_parent']:
+                workflow['attach_num'] = Attachment.objects.filter(workflow=workflow['id']).count()
+            else:
+                workflow['attach_num'] = Attachment.objects.filter(workflow=workflow['parent']).count()
+
             workflow['receive_status'] = order.get_receive_status_display()
 
         res = dict(data=list(workflows))
@@ -460,7 +465,7 @@ class WorkFlowCreateView(LoginRequiredMixin, View):
             # 用户为发布者时才更新子流程
             if request.user.account_type == 0:
                 # 更新子流程
-                OrderInfo.objects.filter(parent=workflow).update(**fields)
+                OrderInfo.objects.filter(parent=workflow).update(**fields, receive_status=0)
 
             res['result'] = True
 

@@ -120,7 +120,7 @@
                     <thead>
                     <tr valign="middle">
                         <th><input type="checkbox" id="checkAll"></th>
-                        {#                            <th>ID</th>#}
+                        <th>ID</th>
                         <th>發佈部門</th>
                         <th>發佈者</th>
                         <th>發佈時間</th>
@@ -131,10 +131,10 @@
 
                         {% if request.user.account_type == 1 %}
                             <th>接收者</th>
+                            <th>接收狀態</th>
+                            <th>執行狀況</th>
                         {% endif %}
 
-                        <th>接收狀態</th>
-                        <th>執行狀況</th>
                         {#                            <th>備註</th>#}
                         <th>操作</th>
                     </tr>
@@ -210,10 +210,10 @@
                         },
                         columns: [
                             DATATABLES_CONSTANT.DATA_TABLES.COLUMN.CHECKBOX,
-                            {#{#}
-                            {#    data: "id",#}
-                            {#    width: "5%",#}
-                            {# },#}
+                            {
+                                data: "id",
+                                width: "5%",
+                            },
                             {
                                 data: "publish_dept",
                             },
@@ -253,15 +253,14 @@
                                 {
                                     data: "receiver",
                                 },
-                            {% endif %}
-
-                            {
+                                {
                                 data: "receive_status",
-                            },
+                                },
 
-                            {
-                                data: "status",
-                            },
+                                {
+                                    data: "status",
+                                },
+                            {% endif %}
 
                             {
                                 data: "id",

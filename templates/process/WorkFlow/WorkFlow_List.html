@@ -178,10 +178,11 @@
 
                         {% if request.user.account_type == 1 %}
                             <th>接收者</th>
+                            <th>接收狀態</th>
+                            <th>執行狀況</th>
                         {% endif %}
 
-                        <th>接收狀態</th>
-                        <th>執行狀況</th>
+                        <th>附件數</th>
                         {#                            <th>備註</th>#}
                         <th>操作</th>
                     </tr>
@@ -324,41 +325,44 @@
                                 {
                                     data: "receiver",
                                 },
+                                {
+                                data: "receive_status",
+                                },
+
+                                {
+                                    data: "status",
+                                    bSortable: "false",
+                                    render: function (data, type, row, meta) {
+                                        {% if request.user.user_type == 0 %}
+
+                                            var str1 = data == 0 ? "<option value='0' selected>未執行</option>" : "<option value='0'>未執行</option>";
+                                            var str2 = data == 1 ? "<option value='1' selected>執行中</option>" : "<option value='1'>執行中</option>";
+                                            var str3 = data == 2 ? "<option value='2' selected>已完成</option>" : "<option value='2'>已完成</option>";
+
+                                            var res = "<select class='form-control select2' style='width:100%;' id='updatestatus" + row['id'] + "' type='text'" +
+                                                "onchange='save(" + row['id'] + ")'>"
+                                                + str1 + str2 + str3;
+                                            "</select>"
+
+                                            return res;
+
+                                        {% else %}
+
+                                            if (data == 0) {
+                                                return '未執行'
+                                            } else if (data == 1) {
+                                                return '執行中'
+                                            } else {
+                                                return '已完成'
+                                            }
+
+                                        {% endif %}
+                                    },
+                                },
                             {% endif %}
 
                             {
-                                data: "receive_status",
-                            },
-
-                            {
-                                data: "status",
-                                bSortable: "false",
-                                render: function (data, type, row, meta) {
-                                    {% if request.user.account_type == 1  and request.user.user_type == 0 %}
-
-                                        var str1 = data == 0 ? "<option value='0' selected>未執行</option>" : "<option value='0'>未執行</option>";
-                                        var str2 = data == 1 ? "<option value='1' selected>執行中</option>" : "<option value='1'>執行中</option>";
-                                        var str3 = data == 2 ? "<option value='2' selected>已完成</option>" : "<option value='2'>已完成</option>";
-
-                                        var res = "<select class='form-control select2' style='width:100%;' id='updatestatus" + row['id'] + "' type='text'" +
-                                            "onchange='save(" + row['id'] + ")'>"
-                                            + str1 + str2 + str3;
-                                        "</select>"
-
-                                        return res;
-
-                                    {% else %}
-
-                                        if (data == 0) {
-                                            return '未執行'
-                                        } else if (data == 1) {
-                                            return '執行中'
-                                        } else {
-                                            return '已完成'
-                                        }
-
-                                    {% endif %}
-                                },
+                                data: "attach_num",
                             },
 
                             {
