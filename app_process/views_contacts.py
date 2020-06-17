@@ -70,6 +70,8 @@ class ContactCreateView(LoginRequiredMixin, View):
         # projects = re.split(r'[/|，|, |\n]\s*', request.user.project)
         res['projects'] = Project.objects.all()
 
+        res['segments'] = Segment.objects.all()
+
         # 部门
         departments = Structure.objects.all()
         res['departments'] = departments
