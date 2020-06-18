@@ -28,6 +28,7 @@ def make_celery():
         'tasks',
         # backend='mysql://{}:{}@{}:{}/PTS'.format('root', 'xiayanxia12', BACKEND_IP, BACKEND_PORT),
         broker='amqp://10.134.82.243:5900//'
+        # broker = 'amqp://guest:guest@127.0.0.1:15672//'  # 本地 rabbitmq-server
     )
     return celery
 

@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zmonaqk=2*-u0vc_shy+#4&d7b@67%dyrm3&4(rgx7)#r@5fug'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -108,11 +108,11 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'PMS',
+#         'NAME': 'PTS',
 #         'HOST': '127.0.0.1',
 #         'PORT': '3306',
 #         'USER': 'root',
-#         'PASSWORD': '123456',
+#         'PASSWORD': 'root123456',
 #     }
 # }
 
