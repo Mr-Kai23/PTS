@@ -134,7 +134,7 @@ class LoginView(View):
                     return HttpResponseRedirect(redirect_to)
                 else:
                     ret['msg'] = '用户未激活！'
-            elif user1 is not None:
+            elif len(user1) > 0:
                 if user1[0].is_active:
                     login(request, user1[0])
                     return HttpResponseRedirect(redirect_to)
