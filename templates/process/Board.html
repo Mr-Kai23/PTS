@@ -61,7 +61,6 @@
             float: left;
 
         }
-
         .tabel-list {
             border-spacing: 0;
             width: 100%;
@@ -176,7 +175,7 @@
     </div>
 
     <div class="tabel_all">
-            <table class="tabel-list" style="table-layout:fixed;float:left;table-layout:fixed;word-wrap:break-word;word-break;break-all;">
+            <table class="tabel-list" style="table-layout:fixed;float:left;word-wrap:break-word;">
                 <thead class="tabel_head">
                 <tr style="width:100%;display:table;min-height:48px">
                     <th>發佈部門</th>
@@ -219,10 +218,10 @@
     });
 
     creatTable();
-    var interval3 = setInterval(function () {
-        creatTable();
-        window.location.reload();
-     }, 60000);
+    {#var interval3 = setInterval(function () {#}
+    {#    creatTable();#}
+    {#    window.location.reload();#}
+    {# }, 60000);#}
 
     function creatTable() {
         var project = $("#project option:selected").val();
@@ -246,20 +245,19 @@
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
-
-                var tableData = "<tr>";
+                var tableData = "<tr style='width:100%; display:table; min-height:48px'>";
                 for (var i = 0; i < data.length; i++) {
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未執行") {
-                            tableData += "<td style='font-weight: 300; height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden; width:10%'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300; text-align: center;height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "執行中") {
-                            tableData += "<td style='font-weight: 300; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden; width:10%'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "已完成") {
-                            tableData += "<td style='font-weight: 300; height:48px; text-align: center;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden; width:10%'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                            tableData += "<td class='blink' style='font-weight: 450; height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden; width:10%'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         } else {
-                            tableData += "<td style='font-weight: 300; min-height:48px; font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden; width:10%'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
@@ -270,8 +268,7 @@
                     if ($(item)[0].innerText.length > 20) {
                         $(item).wrap(document.createElement("div"))
                         $(item).parent().css({
-                            'height': '49px',
-
+                            'height': '50px',
                             'overflow-y': 'auto',
                             'border-bottom': '0.5px solid #999B9F'
                         })
@@ -287,7 +284,6 @@
     $("#btnSearch").click(function () {
         creatTable();
     });
-
 
     // QN P1生產流程執行狀況環形圖
     var myChart1 = echarts.init(document.getElementById("status_echarts"));
