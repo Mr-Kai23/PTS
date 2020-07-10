@@ -190,7 +190,7 @@
                     <th>執行狀況</th>
                 </tr>
                 </thead>
-                <tbody id="tbody">
+                <tbody class="tbody">
                 </tbody>
             </table>
     </div>
@@ -245,24 +245,26 @@
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
-                var tableData = "<tr style='width:100%; display:table; min-height:48px'>";
+                var trstyle = "<tr style='width:100%; display:table; min-height:48px'>";
+                var tableData = ""
                 for (var i = 0; i < data.length; i++) {
+                    tableData += trstyle
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未執行") {
-                             tableData += "<td style='font-weight: 300; text-align: center;height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300; text-align: center;height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "執行中") {
-                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "已完成") {
-                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                             tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else {
-                             tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
                 }
-                $("#tbody").html(tableData)
+                $(".tbody").html(tableData)
                 //console.log($('table tbody tr td:nth-child(6)'))
                 $('table tbody tr td:nth-child(6)').each(function (index, item) {
                     if ($(item)[0].innerText.length > 20) {
@@ -270,10 +272,12 @@
                         $(item).parent().css({
                             'height': '50px',
                             'overflow-y': 'auto',
-                            'border-bottom': '0.5px solid #999B9F'
+                            'font-size':'10px',
+                            'border-bottom': '0.7px solid #999B9F'
                         })
                     }
                 })
+
             }
         })
     }
