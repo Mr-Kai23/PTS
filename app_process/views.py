@@ -79,7 +79,7 @@ class BoardView(View):
             'un_product_list': un_product_list,
             'Ongoing_list': Ongoing_list,
             'Closed_list': Closed_list,
-            'len': orders.count()*2
+            'len': orders.count()
         }
 
         return render(request, 'process/Board.html', res)
@@ -115,7 +115,7 @@ class BoardListView(View):
                                              is_parent=False).exclude(subject='重點流程',
                                                                       status=2).values(*fields).order_by('priority',
                                                                                                          '-publish_time',
-                                                                                                         '-id')
+                                                                                                         '-id')[:50]
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

@@ -43,10 +43,11 @@ urlpatterns = [
 
     re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
+
 ]
-
-# ] + static(STATIC_URL, document_root=STATIC_ROOT)
-
-    # urlpatterns += [
-    #     re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
-    # ]
+# ] + static(STATIC_URL, document_root=STATIC_URL)
+#
+#
+# urlpatterns += [
+#     re_path(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+# ]

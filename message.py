@@ -54,4 +54,4 @@ def send_message(mobile_list, message, FormatID='6311', SpaceNum='7'):
 
             return HttpResponse('信息有誤！！')
 
-        return '短信已发送！！'
+    return '短信已发送！！'
