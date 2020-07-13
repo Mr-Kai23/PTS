@@ -78,7 +78,7 @@
             display:block;
             width:100%;
         }
-        .tabel-list td, .tabel-list th{
+        .tabel-list td, .tabel-list th {
             width:10%
         }
 
@@ -208,7 +208,6 @@
 <script type="text/javascript">
     $(function () {
         setTimeout(function () {
-
             $('td').click(function () {
                 if ($(this).children().length == 0) {
                     alert($(this).context.innerText)
@@ -259,12 +258,26 @@
                         } else if (data[i][arr[j]] == "未接收") {
                              tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else {
-                            tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;overflow:hidden'>" + data[i][arr[j]] + "</td>";
+                            tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
                 }
                 $(".tbody").html(tableData)
+                $('table tbody tr td:nth-child(5)').each(function (index, item) {
+                    console.log($(item)[0].innerText.length)
+                    if ($(item)[0].innerText.length >= 18) {
+                        $(item).wrap(document.createElement("div"))
+                        $(item).parent().css({
+                            'width':"110px",
+                            'height': '50px',
+                            'overflow': 'auto',
+                            'font-size':'10px',
+                            'float':"left",
+                            'border-bottom': '0.7px solid #999B9F'
+                        })
+                    }
+                })
                 //console.log($('table tbody tr td:nth-child(6)'))
                 $('table tbody tr td:nth-child(6)').each(function (index, item) {
                     if ($(item)[0].innerText.length > 20) {
