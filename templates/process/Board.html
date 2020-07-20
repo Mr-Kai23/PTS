@@ -244,21 +244,21 @@
             success: function (e) {
                 var arr = ["publish_dept", "publisher", "publish_time", "subject", "order", "key_content", "segment", "receiver", "receive_status", "status"];
                 var data = e.data;
-                var trstyle = "<tr style='width:100%; display:table; min-height:48px'>";
+                var trstyle = "<tr style='width:100%; display:table; min-height:50px'>";
                 var tableData = ""
                 for (var i = 0; i < data.length; i++) {
                     tableData += trstyle
                     for (var j = 0; j < arr.length; j++) {
                         if (data[i][arr[j]] == "未執行") {
-                             tableData += "<td style='font-weight: 300; text-align: center;height:48px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300; text-align: center;height:50px; font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F; color:#F79646; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "執行中") {
-                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:50px;font-size:18px; background-color:#263143;border-bottom:0.5px solid #999B9F; color:#FBFB00; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "已完成") {
-                             tableData += "<td style='font-weight: 300;text-align: center; height:48px;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300;text-align: center; height:50px;font-size:18px; background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#9BBB59; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else if (data[i][arr[j]] == "未接收") {
-                             tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:48px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td class='blink' style='font-weight: 300;text-align: center;height:50px; font-size:18px;background-color:#263143; border-bottom:0.5px solid #999B9F;  color:#FF0000; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         } else {
-                            tableData += "<td style='font-weight: 300; min-height:48px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
+                             tableData += "<td style='font-weight: 300; min-height:48px; height:50px;text-align: center;font-size:18px;border-bottom:0.5px solid #999B9F; background-color:#263143; color:white; word-wrap:break-word;'>" + data[i][arr[j]] + "</td>";
                         }
                     }
                     tableData += "</tr>";
@@ -266,12 +266,12 @@
                 $(".tbody").html(tableData)
                 $('table tbody tr td:nth-child(5)').each(function (index, item) {
                     console.log($(item)[0].innerText.length)
-                    if ($(item)[0].innerText.length >= 18) {
+                    if ($(item)[0].innerText.length >= 20) {
                         $(item).wrap(document.createElement("div"))
                         $(item).parent().css({
-                            'width':"110px",
+                            'width':'130px',
                             'height': '50px',
-                            'overflow': 'auto',
+                            'overflow': 'hidden',
                             'font-size':'10px',
                             'float':"left",
                             'border-bottom': '0.7px solid #999B9F'
@@ -284,7 +284,7 @@
                         $(item).wrap(document.createElement("div"))
                         $(item).parent().css({
                             'height': '50px',
-                            'overflow-y': 'auto',
+                            'overflow': 'hidden',
                             'font-size':'10px',
                             'border-bottom': '0.7px solid #999B9F'
                         })
