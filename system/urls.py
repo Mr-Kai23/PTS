@@ -92,8 +92,9 @@ urlpatterns = [
     # 工站选中获取工站号
     url(r'^basic/station/number/$', views_stations.StationAndNumberView.as_view(), name='basic-station-number'),
 
-    # 工单种类
+    # # 工单种类
     url(r'^basic/orderclass/$', views_orderclass.OrderclassView.as_view(), name='basic-orderclass'),
-    url(r'^basic/orderclass/list/$', views_orderclass.OrderclassListView.as_view(), name='basic-orderclass_list'),
-    url(r'^basic/orderclass/update/$', views_orderclass.OrderclassUpdate.as_view(), name='basic_orderclass_update'),
+    url(r'^basic/orderclass/list/$', views_orderclass.OrderclassListView.as_view(), name='basic-orderclass-list'),
+    url(r'^basic/orderclass/update/$', views_orderclass.OrderclassUpdate.as_view(), name='basic-orderclass-update'),
+    url(r'^basic/orderclass/delete/$', views_orderclass.OrderclassDelete.as_view(), name='basic-orderclass-delete'),
 ]

@@ -12,20 +12,20 @@
 	<form class="form-horizontal" id="addForm" method="post">
 		{% csrf_token %}
 
-        <input type="hidden" name='id' value="{{ project.id }}" />
+        <input type="hidden" name='id' value="{{ orderclass.id }}" />
 
 		<div class="box-body">
           <fieldset>
             <legend>
-              <h4>專案</h4>
+              <h4>工单类型</h4>
             </legend>
 
 
 
             <div class="form-group has-feedback">
-                <label class="col-sm-2 control-label">專案名</label>
+                <label class="col-sm-2 control-label">工单类型名</label>
                 <div class="col-sm-3">
-                    <input class="form-control" name="project" type="text" value="{{ project.project }}"/>
+                    <input class="form-control" name="orderclass" type="text" value="{{ orderclass.orderclass }}"/>
                 </div>
 
             </div>
@@ -57,7 +57,7 @@
 		var data = $("#addForm").serialize();
 		$.ajax({
 			type: $("#addForm").attr('method'),
-			url : "{% url 'system:basic-project-update' %}",
+			url : "{% url 'system:basic-orderclass-update' %}",
 			data : data,
 			cache: false,
 			success : function(msg) {

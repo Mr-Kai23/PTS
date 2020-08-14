@@ -107,7 +107,7 @@
                 DATATABLES_CONSTANT.DATA_TABLES.DEFAULT_OPTION,
                 {
                     ajax: {
-                        "url": "{% url 'system:basic-orderclass_list' %}",
+                        "url": "{% url 'system:basic-orderclass-list' %}",
                         "data": function (d) {
                             d.orderclass = $("#orderclass").val();
                         }
@@ -127,7 +127,6 @@
                             width: "10%",
                             bSortable: "false",
                             render: function (data, type, row, meta) {
-
                                 var ret = "<button title='编辑' onclick='doUpdate("
                                     + data + ")'><i class='glyphicon glyphicon-pencil'></i></button>";
                                 ret = ret + "<button title='删除' onclick='doDelete("
@@ -168,7 +167,7 @@
                 shadeClose: false,
                 maxmin: true,
                 area: ['800px', '400px'],
-                content: "{% url 'system:basic-project-update' %}",
+                content: "{% url 'system:basic-orderclass-update' %}",
                 end: function () {
                     //关闭时做的事情
                     oDataTable.ajax.reload();
@@ -200,7 +199,7 @@
                     layer.close(index);
                     $.ajax({
                         type: "POST",
-                        url: "{% url 'system:basic-project-delete' %}",
+                        url: "{% url 'system:basic-orderclass-delete' %}",
                         data: {"id": sId, csrfmiddlewaretoken: '{{ csrf_token }}'},
                         cache: false,
                         success: function (msg) {
@@ -228,7 +227,7 @@
             shadeClose: false,
             maxmin: true,
             area: ['800px', '400px'],
-            content: ["{% url 'system:basic-project-update' %}" + '?id=' + id,],
+            content: ["{% url 'system:basic-orderclass-update' %}" + '?id=' + id,],
             end: function () {
                 //关闭时做的事情
                 oDataTable.ajax.reload();
@@ -247,7 +246,7 @@
                 layer.close(index);
                 $.ajax({
                     type: "POST",
-                    url: "{% url 'system:basic-project-delete' %}",
+                    url: "{% url 'system:basic-orderclass-delete' %}",
                     data: {"id": id, csrfmiddlewaretoken: '{{ csrf_token }}'},  //防止post数据时报 csrf_token 403
                     cache: false,
                     success: function (msg) {
