@@ -7,7 +7,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-
 class Project(models.Model):
     """
     专案信息表
@@ -98,6 +97,20 @@ class Subject(models.Model):
         verbose_name_plural = '主旨表'
         db_table = 'Subject'
 
+class Orderclass(models.Model):
+    '''
+    工单类型表
+    '''
+    orderclass = models.CharField(max_length=32, null=True, blank=True, verbose_name='工单类型')
+
+    def __str__(self):
+        return self.orderclass
+
+    class Meta:
+        verbose_name = '工单类型表'
+        verbose_name_plural = '工单类型表'
+        db_table = 'Orderclass'
+
 
 class OrderInfo(models.Model):
     """
@@ -120,6 +133,12 @@ class OrderInfo(models.Model):
         (2, '已完成'),
     )
 
+    # 更新状况
+    # status_fresh = (
+    #     (1, '已更新'),
+    #     (0, '未更新')
+    # )
+
     project = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='专案')
     build = models.CharField(max_length=10, null=True, blank=True, default='', verbose_name='阶段')
     publish_dept = models.CharField(max_length=10, default='', verbose_name='发布部门')
@@ -135,8 +154,14 @@ class OrderInfo(models.Model):
     receive_dept = models.CharField(max_length=10, default='', blank=True, verbose_name='接收部门')
     station = models.CharField(max_length=500, null=True, blank=True, default="", verbose_name='工站')
     receive_status = models.SmallIntegerField(choices=receive_status_choice, default=0, blank=True, verbose_name='接收状态')
+    # fresh_status = models.SmallIntegerField(choices=status_fresh, default=0, blank=None, verbose_name='更新状况')
     status = models.SmallIntegerField(choices=status_choice, default=0, blank=True, verbose_name='执行状态')
     receive_time = models.DateTimeField(null=True, blank=True, default=None, verbose_name='接收时间')
+
+    # EPM工单
+    # per_order = models.IntegerField(default=1, blank=True, verbose_name='优先等级')
+    # order_class = models.CharField(max_length=50, null=True, blank=True, default='', verbose_name='工单类型')
+
 
     # 用於判斷該條工單是否為父工單，發佈者發佈的時候生成的父工單
     # 父工單保存發佈者發佈時的工單信息，例如多個段別、工站等信息

@@ -7,22 +7,20 @@
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-datetimepicker.min.css' %}">
     <style>
         textarea {
-            height: '150px',
+            height:150px;
         }
     </style>
 {% endblock %}
 
 {% block main %}
-    <div class="box box-danger">
+    <div class="box box-danger" style="border:1px solid black;">
         <form class="form-horizontal" id="addForm" method="post">
             {% csrf_token %}
             <input type="hidden" name='id' value="{{ workflow.id }}"/>
-
             <div class="box-body">
                 <fieldset>
-
-                    <legend>
-                        <h4>基本信息</h4>
+                    <legend style="background-color:#2A6384;color: white">
+                        <h4 style="margin-left: 10px;margin-top: 10px;">基本信息</h4>
                     </legend>
 
                     <div class="form-group has-feedback">
@@ -75,8 +73,8 @@
                         </div>
                     </div>
 
-                    <legend>
-                        <h4>流程內容</h4>
+                    <legend style="background-color:#2A6384;color: white;height: 40px">
+                        <h4 style='margin-left: 10px;margin-top: 20px'> 流程內容</h4>
                     </legend>
                     <div class="form-group has-feedback">
                         <label class="col-sm-2 control-label">主旨</label>

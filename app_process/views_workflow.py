@@ -65,7 +65,6 @@ class WorkFlowView(LoginRequiredMixin, View):
         menu = Menu.get_menu_by_request_url(url=self.request.path_info)
         if menu is not None:
             res.update(menu)
-
         return render(request, 'process/WorkFlow/WorkFlow_List.html', res)
 
     """
@@ -76,7 +75,7 @@ class WorkFlowView(LoginRequiredMixin, View):
     def post(self, request):
 
         """
-        工單導入
+        工單批量導入
         :param request:
         :return: 返回渲染上传信息页面
         """
@@ -96,8 +95,12 @@ class WorkFlowView(LoginRequiredMixin, View):
 
             column_list = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別', 'DRI(白班)',
                            'DRI(晚班)']
+            # EPM 批量上传工单
+            epm_column_list = ['优先等级', '工单', '机种', '工单类型', '段别', '工站', '注意事项', 'DRI及联系方式', '备注']
 
-            if list(df.columns) == column_list:
+            # if list(df.columns) == epm_column_list:
+
+            if list(df.columns) == column_list :
 
                 pattern = re.compile(r'[/|，|, |\n]\s*')
 
@@ -242,7 +245,7 @@ class WorkFlowListView(LoginRequiredMixin, View):
 
 class WorkFlowCreateView(LoginRequiredMixin, View):
     """
-    流程創建视图
+    流程創建视图，发布单个工单
     """
 
     def get(self, request):

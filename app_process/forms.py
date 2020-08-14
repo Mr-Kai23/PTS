@@ -5,7 +5,7 @@
 import re
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import Project, Build, Segment, UnitType, OrderInfo, Stations, Subject, ExceptionContact
+from .models import Project, Build, Segment, UnitType, OrderInfo, Stations, Subject, ExceptionContact, Orderclass
 
 
 class ProjectCreateForm(forms.ModelForm):
@@ -59,6 +59,14 @@ class RecipientForm(forms.ModelForm):
     """
     class Meta:
         model = OrderInfo
+        fields = '__all__'
+
+class OrderclassForm(forms.ModelForm):
+    """
+    工单类型表
+    """
+    class Meta:
+        model = Orderclass
         fields = '__all__'
 
 

@@ -4,31 +4,23 @@
 # @Desc    :   看板
 # ======================================================
 from django.shortcuts import render
-
-# Create your views here.
 from django.views import View
-
 from app_process.models import OrderInfo, Segment, Project, Subject, Attachment
 from system.models import UserInfo
 from system.mixin import LoginRequiredMixin
 import json, re
 from django.core.serializers.json import DjangoJSONEncoder
-from django.views.decorators.cache import cache_page
-
 from message import send_message
 from Celery_Task.service import send_email_async
 from django.conf import settings
 import xlsxwriter
 from io import BytesIO
-
 from django.http import HttpResponse
-
 
 class BoardView(View):
     """
     看板视图
     """
-
     def get(self, request):
         """
         用于渲染看板页面
@@ -232,6 +224,7 @@ def create_workflow(parent_order, fields={}, segment_list=None):
     # 如果主旨為重點流程，優先
     if fields['subject'] == '重點流程':
         # 根據不同的接收人，创建對應的多條工单
+        # Order()
         workflow_list = [OrderInfo(**fields, parent=parent_order, priority=True, receive_dept=receive_dept,
                                    receiver=receiver, segment=segment) for receive_dept, receiver, segment in receivers]
     else:
@@ -334,18 +327,28 @@ def get_upload_module(request, download_id):
 
     # 流程模板
     if download_id == '0':
-        title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別', 'DRI(白班)', 'DRI(晚班)']
+        # EPM 模板下载
+        if re.match('epm', request.user.department.name, re.I):
+            title = ['优先等级', '工单', '机种', '工单类型', '段别', '工站', '注意事项', 'DRI及联系方式', '备注']
+            sheet.set_column(0, 8, 15)
+            # 所有段别
+            segment = list(Segment.objects.values_list('segment', flat=True))
+            sheet.data_validation('E2', {'validate': 'list', 'source': segment})
+            sheet.write_row('A1', title, title_format)
+            sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+        else:
+            title = ['專案', '發佈者部門', '發佈者姓名', '主旨', '工單', '工站', '流程內容', '接收段別', 'DRI(白班)', 'DRI(晚班)']
 
-        # 第0列到第12列設置列寬
-        sheet.set_column(0, 7, 15)
-        # 数据库所有主旨
-        subjects = list(Subject.objects.values_list('subject', flat=True))
-        sheet.data_validation('D2', {'validate': 'list', 'source': subjects})
+            # 第0列到第12列設置列寬
+            sheet.set_column(0, 7, 15)
+            # 数据库所有主旨
+            subjects = list(Subject.objects.values_list('subject', flat=True))
+            sheet.data_validation('D2', {'validate': 'list', 'source': subjects})
 
-        # 設置列名
-        sheet.write_row('A1', title, title_format)
-        # 給一行空值
-        sheet.write_row('A2', ['' for i in range(len(title))], field_format)
+            # 設置列名
+            sheet.write_row('A1', title, title_format)
+            # 給一行空值
+            sheet.write_row('A2', ['' for i in range(len(title))], field_format)
 
     # 用戶模板
     elif download_id == '1':
@@ -375,6 +378,10 @@ def get_upload_module(request, download_id):
 
         # 給一行空值
         sheet.write_row('B4', ['' for i in range(len(title))], field_format)
+
+
+
+
 
     workbook.close()
     excel.seek(0)

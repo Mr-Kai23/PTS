@@ -11,6 +11,7 @@ import system.views_segment as views_segment
 import system.views_unit_type as views_unit_type
 import system.views_stations as views_stations
 import system.views_subject as views_subject
+import system.views_orderclass as views_orderclass
 
 app_name = 'system'
 
@@ -90,4 +91,9 @@ urlpatterns = [
 
     # 工站选中获取工站号
     url(r'^basic/station/number/$', views_stations.StationAndNumberView.as_view(), name='basic-station-number'),
+
+    # 工单种类
+    url(r'^basic/orderclass/$', views_orderclass.OrderclassView.as_view(), name='basic-orderclass'),
+    url(r'^basic/orderclass/list/$', views_orderclass.OrderclassListView.as_view(), name='basic-orderclass_list'),
+    url(r'^basic/orderclass/update/$', views_orderclass.OrderclassUpdate.as_view(), name='basic_orderclass_update'),
 ]
