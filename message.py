@@ -55,3 +55,9 @@ def send_message(mobile_list, message, FormatID='6311', SpaceNum='7'):
             return HttpResponse('信息有誤！！')
 
     return '短信已发送！！'
+
+
+# if __name__ == '__main__':
+#     send_message.delay(['15364911676'],
+#                        ["PV專案部門", '2020', '7', '20', '10', '59', 'Test'],
+#                        '6311', '7')
