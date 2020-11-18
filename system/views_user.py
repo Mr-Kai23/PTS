@@ -273,7 +273,7 @@ class UserListView(LoginRequiredMixin, View):
         # 用户部门
         department = request.user.department
 
-        users = User.objects.filter(**filters, department=department).values(*fields).order_by('id')
+        users = User.objects.filter(department=department, **filters).values(*fields).order_by('id')
 
         # 更新前端显示为choice文字显示
         for user in users:

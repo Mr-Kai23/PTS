@@ -33,10 +33,8 @@ class WorkFlowView(LoginRequiredMixin, View):
         res = dict()
 
         pattern = re.compile(r'[/|，|, |\n]\s*')
-
         # 用戶部門
-        department = request.user.department.name
-
+        department = request.user.department.name\
         # 用戶專案
         projects = pattern.split(request.user.project)
         res['projects'] = projects
@@ -218,15 +216,17 @@ class WorkFlowListView(LoginRequiredMixin, View):
                         for lower_junior in junior.userinfo_set.all():
                             lower_juniors.append(lower_junior.name)
 
-                    workflows = OrderInfo.objects.filter(project__in=projects, receive_dept=department, is_parent=False,
-                                                         receiver__in=lower_juniors, deleted=False,
-                                                         **filters).values(*fields).order_by('-publish_time', '-id')
+                    workflows = OrderInfo.objects.filter(
+                        project__in=projects, receive_dept=department, is_parent=False,
+                        receiver__in=lower_juniors, deleted=False, **filters
+                    ).values(*fields).order_by('-publish_time', '-id')
 
         else:
             # 發佈者工單
             # 發佈者只能看自己發佈的流程，所有未被刪除的父流程
-            workflows = OrderInfo.objects.filter(project__in=projects, publisher=name, is_parent=True, deleted=False,
-                                                 **filters).values(*fields).order_by('-publish_time', '-id')
+            workflows = OrderInfo.objects.filter(
+                project__in=projects, publisher=name, is_parent=True, deleted=False, **filters
+            ).values(*fields).order_by('-publish_time', '-id')
 
         for workflow in workflows:
             order = OrderInfo.objects.get(id=workflow['id'])

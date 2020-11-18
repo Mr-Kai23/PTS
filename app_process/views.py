@@ -379,10 +379,6 @@ def get_upload_module(request, download_id):
         # 給一行空值
         sheet.write_row('B4', ['' for i in range(len(title))], field_format)
 
-
-
-
-
     workbook.close()
     excel.seek(0)
 

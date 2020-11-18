@@ -45,7 +45,9 @@ class BuildListView(LoginRequiredMixin, View):
 
         fields = ['id', 'project', 'build']
         searchFields = ['project', 'build']  # 与数据库字段一致
-        filters = {i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')}  # 此处的if语句有很大作用，如remark中数据为None,可通过if request.GET.get('')将传入为''的不将条件放入进去
+        filters = {
+            i + '__icontains': request.GET.get(i, '') for i in searchFields if request.GET.get(i, '')
+        }
 
         res = dict(data=list(Build.objects.filter(**filters).values(*fields)))
 
